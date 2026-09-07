@@ -678,10 +678,30 @@
     if (!window.supabase || !window.supabase.createClient) {
       throw new Error('Biblioteka Supabase nie została załadowana. Sprawdź połączenie z internetem, wyłącz ewentualny adblock/VPN i odśwież stronę (Ctrl+F5).');
     }
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true
+      }
+    });
   } catch (e) {
     console.error(e);
     document.addEventListener('DOMContentLoaded', function () { pokazBladLoginu(e.message); });
+  }
+
+  // ===================== BEZPIECZEŃSTWO: escapowanie HTML =====================
+  // Zapobiega XSS - dane wpisane przez użytkownika (nazwy przepisów, składników,
+  // osób itd.) są oczyszczane przed wstawieniem do innerHTML, żeby np.
+  // "<img src=x onerror=alert(1)>" wyświetlało się jako zwykły tekst,
+  // a nie wykonywało jako kod.
+  function escapeHtml(tekst) {
+    if (tekst === null || tekst === undefined) return '';
+    return String(tekst)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   const db = {
@@ -1056,12 +1076,12 @@
     pickingSlot: null,
     filtrPrzepisy: 'wszystkie',
     iloscPosilkowDaty: {},
-    nazwyPosilkow: wczytajNazwyPosilkow(),
+    nazwyPosilkow: {},
     dzisiajPlan: [],
     tydzienPlan: [],
     tydzienStart: formatDate(getPoniedzialek(new Date())),
     zakupyDodatkowe: [],
-    domyslnaLiczbaPosilkow: wczytajDomyslnaLiczbePosilkow(),
+    domyslnaLiczbaPosilkow: 3,
     wagaOsoba: null,
     wagaPomiary: []
   };
@@ -1081,28 +1101,18 @@
     return PALETA_OSOB[idx % PALETA_OSOB.length];
   }
 
-  function wczytajNazwyPosilkow() {
-    try {
-      var raw = localStorage.getItem('nazwyPosilkow');
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) { return {}; }
-  }
-
   function zapiszNazwyPosilkow() {
-    try { localStorage.setItem('nazwyPosilkow', JSON.stringify(state.nazwyPosilkow)); } catch (e) {}
-  }
-
-  function wczytajDomyslnaLiczbePosilkow() {
-    try {
-      var v = localStorage.getItem('domyslnaLiczbaPosilkow');
-      return v ? Number(v) : 3;
-    } catch (e) { return 3; }
+    db.setUstawienie('nazwyPosilkow', state.nazwyPosilkow).catch(pokazBlad);
   }
 
   function zapiszDomyslnaLiczbePosilkow() {
     var v = document.getElementById('ustawienia-domyslna-liczba').value;
     state.domyslnaLiczbaPosilkow = Number(v);
-    try { localStorage.setItem('domyslnaLiczbaPosilkow', v); } catch (e) {}
+    db.setUstawienie('domyslnaLiczbaPosilkow', state.domyslnaLiczbaPosilkow).catch(pokazBlad);
+  }
+
+  function zapiszIloscPosilkowDaty() {
+    db.setUstawienie('iloscPosilkowDaty', state.iloscPosilkowDaty).catch(pokazBlad);
   }
 
   function nazwaSlotu(numer) {
@@ -1148,9 +1158,9 @@
 
   function miniaturaPrzepisuHtml(p) {
     if (p && p.zdjecieUrl) {
-      return '<img class="recipe-thumb" src="' + p.zdjecieUrl + '" alt="">';
+      return '<img class="recipe-thumb" src="' + escapeHtml(p.zdjecieUrl) + '" alt="">';
     }
-    return '<span class="type-icon"><span class="material-symbols-outlined">' + ikonaTypu(p && p.typPosilku) + '</span></span>';
+    return '<span class="type-icon"><span class="material-symbols-outlined">' + escapeHtml(ikonaTypu(p && p.typPosilku)) + '</span></span>';
   }
 
   function ikonaTypu(typ) {
@@ -1164,7 +1174,15 @@
   }
 
   function inicjalizujAplikacje() {
-    db.getOsoby().then(function (r) { state.osoby = r; renderujWszystko(); }).catch(pokazBlad);
+    Promise.all([db.getOsoby(), db.getUstawienia()]).then(function (wyniki) {
+      state.osoby = wyniki[0];
+      var u = wyniki[1];
+      state.nazwyPosilkow = u.nazwyPosilkow || {};
+      state.domyslnaLiczbaPosilkow = (u.domyslnaLiczbaPosilkow != null) ? u.domyslnaLiczbaPosilkow : 3;
+      state.iloscPosilkowDaty = u.iloscPosilkowDaty || {};
+      renderujWszystko();
+    }).catch(pokazBlad);
+
     db.getSkladniki().then(function (r) { state.skladniki = r; }).catch(pokazBlad);
     db.getPrzepisy().then(function (r) {
       state.przepisy = r;
@@ -1278,7 +1296,7 @@
       header.className = 'meal-slot-header';
       var pokazUsun = numeryPosilkow.length > 1 && numerPosilku === numeryPosilkow.length;
       header.innerHTML =
-        '<span class="label-sm card-title-row" style="gap:4px;">' + nazwaSlotu(numerPosilku) +
+        '<span class="label-sm card-title-row" style="gap:4px;">' + escapeHtml(nazwaSlotu(numerPosilku)) +
         '<button class="icon-btn" title="Zmień nazwę tego posiłku"><span class="material-symbols-outlined">edit</span></button></span>' +
         (pokazUsun ? '<button class="icon-btn" title="Usuń ten posiłek z tego dnia"><span class="material-symbols-outlined">delete</span></button>' : '');
       header.querySelector('.icon-btn').onclick = function () { zmienNazweSlotu(numerPosilku); };
@@ -1297,7 +1315,7 @@
         card.style.borderLeftColor = paleta.accent;
         card.onclick = function () { otworzWyborPrzepisu(state.selectedDate, osoba.imie, numerPosilku); };
 
-        var pill = '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + osoba.imie + '</span>';
+        var pill = '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + escapeHtml(osoba.imie) + '</span>';
 
         if (wpis && wpis.przepis) {
           var p = wpis.przepis;
@@ -1312,7 +1330,7 @@
             '<div class="row-top"><span class="label-sm card-title-row">' + miniaturaPrzepisuHtml(p) + pill + '</span>' +
             '<span class="row-top-actions"><span class="badge-kcal">' + Math.round(p.kcal * porcje) + ' kcal</span>' +
             '<button class="clear-slot-btn" title="Usuń przepis z tego posiłku"><span class="material-symbols-outlined">close</span></button></span></div>' +
-            '<p class="meal-title">' + p.nazwa + '</p>';
+            '<p class="meal-title">' + escapeHtml(p.nazwa) + '</p>';
 
           (function (osobaImie, numer) {
             card.querySelector('.clear-slot-btn').onclick = async function (e) {
@@ -1375,7 +1393,7 @@
           '<div class="macro" style="margin-top:4px;">' + Math.round(s.kcal) + ' / ' + o.celKcal + ' kcal</div>';
       }
       div.innerHTML =
-        '<div class="label-sm" style="color:' + paleta.accent + '; font-weight:600;">' + o.imie + ' · razem</div>' +
+        '<div class="label-sm" style="color:' + paleta.accent + '; font-weight:600;">' + escapeHtml(o.imie) + ' · razem</div>' +
         '<div class="num">' + Math.round(s.kcal) + ' kcal</div>' +
         '<div class="macro">B ' + Math.round(s.b) + 'g · T ' + Math.round(s.t) + 'g · W ' + Math.round(s.w) + 'g</div>' +
         celHtml;
@@ -1406,6 +1424,7 @@
     var aktualna = iloscPosilkowDlaDnia(state.selectedDate);
     if (aktualna >= 4) return;
     state.iloscPosilkowDaty[state.selectedDate] = aktualna + 1;
+    zapiszIloscPosilkowDaty();
     renderujPlanDnia();
   }
 
@@ -1423,6 +1442,7 @@
 
     function zmniejszLiczbePosilkow() {
       state.iloscPosilkowDaty[data] = aktualna - 1;
+      zapiszIloscPosilkowDaty();
       wczytajPlanTygodnia();
     }
 
@@ -1492,8 +1512,8 @@
         row.style.cursor = 'pointer';
         row.innerHTML =
           '<div class="card-title-row">' + miniaturaPrzepisuHtml(p) +
-          '<div><div class="meal-title" style="margin:0">' + p.nazwa + '</div>' +
-          '<div class="meta">' + p.typPosilku + '</div></div></div><span class="badge-kcal">' + p.kcal + ' kcal</span>';
+          '<div><div class="meal-title" style="margin:0">' + escapeHtml(p.nazwa) + '</div>' +
+          '<div class="meta">' + escapeHtml(p.typPosilku) + '</div></div></div><span class="badge-kcal">' + escapeHtml(p.kcal) + ' kcal</span>';
         row.onclick = function () { wybierzPrzepisDoPosilku(p.id); };
         lista.appendChild(row);
       });
@@ -1566,7 +1586,7 @@
     numery.forEach(function (numer) {
       var header = document.createElement('div');
       header.className = 'meal-slot-header';
-      header.innerHTML = '<span class="label-sm">' + nazwaSlotu(numer) + '</span>';
+      header.innerHTML = '<span class="label-sm">' + escapeHtml(nazwaSlotu(numer)) + '</span>';
       container.appendChild(header);
 
       var wgPrzepisu = {};
@@ -1583,20 +1603,20 @@
 
         var pills = wpisy.map(function (w) {
           var paleta = paletaOsoby(w.osoba);
-          return '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + w.osoba +
-            (wpisy.length > 1 || w.porcje > 1 ? ' ×' + w.porcje : '') + '</span>';
+          return '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + escapeHtml(w.osoba) +
+            (wpisy.length > 1 || w.porcje > 1 ? ' ×' + escapeHtml(w.porcje) : '') + '</span>';
         }).join(' ');
 
         var thumbHtml = p.zdjecieUrl
-          ? '<img class="dzisiaj-thumb" src="' + p.zdjecieUrl + '" alt="">'
-          : '<span class="dzisiaj-thumb-fallback"><span class="material-symbols-outlined">' + ikonaTypu(p.typPosilku) + '</span></span>';
+          ? '<img class="dzisiaj-thumb" src="' + escapeHtml(p.zdjecieUrl) + '" alt="">'
+          : '<span class="dzisiaj-thumb-fallback"><span class="material-symbols-outlined">' + escapeHtml(ikonaTypu(p.typPosilku)) + '</span></span>';
 
         var iloscSkladnikow = p.skladniki.length;
         var liniaSkladnikow = '';
         if (iloscSkladnikow) {
           var wierszeSkladnikow = p.skladniki.map(function (s) {
             var ilosc = (Number(s.ilosc) || 0) * razemPorcje;
-            return '<div class="dzisiaj-ingredient-line">+ ' + s.nazwa + ' — ' + (Math.round(ilosc * 100) / 100) + ' ' + s.jednostka + '</div>';
+            return '<div class="dzisiaj-ingredient-line">+ ' + escapeHtml(s.nazwa) + ' — ' + (Math.round(ilosc * 100) / 100) + ' ' + escapeHtml(s.jednostka) + '</div>';
           }).join('');
           liniaSkladnikow = '<div class="dzisiaj-ingredients-grid">' + wierszeSkladnikow + '</div>';
         } else {
@@ -1612,7 +1632,7 @@
           '<div class="dzisiaj-content">' +
           '<div class="row-top"><span class="label-sm card-title-row" style="flex-wrap:wrap; gap:6px;">' + pills + '</span>' +
           '<span class="badge-kcal">' + Math.round(p.kcal * razemPorcje) + ' kcal</span></div>' +
-          '<p class="meal-title" style="margin-top:6px;">' + p.nazwa + (wpisy.length > 1 ? ' <span class="label-sm" style="font-weight:400;">(razem, ' + razemPorcje + ' porcje)</span>' : '') + '</p>' +
+          '<p class="meal-title" style="margin-top:6px;">' + escapeHtml(p.nazwa) + (wpisy.length > 1 ? ' <span class="label-sm" style="font-weight:400;">(razem, ' + razemPorcje + ' porcje)</span>' : '') + '</p>' +
           liniaSkladnikow +
           '</div></div>';
 
@@ -1702,8 +1722,8 @@
             return w.osoba === osoba.imie && String(w.numerPosilku) === String(numer);
           });
           var paleta = paletaOsoby(osoba.imie);
-          liniaHtml += '<div class="cal-person-line"><span class="cal-person-name" style="color:' + paleta.accent + ';">' + osoba.imie + '</span><br>' +
-            (wpis && wpis.przepis ? wpis.przepis.nazwa : '<span class="cal-empty">—</span>') + '</div>';
+          liniaHtml += '<div class="cal-person-line"><span class="cal-person-name" style="color:' + paleta.accent + ';">' + escapeHtml(osoba.imie) + '</span><br>' +
+            (wpis && wpis.przepis ? escapeHtml(wpis.przepis.nazwa) : '<span class="cal-empty">—</span>') + '</div>';
         });
         td.innerHTML = liniaHtml;
         tr.appendChild(td);
@@ -1756,8 +1776,8 @@
       row.onclick = function () { pokazSzczegoly(p.id); };
       row.innerHTML =
         '<div class="card-title-row">' + miniaturaPrzepisuHtml(p) +
-        '<div><div class="meal-title" style="margin:0">' + p.nazwa + '</div>' +
-        '<div class="meta">' + p.typPosilku + '</div></div></div><span class="badge-kcal">' + p.kcal + ' kcal</span>';
+        '<div><div class="meal-title" style="margin:0">' + escapeHtml(p.nazwa) + '</div>' +
+        '<div class="meta">' + escapeHtml(p.typPosilku) + '</div></div></div><span class="badge-kcal">' + escapeHtml(p.kcal) + ' kcal</span>';
       container.appendChild(row);
     });
   }
@@ -1779,7 +1799,7 @@
       '<div class="summary-card"><div class="label-sm">Makro</div><div class="macro" style="font-size:14px; margin-top:6px;">B ' + p.bialko + 'g · T ' + p.tluszcz + 'g · W ' + p.wegle + 'g</div></div>';
     var skl = document.getElementById('szczegoly-skladniki');
     skl.innerHTML = p.skladniki.length
-      ? p.skladniki.map(function (s) { return '<div class="shopping-item"><span>' + s.nazwa + ' — ' + s.ilosc + ' ' + s.jednostka + '</span></div>'; }).join('')
+      ? p.skladniki.map(function (s) { return '<div class="shopping-item"><span>' + escapeHtml(s.nazwa) + ' — ' + escapeHtml(s.ilosc) + ' ' + escapeHtml(s.jednostka) + '</span></div>'; }).join('')
       : '<p class="label-sm">Brak podanych składników.</p>';
     document.getElementById('szczegoly-przygotowanie').innerText = p.przygotowanie || '(brak opisu)';
     otworzModal('modal-szczegoly');
@@ -1820,7 +1840,12 @@
   function pokazPodgladZdjecia(input) {
     if (!input.files || !input.files[0]) return;
     var podglad = document.getElementById('f-zdjecie-preview');
-    podglad.src = URL.createObjectURL(input.files[0]);
+    if (podglad.dataset.blobUrl) {
+      URL.revokeObjectURL(podglad.dataset.blobUrl);
+    }
+    var url = URL.createObjectURL(input.files[0]);
+    podglad.dataset.blobUrl = url;
+    podglad.src = url;
     podglad.classList.add('shown');
   }
 
@@ -1858,11 +1883,11 @@
     row.className = 'ingredient-row';
     var opcje = state.skladniki.map(function (s) {
       var sel = (wybranyId && String(s.id) === String(wybranyId)) ? 'selected' : '';
-      return '<option value="' + s.id + '" ' + sel + '>' + s.nazwa + ' (' + s.jednostka + ')</option>';
+      return '<option value="' + escapeHtml(s.id) + '" ' + sel + '>' + escapeHtml(s.nazwa) + ' (' + escapeHtml(s.jednostka) + ')</option>';
     }).join('');
     row.innerHTML =
       '<select>' + opcje + '</select>' +
-      '<input type="number" placeholder="ilość" value="' + (ilosc || '') + '">' +
+      '<input type="number" placeholder="ilość" value="' + escapeHtml(ilosc || '') + '">' +
       '<button onclick="this.parentElement.remove()">×</button>';
     lista.appendChild(row);
   }
@@ -1932,10 +1957,11 @@
     var doD = document.getElementById('zakupy-do').value;
     if (!od || !doD) { pokazKomunikat('Wybierz zakres dat.'); return; }
     document.getElementById('zakupy-wynik').innerHTML = '<div class="loading">Wczytywanie…</div>';
-    db.getPlanZakresuRaw(od, doD).then(function (rows) {
-      var plan = mapPlanRows(rows);
+    Promise.all([db.getPlanZakresuRaw(od, doD), db.getZakupyZaznaczenia()]).then(function (wyniki) {
+      var plan = mapPlanRows(wyniki[0]);
+      var zaznaczenia = wyniki[1];
       var pogrupowane = obliczListeZakupow(plan);
-      renderujListeZakupow(pogrupowane);
+      renderujListeZakupow(pogrupowane, zaznaczenia);
     }).catch(pokazBlad);
   }
 
@@ -1947,7 +1973,7 @@
       wpis.przepis.skladniki.forEach(function (s) {
         var key = s.id;
         if (!suma[key]) {
-          suma[key] = { nazwa: s.nazwa, kategoria: s.kategoria, jednostka: s.jednostka, ilosc: 0 };
+          suma[key] = { id: s.id, nazwa: s.nazwa, kategoria: s.kategoria, jednostka: s.jednostka, ilosc: 0 };
         }
         suma[key].ilosc += (Number(s.ilosc) || 0) * porcje;
       });
@@ -1957,12 +1983,13 @@
       var item = suma[key];
       var kat = item.kategoria || 'inne';
       if (!pogrupowane[kat]) pogrupowane[kat] = [];
-      pogrupowane[kat].push({ nazwa: item.nazwa, ilosc: item.ilosc, jednostka: item.jednostka });
+      pogrupowane[kat].push({ id: item.id, nazwa: item.nazwa, ilosc: item.ilosc, jednostka: item.jednostka });
     });
     return pogrupowane;
   }
 
-  function renderujListeZakupow(pogrupowane) {
+  function renderujListeZakupow(pogrupowane, zaznaczenia) {
+    zaznaczenia = zaznaczenia || {};
     var container = document.getElementById('zakupy-wynik');
     var kategorie = Object.keys(pogrupowane);
     if (!kategorie.length) {
@@ -1973,12 +2000,37 @@
     kategorie.forEach(function (kat) {
       var block = document.createElement('div');
       block.className = 'shopping-cat';
-      var items = pogrupowane[kat].map(function (it) {
-        return '<div class="shopping-item" onclick="this.classList.toggle(\'checked\')">' +
-          '<input type="checkbox" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'checked\')">' +
-          '<span>' + it.nazwa + ' — ' + (Math.round(it.ilosc * 100) / 100) + ' ' + it.jednostka + '</span></div>';
-      }).join('');
-      block.innerHTML = '<h3>' + kat + '</h3>' + items;
+      var naglowek = document.createElement('h3');
+      naglowek.innerText = kat;
+      block.appendChild(naglowek);
+
+      pogrupowane[kat].forEach(function (it) {
+        var zaznaczone = !!zaznaczenia[it.id];
+        var row = document.createElement('div');
+        row.className = 'shopping-item' + (zaznaczone ? ' checked' : '');
+
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = zaznaczone;
+
+        var label = document.createElement('span');
+        label.innerText = it.nazwa + ' — ' + (Math.round(it.ilosc * 100) / 100) + ' ' + it.jednostka;
+
+        function przelacz() {
+          var nowyStan = !checkbox.checked;
+          checkbox.checked = nowyStan;
+          row.classList.toggle('checked', nowyStan);
+          db.ustawZaznaczenieZakupu(it.id, nowyStan).catch(pokazBlad);
+        }
+
+        row.onclick = przelacz;
+        checkbox.onclick = function (e) { e.stopPropagation(); przelacz(); };
+
+        row.appendChild(checkbox);
+        row.appendChild(label);
+        block.appendChild(row);
+      });
+
       container.appendChild(block);
     });
   }
@@ -2006,11 +2058,11 @@
       blok.className = 'ust-osoba-blok';
       blok.innerHTML =
         '<label style="margin-top:0;">Imię</label>' +
-        '<input type="text" class="ust-osoba-imie" data-id="' + o.id + '" value="' + o.imie + '">' +
+        '<input type="text" class="ust-osoba-imie" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.imie) + '">' +
         '<label>Cel kalorii (kcal/dzień)</label>' +
-        '<input type="number" class="ust-osoba-kcal" data-id="' + o.id + '" value="' + (o.celKcal != null ? o.celKcal : '') + '" placeholder="np. 1800">' +
+        '<input type="number" class="ust-osoba-kcal" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.celKcal != null ? o.celKcal : '') + '" placeholder="np. 1800">' +
         '<label>Cel wagi (kg)</label>' +
-        '<input type="number" step="0.1" class="ust-osoba-waga" data-id="' + o.id + '" value="' + (o.celWaga != null ? o.celWaga : '') + '" placeholder="np. 70">';
+        '<input type="number" step="0.1" class="ust-osoba-waga" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.celWaga != null ? o.celWaga : '') + '" placeholder="np. 70">';
       el.appendChild(blok);
     });
   }
@@ -2078,7 +2130,7 @@
       var row = document.createElement('div');
       row.className = 'shopping-item';
       row.innerHTML =
-        '<span>' + s.nazwa + ' <span class="label-sm">(' + s.kategoria + ')</span></span>' +
+        '<span>' + escapeHtml(s.nazwa) + ' <span class="label-sm">(' + escapeHtml(s.kategoria) + ')</span></span>' +
         '<button class="del-btn" title="Usuń"><span class="material-symbols-outlined">close</span></button>';
       row.querySelector('.del-btn').onclick = async function () {
         var ok = await pokazPotwierdzenie('Usunąć składnik "' + s.nazwa + '" z bazy?');
@@ -2131,10 +2183,10 @@
       return;
     }
     container.innerHTML = state.zakupyDodatkowe.map(function (it) {
-      return '<div class="shopping-item' + (it.kupione ? ' checked' : '') + '" data-id="' + it.id + '">' +
-        '<input type="checkbox" ' + (it.kupione ? 'checked' : '') + ' onchange="przelaczKupioneDodatkowy(' + it.id + ', this.checked)">' +
-        '<span>' + it.nazwa + (it.ilosc ? ' — ' + it.ilosc : '') + '</span>' +
-        '<button class="del-btn" onclick="usunZakupDodatkowyPotwierdz(' + it.id + ')"><span class="material-symbols-outlined">close</span></button>' +
+      return '<div class="shopping-item' + (it.kupione ? ' checked' : '') + '" data-id="' + escapeHtml(it.id) + '">' +
+        '<input type="checkbox" ' + (it.kupione ? 'checked' : '') + ' onchange="przelaczKupioneDodatkowy(' + escapeHtml(it.id) + ', this.checked)">' +
+        '<span>' + escapeHtml(it.nazwa) + (it.ilosc ? ' — ' + escapeHtml(it.ilosc) : '') + '</span>' +
+        '<button class="del-btn" onclick="usunZakupDodatkowyPotwierdz(' + escapeHtml(it.id) + ')"><span class="material-symbols-outlined">close</span></button>' +
         '</div>';
     }).join('');
   }
@@ -2211,7 +2263,7 @@
 
     if (!osoba || !osoba.celWaga) {
       celEl.innerHTML =
-        '<div class="label-sm">Brak ustawionego celu wagi dla ' + (osoba ? osoba.imie : '') + '.</div>' +
+        '<div class="label-sm">Brak ustawionego celu wagi dla ' + escapeHtml(osoba ? osoba.imie : '') + '.</div>' +
         '<div class="label-sm" style="margin-top:4px;">Ustaw go w Ustawieniach (ikona koła zębatego).</div>' +
         (ostatni ? '<div class="num" style="margin-top:8px;">' + ostatni.waga + ' kg</div>' : '');
     } else if (!ostatni) {
