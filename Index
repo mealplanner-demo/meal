@@ -1,0 +1,2286 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Planer posiłków</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #F2EEE5;
+      --card: #ffffff;
+      --border: #E1D9C7;
+      --text: #3E362E;
+      --text-2: #7C7263;
+      --text-3: #A79C89;
+      --accent: #2F4735;
+      --accent-bg: #E3E9E0;
+      --accent-border: #5B7864;
+      --accent-2: #4B4139;
+      --danger: #a32d2d;
+      --radius: 14px;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 84px;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      padding: 18px 16px 10px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 20px; font-weight: 600; margin: 0; }
+    #logout-btn {
+      background: none; border: none; color: var(--text-3); display: inline-flex;
+      align-items: center; gap: 4px; font-size: 12px; cursor: pointer;
+    }
+    #settings-btn {
+      background: none; border: none; color: var(--text-3); display: inline-flex;
+      align-items: center; justify-content: center; cursor: pointer; padding: 2px;
+    }
+
+    .tabbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+      z-index: 10;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-3);
+      background: none;
+      border: none;
+      padding: 6px 0;
+      cursor: pointer;
+    }
+    .tab.active { color: var(--accent); font-weight: 600; }
+    .tab .icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+    .view { display: none; padding: 0 16px 16px; }
+    .view.active { display: block; }
+
+    .day-scroller { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 14px; -webkit-overflow-scrolling: touch; }
+    .day-chip {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .day-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .card .row-top { display: flex; justify-content: space-between; align-items: center; }
+    .label-sm { font-size: 12px; color: var(--text-2); }
+    .badge-kcal { font-size: 12px; color: var(--accent); background: var(--accent-bg); padding: 3px 9px; border-radius: 999px; font-weight: 600; }
+    .meal-title { font-size: 15px; font-weight: 600; margin: 6px 0 0; }
+    .empty-slot { color: var(--text-3); font-size: 14px; text-align: center; padding: 10px 0; }
+
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .summary-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+    .summary-card .num { font-size: 22px; font-weight: 700; margin: 4px 0 2px; }
+    .summary-card .macro { font-size: 11.5px; color: var(--text-3); }
+    .progress-bar-track { width: 100%; height: 6px; border-radius: 999px; background: var(--border); margin-top: 8px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 999px; }
+    .ust-osoba-blok { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .ust-osoba-blok:last-child { border-bottom: none; }
+
+    .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-3); margin: 18px 0 8px; font-weight: 600; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 11px 16px; font-size: 14px; font-weight: 600; color: var(--text);
+      cursor: pointer; width: 100%;
+    }
+    .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn.small { width: auto; padding: 7px 12px; font-size: 13px; }
+
+    .recipe-card { display: flex; justify-content: space-between; align-items: center; }
+    .recipe-card .meta { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+
+    .fab {
+      position: fixed; right: 16px; bottom: 90px; z-index: 8;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent); color: white; font-size: 26px;
+      border: none; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4);
+      z-index: 20; align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg); width: 100%; max-width: 480px;
+      border-radius: 18px 18px 0 0; padding: 18px 16px calc(48px + env(safe-area-inset-bottom));
+      max-height: 82vh; overflow-y: auto; margin-bottom: 4px;
+      position: relative;
+    }
+    .close-x { background: none; border: none; color: var(--text-3); }
+
+    label { font-size: 12px; color: var(--text-2); display: block; margin: 12px 0 4px; }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      font-size: 16px; background: var(--card); color: var(--text); font-family: inherit;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    .ingredient-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+    .ingredient-row select { flex: 2; }
+    .ingredient-row input { flex: 1; }
+    .ingredient-row button { flex: 0 0 auto; background: none; border: none; color: #a32d2d; font-size: 18px; }
+
+    .shopping-cat { margin-bottom: 16px; }
+    .shopping-cat h3 { font-size: 13px; text-transform: uppercase; color: var(--text-3); margin: 0 0 6px; letter-spacing: .04em; }
+    .shopping-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .shopping-item input[type=checkbox] { width: 18px; height: 18px; }
+    .shopping-item.checked span { text-decoration: line-through; color: var(--text-3); }
+    .shopping-item .del-btn {
+      margin-left: auto; background: none; border: none; color: var(--text-3);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; cursor: pointer; padding: 0; flex: 0 0 auto;
+    }
+    .shopping-item .del-btn:hover { color: var(--danger); background: #f4e6e6; }
+    .shopping-item .del-btn .material-symbols-outlined { font-size: 16px; }
+
+    .dodaj-skladnik-row { display: flex; gap: 6px; margin-top: 4px; margin-bottom: 18px; }
+    .dodaj-skladnik-row input { flex: 1; }
+    .dodaj-skladnik-row input.ilosc-input { flex: 0 0 90px; }
+    .dodaj-skladnik-row button {
+      flex: 0 0 auto; width: 42px; background: var(--accent); color: #fff; border: none;
+      border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+
+    .loading { text-align: center; color: var(--text-3); padding: 30px 0; font-size: 14px; }
+
+    .chip-scroller { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 14px; -webkit-overflow-scrolling: touch; }
+    .filter-chip {
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--card); font-size: 13px; color: var(--text-2); cursor: pointer; white-space: nowrap;
+    }
+    .filter-chip .material-symbols-outlined { font-size: 16px; }
+    .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .type-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 9px; background: var(--accent-bg);
+      color: var(--accent); flex: 0 0 auto;
+    }
+    .type-icon .material-symbols-outlined { font-size: 18px; }
+    .card-title-row { display: flex; align-items: center; gap: 10px; }
+
+    /* ===== ZDJĘCIA PRZEPISÓW ===== */
+    .recipe-thumb {
+      width: 44px; height: 44px; border-radius: 10px; object-fit: cover;
+      flex: 0 0 auto; background: var(--accent-bg);
+    }
+    .recipe-thumb-hero {
+      width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius);
+      margin-bottom: 12px; background: var(--accent-bg);
+    }
+    .f-zdjecie-wrap { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+    .f-zdjecie-preview {
+      width: 60px; height: 60px; border-radius: 10px; object-fit: cover;
+      background: var(--accent-bg); flex: 0 0 auto; display: none;
+    }
+    .f-zdjecie-preview.shown { display: block; }
+    .f-zdjecie-input-label {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+      color: var(--text); background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 14px; cursor: pointer;
+    }
+    #f-zdjecie { display: none; }
+
+    /* ===== WIDOK DZISIAJ - karta w stylu listy z miniaturą ===== */
+    .dzisiaj-card { display: flex; gap: 12px; align-items: flex-start; }
+    .dzisiaj-thumb {
+      width: 64px; height: 64px; border-radius: 12px; object-fit: cover;
+      flex: 0 0 auto; background: var(--accent-bg);
+    }
+    .dzisiaj-thumb-fallback {
+      width: 64px; height: 64px; border-radius: 12px; flex: 0 0 auto;
+      background: var(--accent-bg); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dzisiaj-thumb-fallback .material-symbols-outlined { font-size: 28px; }
+    .dzisiaj-content { flex: 1; min-width: 0; }
+    .dzisiaj-ingredient-line { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+    .dzisiaj-ingredients-grid {
+      display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 0;
+      margin-top: 4px;
+    }
+
+    /* ===== WIDOK TYDZIEŃ - siatka kalendarza ===== */
+    .cal-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); border: 1px solid var(--border); }
+    .cal-table { border-collapse: collapse; width: 100%; background: var(--card); }
+    .cal-table th, .cal-table td {
+      border: 1px solid var(--border); padding: 8px 7px; font-size: 12px; vertical-align: top;
+      min-width: 118px;
+    }
+    .cal-table th {
+      background: var(--card); font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em;
+      color: var(--text-2); font-weight: 700; position: sticky; top: 0; z-index: 2;
+    }
+    .cal-table td.cal-slot-label, .cal-table th.cal-corner {
+      position: sticky; left: 0; z-index: 1; background: var(--card);
+      font-weight: 600; color: var(--text); min-width: 84px; max-width: 84px;
+      font-size: 11.5px;
+    }
+    .cal-table th.cal-corner { z-index: 3; }
+    .cal-table th.cal-today, .cal-table td.cal-today { background: var(--accent-bg); }
+    .cal-table th.cal-today { color: var(--accent); }
+    .cal-person-line { margin-bottom: 4px; }
+    .cal-person-line:last-child { margin-bottom: 0; }
+    .cal-person-name { font-weight: 700; }
+    .cal-empty { color: var(--text-3); }
+
+    .modal-header {
+      position: sticky; top: 0; z-index: 2; background: var(--bg);
+      display: flex; align-items: center; justify-content: space-between;
+      margin: -18px -16px 14px; padding: 16px 16px 10px; border-radius: 18px 18px 0 0;
+    }
+    .modal-header h2 { font-size: 17px; margin: 0; }
+    .modal-header .close-x {
+      position: static; display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; background: var(--card);
+      border: 1px solid var(--border); color: var(--text-2); font-size: 0; flex: 0 0 auto;
+    }
+
+    .sticky-controls-view {
+      position: sticky;
+      top: 54px;
+      z-index: 4;
+      background: var(--bg);
+      padding-top: 2px;
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .sticky-controls-modal {
+      position: sticky;
+      top: 48px;
+      z-index: 1;
+      background: var(--bg);
+      margin: 0 -16px;
+      padding: 0 16px 6px;
+    }
+    .search-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .search-box { position: relative; flex: 1; }
+    .search-box .material-symbols-outlined {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 18px;
+    }
+    .search-box input { padding-left: 34px; }
+    .search-row select { flex: 0 0 128px; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 16px; }
+    .btn-row .btn { margin-top: 0; }
+    .btn.ghost { background: transparent; }
+    .btn.danger-outline { color: var(--danger); border-color: var(--danger); }
+
+    .plan-controls-row { display: flex; gap: 8px; justify-content: center; margin: 4px 0 14px; }
+    .link-btn {
+      background: none; border: none; color: var(--accent); font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px; cursor: pointer; padding: 6px 10px;
+      border-radius: 999px; border: 1px solid var(--border); background: var(--card);
+    }
+    .link-btn.remove { color: var(--danger); }
+    .link-btn .material-symbols-outlined { font-size: 17px; }
+    .link-btn:disabled { opacity: .4; cursor: default; }
+
+    .meal-slot-header { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 6px; }
+    .meal-slot-header .label-sm { font-weight: 600; color: var(--text); text-transform: uppercase; font-size: 11.5px; letter-spacing: .04em; }
+    .meal-slot-header .icon-btn {
+      background: none; border: none; color: var(--text-3); display: inline-flex; align-items: center;
+      padding: 3px; cursor: pointer;
+    }
+    .meal-slot-header .icon-btn .material-symbols-outlined { font-size: 18px; }
+
+    .porcje-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .porcje-row .label-sm { margin: 0; }
+    .porcje-btn {
+      width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); background: var(--card);
+      display: inline-flex; align-items: center; justify-content: center; color: var(--text); cursor: pointer; padding: 0; flex: 0 0 auto;
+    }
+    .porcje-btn .material-symbols-outlined { font-size: 16px; }
+    .porcje-btn:disabled { opacity: .35; cursor: default; }
+    .porcje-val { font-weight: 700; font-size: 14px; min-width: 14px; text-align: center; }
+
+    .row-top-actions { display: flex; align-items: center; gap: 6px; }
+    .clear-slot-btn {
+      background: none; border: none; color: var(--text-3); display: inline-flex; align-items: center;
+      justify-content: center; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; padding: 0; flex: 0 0 auto;
+    }
+    .clear-slot-btn .material-symbols-outlined { font-size: 17px; }
+    .clear-slot-btn:hover { color: var(--danger); background: #f4e6e6; }
+
+    .osoba-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-weight: 600; font-size: 11.5px; }
+    .card.osoba-card { border-left-width: 4px; border-left-style: solid; }
+    .summary-card.osoba-card { border-left-width: 4px; border-left-style: solid; }
+
+    /* ===== EKRAN LOGOWANIA ===== */
+    #login-screen {
+      position: fixed; inset: 0; background: var(--bg); z-index: 100;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    #login-screen.hidden { display: none; }
+    .login-box { width: 100%; max-width: 340px; }
+    .login-box h1 { font-size: 22px; margin: 0 0 4px; }
+    .login-box p.sub { color: var(--text-2); font-size: 13px; margin: 0 0 22px; }
+    #login-error { color: var(--danger); font-size: 13px; margin-top: 10px; display: none; }
+    #app-root { display: none; }
+    #app-root.ready { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== EKRAN LOGOWANIA ===================== -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Planer posiłków</h1>
+    <p class="sub">Zaloguj się, żeby zobaczyć plan.</p>
+    <label>E-mail</label>
+    <input id="login-email" type="email" autocomplete="username">
+    <label>Hasło</label>
+    <input id="login-password" type="password" autocomplete="current-password">
+    <button class="btn primary" style="margin-top:16px;" onclick="zaloguj()">Zaloguj się</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<div id="app-root">
+
+<header>
+  <h1 id="page-title">Plan tygodnia</h1>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button id="settings-btn" onclick="otworzUstawienia()" title="Ustawienia"><span class="material-symbols-outlined" style="font-size:20px;">settings</span></button>
+    <button id="logout-btn" onclick="wyloguj()"><span class="material-symbols-outlined" style="font-size:16px;">logout</span>Wyloguj</button>
+  </div>
+</header>
+
+<!-- ===================== WIDOK: PLAN ===================== -->
+<div class="view active" id="view-plan">
+  <label style="margin-top:0;">Skocz do daty</label>
+  <input type="date" id="skocz-do-daty" onchange="skoczDoDaty(this.value)">
+  <div class="day-scroller" id="day-scroller" style="margin-top:12px;"></div>
+  <div id="plan-cards"><div class="loading">Wczytywanie…</div></div>
+  <div class="plan-controls-row" id="plan-controls-row"></div>
+
+  <div class="section-title">Podsumowanie dnia</div>
+  <div class="summary-grid" id="summary-grid"></div>
+</div>
+
+<!-- ===================== WIDOK: DZISIAJ ===================== -->
+<div class="view" id="view-dzisiaj">
+  <div class="label-sm" id="dzisiaj-data" style="margin-bottom:10px;"></div>
+  <div id="dzisiaj-lista"><div class="loading">Wczytywanie…</div></div>
+</div>
+
+<!-- ===================== WIDOK: TYDZIEŃ (PODGLĄD) ===================== -->
+<div class="view" id="view-tydzien">
+  <div class="plan-controls-row" style="margin-top:0;">
+    <button class="link-btn" onclick="tydzienPoprzedni()"><span class="material-symbols-outlined">chevron_left</span>Poprzedni</button>
+    <button class="link-btn" onclick="tydzienNastepny()">Następny<span class="material-symbols-outlined">chevron_right</span></button>
+  </div>
+  <div class="label-sm" id="tydzien-zakres" style="text-align:center; margin-bottom:10px;"></div>
+  <div class="cal-scroll"><div id="tydzien-lista"><div class="loading">Wczytywanie…</div></div></div>
+</div>
+
+<!-- ===================== WIDOK: PRZEPISY ===================== -->
+<div class="view" id="view-przepisy">
+  <div class="sticky-controls-view">
+    <div class="search-box" style="margin-top:2px; margin-bottom:10px;">
+      <span class="material-symbols-outlined">search</span>
+      <input id="przepisy-szukaj" placeholder="Szukaj przepisu…" oninput="renderujPrzepisy()">
+    </div>
+    <div class="chip-scroller" id="przepisy-filter"></div>
+  </div>
+  <div id="przepisy-list"><div class="loading">Wczytywanie…</div></div>
+</div>
+
+<!-- ===================== WIDOK: ZAKUPY ===================== -->
+<div class="view" id="view-zakupy">
+  <label>Od</label>
+  <input type="date" id="zakupy-od">
+  <label>Do</label>
+  <input type="date" id="zakupy-do">
+  <button class="btn primary" style="margin-top:14px" onclick="wczytajListeZakupow()">Pokaż listę zakupów</button>
+  <div id="zakupy-wynik" style="margin-top:18px"></div>
+
+  <div class="section-title">Dodatkowe (ręcznie)</div>
+  <div class="dodaj-skladnik-row">
+    <input id="dodatkowy-nazwa" placeholder="np. papier toaletowy" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
+    <input id="dodatkowy-ilosc" class="ilosc-input" placeholder="ilość (opcj.)" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
+    <button onclick="dodajZakupDodatkowy()"><span class="material-symbols-outlined">add</span></button>
+  </div>
+  <div id="zakupy-dodatkowe-wynik"></div>
+</div>
+
+<!-- ===================== WIDOK: WAGA ===================== -->
+<div class="view" id="view-waga">
+  <div class="day-scroller" id="waga-osoby-chips" style="margin-top:4px;"></div>
+  <div class="card" id="waga-cel-card"><div class="loading">Wczytywanie…</div></div>
+
+  <div class="section-title">Nowy pomiar</div>
+  <div class="dodaj-skladnik-row">
+    <input type="date" id="waga-nowa-data">
+    <input type="number" step="0.1" inputmode="decimal" class="ilosc-input" id="waga-nowa-wartosc" placeholder="kg">
+    <button onclick="dodajPomiarWagiHandler()"><span class="material-symbols-outlined">add</span></button>
+  </div>
+
+  <div id="waga-wykres"></div>
+
+  <div class="section-title">Historia</div>
+  <div id="waga-lista"><div class="loading">Wczytywanie…</div></div>
+</div>
+
+<button class="fab" id="fab-add" onclick="otworzFormularzPrzepisu()"><span class="material-symbols-outlined" style="font-size:26px;">add</span></button>
+
+<div class="tabbar">
+  <button class="tab active" onclick="pokazWidok('plan')"><span class="icon material-symbols-outlined">calendar_month</span>Plan</button>
+  <button class="tab" onclick="pokazWidok('dzisiaj')"><span class="icon material-symbols-outlined">today</span>Dzisiaj</button>
+  <button class="tab" onclick="pokazWidok('tydzien')"><span class="icon material-symbols-outlined">view_week</span>Tydzień</button>
+  <button class="tab" onclick="pokazWidok('przepisy')"><span class="icon material-symbols-outlined">menu_book</span>Przepisy</button>
+  <button class="tab" onclick="pokazWidok('zakupy')"><span class="icon material-symbols-outlined">shopping_cart</span>Zakupy</button>
+  <button class="tab" onclick="pokazWidok('waga')"><span class="icon material-symbols-outlined">monitor_weight</span>Waga</button>
+</div>
+
+<!-- ===================== MODAL: WYBÓR PRZEPISU DO POSIŁKU ===================== -->
+<div class="modal-overlay" id="modal-wybor">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Wybierz przepis</h2>
+      <button class="close-x" onclick="zamknijModal('modal-wybor')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="sticky-controls-modal">
+      <p class="label-sm" id="wybor-podtytul" style="margin:0 0 10px;"></p>
+      <div class="search-row">
+        <div class="search-box">
+          <span class="material-symbols-outlined">search</span>
+          <input id="wybor-szukaj" placeholder="Szukaj przepisu…" oninput="renderujListeWyboru()">
+        </div>
+        <select id="wybor-filtr-typ" onchange="renderujListeWyboru()">
+          <option value="wszystkie">Wszystkie</option>
+          <option value="śniadanie">Śniadanie</option>
+          <option value="obiad">Obiad</option>
+          <option value="kolacja">Kolacja</option>
+          <option value="przekąska">Przekąska</option>
+        </select>
+      </div>
+    </div>
+    <div id="wybor-lista"></div>
+    <button class="btn" style="margin-top:10px; color:var(--danger);" onclick="usunPosilek()">Usuń wybór posiłku</button>
+  </div>
+</div>
+
+<!-- ===================== MODAL: SZCZEGÓŁY PRZEPISU ===================== -->
+<div class="modal-overlay" id="modal-szczegoly">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="szczegoly-nazwa"></h2>
+      <button class="close-x" onclick="zamknijModal('modal-szczegoly')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <img id="szczegoly-zdjecie" class="recipe-thumb-hero" style="display:none;" alt="">
+    <div class="summary-grid" id="szczegoly-makro"></div>
+    <div class="section-title">Składniki</div>
+    <div id="szczegoly-skladniki"></div>
+    <div class="section-title">Przygotowanie</div>
+    <p id="szczegoly-przygotowanie" style="font-size:14px; line-height:1.6;"></p>
+    <div class="btn-row">
+      <button class="btn small" onclick="edytujPrzepis(currentRecipeId)"><span class="material-symbols-outlined" style="font-size:16px;">edit</span> Edytuj</button>
+      <button class="btn small danger-outline" onclick="usunPrzepisPotwierdz(currentRecipeId)"><span class="material-symbols-outlined" style="font-size:16px;">delete</span> Usuń</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: FORMULARZ PRZEPISU ===================== -->
+<div class="modal-overlay" id="modal-formularz">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="formularz-tytul">Nowy przepis</h2>
+      <button class="close-x" onclick="anulujFormularzPrzepisu()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+
+    <label>Zdjęcie</label>
+    <div class="f-zdjecie-wrap">
+      <img id="f-zdjecie-preview" class="f-zdjecie-preview" alt="">
+      <label class="f-zdjecie-input-label" for="f-zdjecie">
+        <span class="material-symbols-outlined" style="font-size:18px;">photo_camera</span>
+        Wybierz zdjęcie
+      </label>
+      <input type="file" id="f-zdjecie" accept="image/*" onchange="pokazPodgladZdjecia(this)">
+    </div>
+
+    <label>Nazwa</label>
+    <input id="f-nazwa" placeholder="np. Owsianka z owocami">
+
+    <label>Typ posiłku</label>
+    <select id="f-typ">
+      <option>śniadanie</option>
+      <option>obiad</option>
+      <option>kolacja</option>
+      <option>przekąska</option>
+    </select>
+
+    <label>Kcal</label>
+    <input id="f-kcal" type="number" inputmode="numeric">
+
+    <label>Białko (g)</label>
+    <input id="f-bialko" type="number" inputmode="numeric">
+
+    <label>Tłuszcz (g)</label>
+    <input id="f-tluszcz" type="number" inputmode="numeric">
+
+    <label>Węglowodany (g)</label>
+    <input id="f-wegle" type="number" inputmode="numeric">
+
+    <label>Sposób przygotowania</label>
+    <textarea id="f-przygotowanie" placeholder="Krok po kroku…"></textarea>
+
+    <div class="section-title">Składniki</div>
+    <div id="f-skladniki-lista"></div>
+    <button class="btn small" style="margin-top:8px;" onclick="dodajWierszSkladnika()">+ Dodaj składnik</button>
+
+    <div style="margin-top:10px; font-size:12px; color:var(--text-3);">
+      Nie ma składnika na liście? Dodaj go najpierw poniżej — pojawi się od razu w wyborze.
+    </div>
+    <div class="ingredient-row" style="margin-top:8px;">
+      <input id="nowy-skladnik-nazwa" placeholder="Nazwa nowego składnika">
+      <select id="nowy-skladnik-kategoria">
+        <option value="nabiał">nabiał</option>
+        <option value="warzywa">warzywa</option>
+        <option value="owoce">owoce</option>
+        <option value="mięso">mięso</option>
+        <option value="pieczywo">pieczywo</option>
+        <option value="przyprawy">przyprawy</option>
+        <option value="inne">inne</option>
+      </select>
+      <input id="nowy-skladnik-jednostka" placeholder="jedn." style="flex:0 0 60px;">
+    </div>
+    <button class="btn small" style="margin-top:8px;" onclick="dodajNowySkladnikDoBazy()">Dodaj do bazy składników</button>
+
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn ghost" onclick="anulujFormularzPrzepisu()">Anuluj</button>
+      <button class="btn primary" onclick="zapiszPrzepis()">Zapisz przepis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: ZMIANA NAZWY POSIŁKU ===================== -->
+<div class="modal-overlay" id="modal-rename" style="align-items:center;">
+  <div class="modal" style="border-radius:18px; max-width:320px; padding:20px 18px;">
+    <h2 style="margin:0 0 4px; font-size:16px;">Nazwa posiłku</h2>
+    <p class="label-sm" style="margin:0 0 12px;">np. Śniadanie, Obiad, Kolacja</p>
+    <input id="rename-input" type="text" placeholder="Nazwa">
+    <div class="btn-row">
+      <button class="btn ghost" onclick="zamknijModal('modal-rename')">Anuluj</button>
+      <button class="btn primary" onclick="zapiszNazweSlotuZModala()">Zapisz</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: USTAWIENIA ===================== -->
+<div class="modal-overlay" id="modal-ustawienia" style="align-items:center;">
+  <div class="modal" style="border-radius:18px; max-width:380px; padding:20px 18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+      <h2 style="margin:0; font-size:16px;">Ustawienia</h2>
+      <button class="close-x" onclick="zamknijModal('modal-ustawienia')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+
+    <div class="section-title" style="margin-top:14px;">Osoby — imiona i cele</div>
+    <div id="ustawienia-osoby-lista"></div>
+    <button class="btn primary small" style="margin-top:4px;" onclick="zapiszOsobyZUstawien()">Zapisz zmiany osób</button>
+
+    <div class="section-title">Domyślna liczba posiłków</div>
+    <p class="label-sm" style="margin:0 0 8px;">Dla dni, w których jeszcze nic nie zaplanowano.</p>
+    <select id="ustawienia-domyslna-liczba" onchange="zapiszDomyslnaLiczbePosilkow()">
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+    <div class="section-title">Kopia zapasowa</div>
+    <p class="label-sm" style="margin:0 0 8px;">Pobierz plik JSON ze wszystkimi przepisami i składnikami.</p>
+    <button class="btn" onclick="pobierzKopieZapasowa()"><span class="material-symbols-outlined" style="font-size:16px;">download</span> Pobierz kopię zapasową</button>
+
+    <div class="section-title">Porządki w składnikach</div>
+    <p class="label-sm" style="margin:0 0 8px;">Składniki, które nie występują w żadnym przepisie.</p>
+    <div id="ustawienia-nieuzywane-lista"><p class="label-sm">Wczytywanie…</p></div>
+
+    <div class="section-title" style="margin-top:14px;">Wyczyść stary plan</div>
+    <p class="label-sm" style="margin:0 0 8px;">Usuwa zaplanowane posiłki sprzed wybranej daty. Same przepisy i składniki zostają — usuwany jest tylko plan tygodniowy.</p>
+    <label>Usuń wszystko sprzed</label>
+    <input id="ustawienia-data" type="date">
+    <button class="btn primary" style="margin-top:14px; color:var(--danger); background:var(--card); border-color:var(--danger);" onclick="wyczyscStaryPlan()">Wyczyść</button>
+  </div>
+</div>
+
+<!-- ===================== MODAL: POTWIERDZENIE / KOMUNIKAT ===================== -->
+<div class="modal-overlay" id="modal-confirm" style="align-items:center;">
+  <div class="modal" style="border-radius:18px; max-width:320px; padding:20px 18px;">
+    <p id="confirm-message" style="margin:0 0 18px; font-size:14px; line-height:1.5;"></p>
+    <div class="btn-row" id="confirm-buttons">
+      <button class="btn ghost" id="confirm-cancel-btn">Anuluj</button>
+      <button class="btn primary" id="confirm-ok-btn">OK</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#app-root -->
+
+<script>
+  // ===================== KONFIGURACJA SUPABASE =====================
+  const SUPABASE_URL = 'https://mcibxhbkkiuuyljqhccq.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jaWJ4aGJra2l1dXlsanFoY2NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3NjA0MDIsImV4cCI6MjEwNDMzNjQwMn0.01UeXq6CAubSPdR5iqHjWqgFTXc6xiP8GWB8yYaAL5I';
+
+  let sb = null;
+  function pokazBladLoginu(tekst) {
+    var el = document.getElementById('login-error');
+    if (!el) return;
+    el.innerText = tekst;
+    el.style.display = 'block';
+  }
+  try {
+    if (!window.supabase || !window.supabase.createClient) {
+      throw new Error('Biblioteka Supabase nie została załadowana. Sprawdź połączenie z internetem, wyłącz ewentualny adblock/VPN i odśwież stronę (Ctrl+F5).');
+    }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) {
+    console.error(e);
+    document.addEventListener('DOMContentLoaded', function () { pokazBladLoginu(e.message); });
+  }
+
+  const db = {
+    async getOsoby() {
+      const { data, error } = await sb.from('osoby').select('*').order('id');
+      if (error) throw error;
+      return data.map(o => ({ id: o.id, imie: o.imie, celKcal: o.cel_kcal, celWaga: o.cel_waga }));
+    },
+
+    async getSkladniki() {
+      const { data, error } = await sb.from('skladniki').select('*').order('nazwa');
+      if (error) throw error;
+      return data.map(s => ({ id: s.id, nazwa: s.nazwa, kategoria: s.kategoria_zakupowa, jednostka: s.jednostka }));
+    },
+
+    async getPrzepisy() {
+      const [rPrzepisy, rSp, rSkladniki] = await Promise.all([
+        sb.from('przepisy').select('*'),
+        sb.from('skladniki_przepisu').select('*'),
+        sb.from('skladniki').select('*')
+      ]);
+      if (rPrzepisy.error) throw rPrzepisy.error;
+      if (rSp.error) throw rSp.error;
+      if (rSkladniki.error) throw rSkladniki.error;
+      const skladnikById = {};
+      rSkladniki.data.forEach(i => { skladnikById[i.id] = i; });
+      return rPrzepisy.data.map(p => {
+        const skladniki = rSp.data
+          .filter(x => x.id_przepisu === p.id)
+          .map(x => {
+            const s = skladnikById[x.id_skladnika] || {};
+            return {
+              id: x.id_skladnika,
+              nazwa: s.nazwa || '(nieznany składnik)',
+              ilosc: x.ilosc,
+              jednostka: s.jednostka || '',
+              kategoria: s.kategoria_zakupowa || 'inne'
+            };
+          });
+        return {
+          id: p.id,
+          nazwa: p.nazwa,
+          typPosilku: p.typ_posilku,
+          kcal: Number(p.kcal) || 0,
+          bialko: Number(p.bialko_g) || 0,
+          tluszcz: Number(p.tluszcz_g) || 0,
+          wegle: Number(p.wegle_g) || 0,
+          przygotowanie: p.sposob_przygotowania || '',
+          zdjecieUrl: p.zdjecie_url || '',
+          skladniki
+        };
+      });
+    },
+
+    async savePrzepis(przepis) {
+      const row = {
+        nazwa: przepis.nazwa, typ_posilku: przepis.typPosilku,
+        kcal: przepis.kcal, bialko_g: przepis.bialko, tluszcz_g: przepis.tluszcz,
+        wegle_g: przepis.wegle, sposob_przygotowania: przepis.przygotowanie,
+        zdjecie_url: przepis.zdjecieUrl || null
+      };
+      let id = przepis.id;
+      if (!id) {
+        const { data, error } = await sb.from('przepisy').insert(row).select('id').single();
+        if (error) throw error;
+        id = data.id;
+      } else {
+        const { error } = await sb.from('przepisy').update(row).eq('id', id);
+        if (error) throw error;
+      }
+
+      let { error } = await sb.from('skladniki_przepisu').delete().eq('id_przepisu', id);
+      if (error) throw error;
+
+      const rows = (przepis.skladniki || [])
+        .filter(s => s.id)
+        .map(s => ({ id_przepisu: id, id_skladnika: Number(s.id), ilosc: Number(s.ilosc) || 0 }));
+      if (rows.length) {
+        ({ error } = await sb.from('skladniki_przepisu').insert(rows));
+        if (error) throw error;
+      }
+      return { id };
+    },
+
+    async deletePrzepis(id) {
+      let { error } = await sb.from('skladniki_przepisu').delete().eq('id_przepisu', id);
+      if (error) throw error;
+      ({ error } = await sb.from('przepisy').delete().eq('id', id));
+      if (error) throw error;
+      return { ok: true };
+    },
+
+    async saveSkladnik(skladnik) {
+      const row = { nazwa: skladnik.nazwa, kategoria_zakupowa: skladnik.kategoria, jednostka: skladnik.jednostka };
+      let id = skladnik.id;
+      if (!id) {
+        const { data, error } = await sb.from('skladniki').insert(row).select('id').single();
+        if (error) throw error;
+        id = data.id;
+      } else {
+        const { error } = await sb.from('skladniki').update(row).eq('id', id);
+        if (error) throw error;
+      }
+      return { id };
+    },
+
+    async getPlanZakresuRaw(dataOd, dataDo) {
+      const { data, error } = await sb.from('plan_tygodnia').select('*').gte('data', dataOd).lte('data', dataDo);
+      if (error) throw error;
+      return data;
+    },
+
+    async ustawPosilek(wpis) {
+      if (!wpis.idPrzepisu) {
+        const { error } = await sb.from('plan_tygodnia').delete()
+          .eq('data', wpis.data).eq('osoba', wpis.osoba).eq('numer_posilku', wpis.numerPosilku);
+        if (error) throw error;
+        return { ok: true };
+      }
+      const row = {
+        data: wpis.data, osoba: wpis.osoba, numer_posilku: wpis.numerPosilku,
+        id_przepisu: wpis.idPrzepisu, porcje: wpis.porcje || 1
+      };
+      const { error } = await sb.from('plan_tygodnia').upsert(row, { onConflict: 'data,osoba,numer_posilku' });
+      if (error) throw error;
+      return { ok: true };
+    },
+
+    async updateOsoba(id, imie, celKcal) {
+      const { error } = await sb.from('osoby').update({ imie: imie, cel_kcal: celKcal }).eq('id', id);
+      if (error) throw error;
+    },
+
+    async updateOsobaPelna(id, imie, celKcal, celWaga) {
+      const { error } = await sb.from('osoby').update({ imie: imie, cel_kcal: celKcal, cel_waga: celWaga }).eq('id', id);
+      if (error) throw error;
+    },
+
+    async getPomiaryWagi(osobaImie) {
+      const { data, error } = await sb.from('pomiary_wagi').select('*').eq('osoba', osobaImie).order('data');
+      if (error) throw error;
+      return data.map(w => ({ id: w.id, osoba: w.osoba, data: w.data, waga: Number(w.waga) }));
+    },
+
+    async dodajPomiarWagi(osobaImie, data, waga) {
+      const { error } = await sb.from('pomiary_wagi').upsert(
+        { osoba: osobaImie, data: data, waga: waga },
+        { onConflict: 'osoba,data' }
+      );
+      if (error) throw error;
+    },
+
+    async usunPomiarWagi(id) {
+      const { error } = await sb.from('pomiary_wagi').delete().eq('id', id);
+      if (error) throw error;
+    },
+
+    async deleteSkladnik(id) {
+      const { error } = await sb.from('skladniki').delete().eq('id', id);
+      if (error) throw error;
+    },
+
+    async getCalyPlanRaw() {
+      const { data, error } = await sb.from('plan_tygodnia').select('*');
+      if (error) throw error;
+      return data;
+    },
+
+    async policzPlanPrzed(dataGraniczna) {
+      const { count, error } = await sb.from('plan_tygodnia').select('*', { count: 'exact', head: true }).lt('data', dataGraniczna);
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async usunPlanPrzed(dataGraniczna) {
+      const { error } = await sb.from('plan_tygodnia').delete().lt('data', dataGraniczna);
+      if (error) throw error;
+    },
+
+    async getZakupyDodatkowe() {
+      const { data, error } = await sb.from('zakupy_dodatkowe').select('*').order('id');
+      if (error) throw error;
+      return data.map(z => ({ id: z.id, nazwa: z.nazwa, ilosc: z.ilosc, kupione: z.kupione }));
+    },
+
+    async dodajZakupDodatkowy(nazwa, ilosc) {
+      const { error } = await sb.from('zakupy_dodatkowe').insert({ nazwa, ilosc: ilosc || null });
+      if (error) throw error;
+    },
+
+    async ustawKupioneDodatkowy(id, kupione) {
+      const { error } = await sb.from('zakupy_dodatkowe').update({ kupione }).eq('id', id);
+      if (error) throw error;
+    },
+
+    async usunZakupDodatkowy(id) {
+      const { error } = await sb.from('zakupy_dodatkowe').delete().eq('id', id);
+      if (error) throw error;
+    }
+  };
+
+  // ===================== ZDJĘCIA PRZEPISÓW (Supabase Storage) =====================
+  const NAZWA_BUCKETU_ZDJEC = 'przepisy-zdjecia';
+  const MAX_WYMIAR_ZDJECIA = 1000; // px, dłuższy bok
+  const JAKOSC_ZDJECIA = 0.75; // 0-1, kompresja JPEG
+
+  function zmniejszZdjecie(plik, maxWymiar, jakosc) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(plik);
+      var img = new Image();
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (w > maxWymiar || h > maxWymiar) {
+          if (w >= h) { h = Math.round(h * (maxWymiar / w)); w = maxWymiar; }
+          else { w = Math.round(w * (maxWymiar / h)); h = maxWymiar; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function (blob) {
+          if (blob) resolve(blob);
+          else reject(new Error('Nie udało się przetworzyć zdjęcia.'));
+        }, 'image/jpeg', jakosc);
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error('Nie udało się wczytać zdjęcia.'));
+      };
+      img.src = url;
+    });
+  }
+
+  async function wyslijZdjeciePrzepisu(plik) {
+    var blob = await zmniejszZdjecie(plik, MAX_WYMIAR_ZDJECIA, JAKOSC_ZDJECIA);
+    var sciezka = Date.now() + '-' + Math.round(Math.random() * 1e6) + '.jpg';
+    const { error } = await sb.storage.from(NAZWA_BUCKETU_ZDJEC).upload(sciezka, blob, { upsert: true, contentType: 'image/jpeg' });
+    if (error) throw error;
+    const { data } = sb.storage.from(NAZWA_BUCKETU_ZDJEC).getPublicUrl(sciezka);
+    return data.publicUrl;
+  }
+
+  function mapPlanRows(rows) {
+    const byId = {};
+    state.przepisy.forEach(p => { byId[p.id] = p; });
+    return rows.map(r => ({
+      data: r.data,
+      osoba: r.osoba,
+      numerPosilku: r.numer_posilku,
+      idPrzepisu: r.id_przepisu,
+      porcje: Number(r.porcje) || 1,
+      przepis: r.id_przepisu ? (byId[r.id_przepisu] || null) : null
+    }));
+  }
+
+  function pokazBlad(err) {
+    console.error(err);
+    pokazKomunikat('Wystąpił błąd: ' + (err && err.message ? err.message : err));
+  }
+
+  function pokazPotwierdzenie(tekst) {
+    return new Promise(function (resolve) {
+      document.getElementById('confirm-message').innerText = tekst;
+      var cancelBtn = document.getElementById('confirm-cancel-btn');
+      var okBtn = document.getElementById('confirm-ok-btn');
+      cancelBtn.style.display = '';
+      okBtn.innerText = 'Tak';
+      cancelBtn.innerText = 'Anuluj';
+      function sprzatnij(wynik) {
+        okBtn.onclick = null;
+        cancelBtn.onclick = null;
+        zamknijModal('modal-confirm');
+        resolve(wynik);
+      }
+      okBtn.onclick = function () { sprzatnij(true); };
+      cancelBtn.onclick = function () { sprzatnij(false); };
+      otworzModal('modal-confirm');
+    });
+  }
+
+  function pokazKomunikat(tekst) {
+    return new Promise(function (resolve) {
+      document.getElementById('confirm-message').innerText = tekst;
+      var cancelBtn = document.getElementById('confirm-cancel-btn');
+      var okBtn = document.getElementById('confirm-ok-btn');
+      cancelBtn.style.display = 'none';
+      okBtn.innerText = 'OK';
+      function sprzatnij() {
+        okBtn.onclick = null;
+        zamknijModal('modal-confirm');
+        cancelBtn.style.display = '';
+        resolve();
+      }
+      okBtn.onclick = sprzatnij;
+      otworzModal('modal-confirm');
+    });
+  }
+
+  async function zaloguj() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errEl = document.getElementById('login-error');
+    errEl.style.display = 'none';
+    if (!sb) {
+      pokazBladLoginu('Nie udało się połączyć z Supabase. Odśwież stronę (Ctrl+F5) i spróbuj ponownie.');
+      return;
+    }
+    if (!email || !password) {
+      pokazBladLoginu('Podaj e-mail i hasło.');
+      return;
+    }
+    var btn = document.querySelector('.login-box .btn.primary');
+    if (btn) { btn.disabled = true; btn.innerText = 'Loguję…'; }
+    try {
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) {
+        pokazBladLoginu('Błąd logowania: ' + error.message);
+        return;
+      }
+      pokazAplikacje();
+    } catch (e) {
+      console.error(e);
+      pokazBladLoginu('Nie udało się połączyć z serwerem logowania: ' + e.message);
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerText = 'Zaloguj się'; }
+    }
+  }
+
+  async function wyloguj() {
+    await sb.auth.signOut();
+    location.reload();
+  }
+
+  function pokazAplikacje() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-root').classList.add('ready');
+    inicjalizujAplikacje();
+    setTimeout(dopasujWysokoscNaglowka, 30);
+    window.addEventListener('resize', dopasujWysokoscNaglowka);
+  }
+
+  function dopasujWysokoscNaglowka() {
+    var header = document.querySelector('#app-root > header');
+    if (!header) return;
+    var h = header.offsetHeight;
+    document.querySelectorAll('.sticky-controls-view').forEach(function (el) {
+      el.style.top = h + 'px';
+    });
+  }
+
+  window.addEventListener('load', async () => {
+    if (!sb) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      pokazAplikacje();
+    } else {
+      document.getElementById('login-password').addEventListener('keydown', e => {
+        if (e.key === 'Enter') zaloguj();
+      });
+    }
+  });
+
+  var state = {
+    przepisy: [],
+    skladniki: [],
+    osoby: [],
+    plan: [],
+    selectedDate: formatDate(new Date()),
+    baseDate: new Date(),
+    editingRecipeId: null,
+    pickingSlot: null,
+    filtrPrzepisy: 'wszystkie',
+    iloscPosilkowDaty: {},
+    nazwyPosilkow: wczytajNazwyPosilkow(),
+    dzisiajPlan: [],
+    tydzienPlan: [],
+    tydzienStart: formatDate(getPoniedzialek(new Date())),
+    zakupyDodatkowe: [],
+    domyslnaLiczbaPosilkow: wczytajDomyslnaLiczbePosilkow(),
+    wagaOsoba: null,
+    wagaPomiary: []
+  };
+  var currentRecipeId = null;
+  var TYPY_POSILKOW = ['śniadanie', 'obiad', 'kolacja', 'przekąska'];
+
+  var PALETA_OSOB = [
+    { accent: '#4A4238', bg: '#EDE8DC', nazwa: 'Olive Night' },
+    { accent: '#8C8265', bg: '#F1EDE0', nazwa: 'Pelican' },
+    { accent: '#2F4735', bg: '#E3E9E0', nazwa: 'Mountain View' },
+    { accent: '#4B4139', bg: '#EFEAE2', nazwa: 'Wren' }
+  ];
+
+  function paletaOsoby(imieOsoby) {
+    var idx = state.osoby.findIndex(function (o) { return o.imie === imieOsoby; });
+    if (idx < 0) idx = 0;
+    return PALETA_OSOB[idx % PALETA_OSOB.length];
+  }
+
+  function wczytajNazwyPosilkow() {
+    try {
+      var raw = localStorage.getItem('nazwyPosilkow');
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function zapiszNazwyPosilkow() {
+    try { localStorage.setItem('nazwyPosilkow', JSON.stringify(state.nazwyPosilkow)); } catch (e) {}
+  }
+
+  function wczytajDomyslnaLiczbePosilkow() {
+    try {
+      var v = localStorage.getItem('domyslnaLiczbaPosilkow');
+      return v ? Number(v) : 3;
+    } catch (e) { return 3; }
+  }
+
+  function zapiszDomyslnaLiczbePosilkow() {
+    var v = document.getElementById('ustawienia-domyslna-liczba').value;
+    state.domyslnaLiczbaPosilkow = Number(v);
+    try { localStorage.setItem('domyslnaLiczbaPosilkow', v); } catch (e) {}
+  }
+
+  function nazwaSlotu(numer) {
+    return (state.nazwyPosilkow && state.nazwyPosilkow[numer]) || ('Posiłek ' + numer);
+  }
+
+  var renameNumerPosilku = null;
+
+  function zmienNazweSlotu(numer) {
+    renameNumerPosilku = numer;
+    var obecna = state.nazwyPosilkow[numer] || '';
+    var input = document.getElementById('rename-input');
+    input.value = obecna;
+    otworzModal('modal-rename');
+    setTimeout(function () { input.focus(); }, 50);
+  }
+
+  function zapiszNazweSlotuZModala() {
+    var input = document.getElementById('rename-input');
+    var nowa = input.value.trim();
+    if (nowa) {
+      state.nazwyPosilkow[renameNumerPosilku] = nowa;
+    } else {
+      delete state.nazwyPosilkow[renameNumerPosilku];
+    }
+    zapiszNazwyPosilkow();
+    zamknijModal('modal-rename');
+    renderujPlanDnia();
+  }
+
+  function formatDate(d) {
+    var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function getPoniedzialek(d) {
+    var dzien = d.getDay();
+    var diff = (dzien === 0 ? -6 : 1 - dzien);
+    var poniedzialek = new Date(d);
+    poniedzialek.setDate(d.getDate() + diff);
+    return poniedzialek;
+  }
+
+  function miniaturaPrzepisuHtml(p) {
+    if (p && p.zdjecieUrl) {
+      return '<img class="recipe-thumb" src="' + p.zdjecieUrl + '" alt="">';
+    }
+    return '<span class="type-icon"><span class="material-symbols-outlined">' + ikonaTypu(p && p.typPosilku) + '</span></span>';
+  }
+
+  function ikonaTypu(typ) {
+    switch (typ) {
+      case 'śniadanie': return 'breakfast_dining';
+      case 'obiad': return 'lunch_dining';
+      case 'kolacja': return 'dinner_dining';
+      case 'przekąska': return 'cookie';
+      default: return 'restaurant';
+    }
+  }
+
+  function inicjalizujAplikacje() {
+    db.getOsoby().then(function (r) { state.osoby = r; renderujWszystko(); }).catch(pokazBlad);
+    db.getSkladniki().then(function (r) { state.skladniki = r; }).catch(pokazBlad);
+    db.getPrzepisy().then(function (r) {
+      state.przepisy = r;
+      renderujFiltrPrzepisow();
+      renderujPrzepisy();
+      wczytajPlanTygodnia();
+    }).catch(pokazBlad);
+
+    document.getElementById('skocz-do-daty').value = formatDate(new Date());
+    zbudujDayScroller();
+
+    var dzis = new Date();
+    document.getElementById('zakupy-od').value = formatDate(dzis);
+    var za7 = new Date(dzis); za7.setDate(za7.getDate() + 6);
+    document.getElementById('zakupy-do').value = formatDate(za7);
+
+    document.getElementById('rename-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') zapiszNazweSlotuZModala();
+    });
+
+    wczytajZakupyDodatkowe();
+  }
+
+  function renderujWszystko() {
+    renderujPlanDnia();
+  }
+
+  function pokazWidok(nazwa) {
+    document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    document.getElementById('view-' + nazwa).classList.add('active');
+    event.currentTarget.classList.add('active');
+    var titles = { plan: 'Plan tygodnia', dzisiaj: 'Dzisiaj', tydzien: 'Podgląd tygodnia', przepisy: 'Przepisy', zakupy: 'Lista zakupów', waga: 'Waga' };
+    document.getElementById('page-title').innerText = titles[nazwa];
+    document.getElementById('fab-add').style.display = (nazwa === 'przepisy') ? 'block' : 'none';
+    if (nazwa === 'dzisiaj') wczytajDzisiaj();
+    if (nazwa === 'tydzien') wczytajTydzien();
+    if (nazwa === 'zakupy') wczytajZakupyDodatkowe();
+    if (nazwa === 'waga') inicjalizujWagaTab();
+  }
+
+  function otworzModal(id) { document.getElementById(id).classList.add('open'); }
+  function zamknijModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function zbudujDayScroller() {
+    var el = document.getElementById('day-scroller');
+    el.innerHTML = '';
+    var dni = ['nd','pn','wt','śr','cz','pt','sb'];
+    var baza = state.baseDate;
+    for (var i = 0; i < 14; i++) {
+      var d = new Date(baza); d.setDate(d.getDate() + i);
+      var iso = formatDate(d);
+      var chip = document.createElement('button');
+      chip.className = 'day-chip' + (iso === state.selectedDate ? ' active' : '');
+      chip.innerText = dni[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1);
+      chip.onclick = function (isoVal) {
+        return function () {
+          state.selectedDate = isoVal;
+          zbudujDayScroller();
+          renderujPlanDnia();
+        };
+      }(iso);
+      el.appendChild(chip);
+    }
+  }
+
+  function wczytajPlanTygodnia() {
+    var od = formatDate(state.baseDate);
+    var doD = new Date(state.baseDate); doD.setDate(doD.getDate() + 13);
+    db.getPlanZakresuRaw(od, formatDate(doD)).then(function (rows) {
+      state.plan = mapPlanRows(rows);
+      renderujPlanDnia();
+    }).catch(pokazBlad);
+  }
+
+  function skoczDoDaty(iso) {
+    if (!iso) return;
+    var d = new Date(iso + 'T00:00:00');
+    state.baseDate = d;
+    state.selectedDate = iso;
+    zbudujDayScroller();
+    wczytajPlanTygodnia();
+  }
+
+  function istniejeWpisDlaNumeru(numerPosilku) {
+    return state.plan.some(function (p) {
+      return p.data === state.selectedDate && String(p.numerPosilku) === String(numerPosilku) && p.przepis;
+    });
+  }
+
+  function iloscPosilkowDlaDnia(data) {
+    if (state.iloscPosilkowDaty.hasOwnProperty(data)) return state.iloscPosilkowDaty[data];
+    if (istniejeWpisDlaNumeru(4)) return 4;
+    return state.domyslnaLiczbaPosilkow || 3;
+  }
+
+  function renderujPlanDnia() {
+    var container = document.getElementById('plan-cards');
+    if (!state.osoby.length) { container.innerHTML = '<div class="loading">Wczytywanie…</div>'; return; }
+    container.innerHTML = '';
+
+    var liczbaPosilkow = iloscPosilkowDlaDnia(state.selectedDate);
+    var numeryPosilkow = [];
+    for (var i = 1; i <= liczbaPosilkow; i++) numeryPosilkow.push(i);
+
+    var podsumowania = {};
+    state.osoby.forEach(function (o) { podsumowania[o.imie] = { kcal: 0, b: 0, t: 0, w: 0 }; });
+
+    numeryPosilkow.forEach(function (numerPosilku) {
+      var header = document.createElement('div');
+      header.className = 'meal-slot-header';
+      var pokazUsun = numeryPosilkow.length > 1 && numerPosilku === numeryPosilkow.length;
+      header.innerHTML =
+        '<span class="label-sm card-title-row" style="gap:4px;">' + nazwaSlotu(numerPosilku) +
+        '<button class="icon-btn" title="Zmień nazwę tego posiłku"><span class="material-symbols-outlined">edit</span></button></span>' +
+        (pokazUsun ? '<button class="icon-btn" title="Usuń ten posiłek z tego dnia"><span class="material-symbols-outlined">delete</span></button>' : '');
+      header.querySelector('.icon-btn').onclick = function () { zmienNazweSlotu(numerPosilku); };
+      if (pokazUsun) {
+        header.querySelectorAll('.icon-btn')[1].onclick = function () { usunOstatniPosilek(); };
+      }
+      container.appendChild(header);
+
+      state.osoby.forEach(function (osoba) {
+        var wpis = state.plan.find(function (p) {
+          return p.data === state.selectedDate && p.osoba === osoba.imie && String(p.numerPosilku) === String(numerPosilku);
+        });
+        var paleta = paletaOsoby(osoba.imie);
+        var card = document.createElement('div');
+        card.className = 'card osoba-card';
+        card.style.borderLeftColor = paleta.accent;
+        card.onclick = function () { otworzWyborPrzepisu(state.selectedDate, osoba.imie, numerPosilku); };
+
+        var pill = '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + osoba.imie + '</span>';
+
+        if (wpis && wpis.przepis) {
+          var p = wpis.przepis;
+          var porcje = wpis.porcje || 1;
+          if (podsumowania[osoba.imie]) {
+            podsumowania[osoba.imie].kcal += p.kcal * porcje;
+            podsumowania[osoba.imie].b += p.bialko * porcje;
+            podsumowania[osoba.imie].t += p.tluszcz * porcje;
+            podsumowania[osoba.imie].w += p.wegle * porcje;
+          }
+          card.innerHTML =
+            '<div class="row-top"><span class="label-sm card-title-row">' + miniaturaPrzepisuHtml(p) + pill + '</span>' +
+            '<span class="row-top-actions"><span class="badge-kcal">' + Math.round(p.kcal * porcje) + ' kcal</span>' +
+            '<button class="clear-slot-btn" title="Usuń przepis z tego posiłku"><span class="material-symbols-outlined">close</span></button></span></div>' +
+            '<p class="meal-title">' + p.nazwa + '</p>';
+
+          (function (osobaImie, numer) {
+            card.querySelector('.clear-slot-btn').onclick = async function (e) {
+              e.stopPropagation();
+              var ok = await pokazPotwierdzenie('Usunąć przepis z tego posiłku?');
+              if (!ok) return;
+              wyczyscPosilek(state.selectedDate, osobaImie, numer);
+            };
+          })(osoba.imie, numerPosilku);
+
+          var stepper = document.createElement('div');
+          stepper.className = 'porcje-row';
+          stepper.onclick = function (e) { e.stopPropagation(); };
+          var btnMinus = document.createElement('button');
+          btnMinus.className = 'porcje-btn';
+          btnMinus.disabled = porcje <= 1;
+          btnMinus.innerHTML = '<span class="material-symbols-outlined">remove</span>';
+          var btnPlus = document.createElement('button');
+          btnPlus.className = 'porcje-btn';
+          btnPlus.disabled = porcje >= 10;
+          btnPlus.innerHTML = '<span class="material-symbols-outlined">add</span>';
+          (function (osobaImie, numer, idPrzepisu) {
+            btnMinus.onclick = function (e) { e.stopPropagation(); zmienPorcje(state.selectedDate, osobaImie, numer, idPrzepisu, -1); };
+            btnPlus.onclick = function (e) { e.stopPropagation(); zmienPorcje(state.selectedDate, osobaImie, numer, idPrzepisu, 1); };
+          })(osoba.imie, numerPosilku, p.id);
+          var label = document.createElement('span');
+          label.className = 'label-sm';
+          label.innerText = 'Porcje:';
+          var val = document.createElement('span');
+          val.className = 'porcje-val';
+          val.innerText = porcje;
+          stepper.appendChild(label);
+          stepper.appendChild(btnMinus);
+          stepper.appendChild(val);
+          stepper.appendChild(btnPlus);
+          card.appendChild(stepper);
+        } else {
+          card.innerHTML =
+            '<div class="row-top">' + pill + '</div>' +
+            '<div class="empty-slot">+ wybierz przepis</div>';
+        }
+        container.appendChild(card);
+      });
+    });
+
+    renderujKontrolkiPlanu(liczbaPosilkow);
+
+    var grid = document.getElementById('summary-grid');
+    grid.innerHTML = '';
+    state.osoby.forEach(function (o) {
+      var s = podsumowania[o.imie] || { kcal: 0, b: 0, t: 0, w: 0 };
+      var paleta = paletaOsoby(o.imie);
+      var div = document.createElement('div');
+      div.className = 'summary-card osoba-card';
+      div.style.borderLeftColor = paleta.accent;
+      var celHtml = '';
+      if (o.celKcal) {
+        var proc = Math.max(0, Math.min(100, Math.round((s.kcal / o.celKcal) * 100)));
+        celHtml = '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + proc + '%; background:' + paleta.accent + ';"></div></div>' +
+          '<div class="macro" style="margin-top:4px;">' + Math.round(s.kcal) + ' / ' + o.celKcal + ' kcal</div>';
+      }
+      div.innerHTML =
+        '<div class="label-sm" style="color:' + paleta.accent + '; font-weight:600;">' + o.imie + ' · razem</div>' +
+        '<div class="num">' + Math.round(s.kcal) + ' kcal</div>' +
+        '<div class="macro">B ' + Math.round(s.b) + 'g · T ' + Math.round(s.t) + 'g · W ' + Math.round(s.w) + 'g</div>' +
+        celHtml;
+      grid.appendChild(div);
+    });
+  }
+
+  function renderujKontrolkiPlanu(liczbaPosilkow) {
+    var el = document.getElementById('plan-controls-row');
+    el.innerHTML = '';
+    if (liczbaPosilkow > 1) {
+      var btnUsun = document.createElement('button');
+      btnUsun.className = 'link-btn remove';
+      btnUsun.innerHTML = '<span class="material-symbols-outlined">remove_circle</span>Usuń ostatni posiłek';
+      btnUsun.onclick = usunOstatniPosilek;
+      el.appendChild(btnUsun);
+    }
+    if (liczbaPosilkow < 4) {
+      var btnDodaj = document.createElement('button');
+      btnDodaj.className = 'link-btn';
+      btnDodaj.innerHTML = '<span class="material-symbols-outlined">add_circle</span>Dodaj kolejny posiłek';
+      btnDodaj.onclick = dodajKolejnyPosilek;
+      el.appendChild(btnDodaj);
+    }
+  }
+
+  function dodajKolejnyPosilek() {
+    var aktualna = iloscPosilkowDlaDnia(state.selectedDate);
+    if (aktualna >= 4) return;
+    state.iloscPosilkowDaty[state.selectedDate] = aktualna + 1;
+    renderujPlanDnia();
+  }
+
+  async function usunOstatniPosilek() {
+    var aktualna = iloscPosilkowDlaDnia(state.selectedDate);
+    if (aktualna <= 1) return;
+    var numerDoUsuniecia = aktualna;
+    var data = state.selectedDate;
+    var maPrzypisane = istniejeWpisDlaNumeru(numerDoUsuniecia);
+
+    if (maPrzypisane) {
+      var ok = await pokazPotwierdzenie('Do tego posiłku przypisane są przepisy. Usunięcie posiłku wyczyści te przypisania. Kontynuować?');
+      if (!ok) return;
+    }
+
+    function zmniejszLiczbePosilkow() {
+      state.iloscPosilkowDaty[data] = aktualna - 1;
+      wczytajPlanTygodnia();
+    }
+
+    if (!maPrzypisane || !state.osoby.length) {
+      zmniejszLiczbePosilkow();
+      return;
+    }
+
+    Promise.all(state.osoby.map(function (osoba) {
+      return db.ustawPosilek({ data: data, osoba: osoba.imie, numerPosilku: numerDoUsuniecia, idPrzepisu: null });
+    })).then(zmniejszLiczbePosilkow).catch(pokazBlad);
+  }
+
+  function otworzWyborPrzepisu(data, osoba, numerPosilku) {
+    state.pickingSlot = { data: data, osoba: osoba, numerPosilku: numerPosilku };
+    document.getElementById('wybor-podtytul').innerText = nazwaSlotu(numerPosilku) + ' · ' + osoba;
+    document.getElementById('wybor-szukaj').value = '';
+    document.getElementById('wybor-filtr-typ').value = 'wszystkie';
+    renderujListeWyboru();
+    otworzModal('modal-wybor');
+    setTimeout(function () {
+      var mh = document.querySelector('#modal-wybor .modal-header');
+      var sc = document.querySelector('#modal-wybor .sticky-controls-modal');
+      if (mh && sc) sc.style.top = mh.offsetHeight + 'px';
+    }, 30);
+  }
+
+  function renderujListeWyboru() {
+    var lista = document.getElementById('wybor-lista');
+    var szukaj = (document.getElementById('wybor-szukaj').value || '').trim().toLowerCase();
+    var filtrTyp = document.getElementById('wybor-filtr-typ').value;
+
+    var wyniki = state.przepisy.filter(function (p) {
+      var pasujeTekst = !szukaj || p.nazwa.toLowerCase().indexOf(szukaj) !== -1;
+      var pasujeTyp = filtrTyp === 'wszystkie' || p.typPosilku === filtrTyp;
+      return pasujeTekst && pasujeTyp;
+    });
+
+    lista.innerHTML = '';
+    if (!state.przepisy.length) {
+      lista.innerHTML = '<p class="label-sm">Najpierw dodaj jakiś przepis w zakładce Przepisy.</p>';
+      return;
+    }
+    if (!wyniki.length) {
+      lista.innerHTML = '<p class="label-sm">Brak przepisów pasujących do wyszukiwania.</p>';
+      return;
+    }
+
+    var grupy = {};
+    wyniki.forEach(function (p) {
+      var kat = p.typPosilku || 'inne';
+      if (!grupy[kat]) grupy[kat] = [];
+      grupy[kat].push(p);
+    });
+    var kolejnosc = TYPY_POSILKOW.concat(Object.keys(grupy).filter(function (k) { return TYPY_POSILKOW.indexOf(k) === -1; }));
+
+    kolejnosc.forEach(function (kat) {
+      if (!grupy[kat]) return;
+      var naglowek = document.createElement('div');
+      naglowek.className = 'section-title';
+      naglowek.style.margin = '10px 0 6px';
+      naglowek.innerText = kat;
+      lista.appendChild(naglowek);
+      grupy[kat].forEach(function (p) {
+        var row = document.createElement('div');
+        row.className = 'card recipe-card';
+        row.style.cursor = 'pointer';
+        row.innerHTML =
+          '<div class="card-title-row">' + miniaturaPrzepisuHtml(p) +
+          '<div><div class="meal-title" style="margin:0">' + p.nazwa + '</div>' +
+          '<div class="meta">' + p.typPosilku + '</div></div></div><span class="badge-kcal">' + p.kcal + ' kcal</span>';
+        row.onclick = function () { wybierzPrzepisDoPosilku(p.id); };
+        lista.appendChild(row);
+      });
+    });
+  }
+
+  function wybierzPrzepisDoPosilku(idPrzepisu) {
+    var slot = state.pickingSlot;
+    db.ustawPosilek({ data: slot.data, osoba: slot.osoba, numerPosilku: slot.numerPosilku, idPrzepisu: idPrzepisu, porcje: 1 })
+      .then(function () {
+        zamknijModal('modal-wybor');
+        wczytajPlanTygodnia();
+      }).catch(pokazBlad);
+  }
+
+  function zmienPorcje(data, osobaImie, numerPosilku, idPrzepisu, delta) {
+    var wpis = state.plan.find(function (p) {
+      return p.data === data && p.osoba === osobaImie && String(p.numerPosilku) === String(numerPosilku);
+    });
+    var obecne = (wpis && wpis.porcje) || 1;
+    var nowe = Math.max(1, Math.min(10, obecne + delta));
+    if (nowe === obecne) return;
+    db.ustawPosilek({ data: data, osoba: osobaImie, numerPosilku: numerPosilku, idPrzepisu: idPrzepisu, porcje: nowe })
+      .then(wczytajPlanTygodnia).catch(pokazBlad);
+  }
+
+  function usunPosilek() {
+    var slot = state.pickingSlot;
+    db.ustawPosilek({ data: slot.data, osoba: slot.osoba, numerPosilku: slot.numerPosilku, idPrzepisu: null })
+      .then(function () {
+        zamknijModal('modal-wybor');
+        wczytajPlanTygodnia();
+      }).catch(pokazBlad);
+  }
+
+  function wyczyscPosilek(data, osobaImie, numerPosilku) {
+    db.ustawPosilek({ data: data, osoba: osobaImie, numerPosilku: numerPosilku, idPrzepisu: null })
+      .then(wczytajPlanTygodnia).catch(pokazBlad);
+  }
+
+  function wczytajDzisiaj() {
+    var dzisIso = formatDate(new Date());
+    var dni = ['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
+    var d = new Date();
+    document.getElementById('dzisiaj-data').innerText =
+      dni[d.getDay()].charAt(0).toUpperCase() + dni[d.getDay()].slice(1) + ', ' + d.getDate() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+    document.getElementById('dzisiaj-lista').innerHTML = '<div class="loading">Wczytywanie…</div>';
+    db.getPlanZakresuRaw(dzisIso, dzisIso).then(function (rows) {
+      state.dzisiajPlan = mapPlanRows(rows).filter(function (w) { return w.przepis; });
+      renderujDzisiaj();
+    }).catch(pokazBlad);
+  }
+
+  function renderujDzisiaj() {
+    var container = document.getElementById('dzisiaj-lista');
+    container.innerHTML = '';
+
+    if (!state.dzisiajPlan.length) {
+      container.innerHTML = '<p class="label-sm" style="margin-top:20px;">Na dziś nie zaplanowano jeszcze żadnych posiłków.</p>';
+      return;
+    }
+
+    var wgNumeru = {};
+    state.dzisiajPlan.forEach(function (w) {
+      if (!wgNumeru[w.numerPosilku]) wgNumeru[w.numerPosilku] = [];
+      wgNumeru[w.numerPosilku].push(w);
+    });
+    var numery = Object.keys(wgNumeru).map(Number).sort(function (a, b) { return a - b; });
+
+    numery.forEach(function (numer) {
+      var header = document.createElement('div');
+      header.className = 'meal-slot-header';
+      header.innerHTML = '<span class="label-sm">' + nazwaSlotu(numer) + '</span>';
+      container.appendChild(header);
+
+      var wgPrzepisu = {};
+      wgNumeru[numer].forEach(function (w) {
+        var key = w.idPrzepisu;
+        if (!wgPrzepisu[key]) wgPrzepisu[key] = [];
+        wgPrzepisu[key].push(w);
+      });
+
+      Object.keys(wgPrzepisu).forEach(function (idPrzepisu) {
+        var wpisy = wgPrzepisu[idPrzepisu];
+        var p = wpisy[0].przepis;
+        var razemPorcje = wpisy.reduce(function (sum, w) { return sum + (w.porcje || 1); }, 0);
+
+        var pills = wpisy.map(function (w) {
+          var paleta = paletaOsoby(w.osoba);
+          return '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + w.osoba +
+            (wpisy.length > 1 || w.porcje > 1 ? ' ×' + w.porcje : '') + '</span>';
+        }).join(' ');
+
+        var thumbHtml = p.zdjecieUrl
+          ? '<img class="dzisiaj-thumb" src="' + p.zdjecieUrl + '" alt="">'
+          : '<span class="dzisiaj-thumb-fallback"><span class="material-symbols-outlined">' + ikonaTypu(p.typPosilku) + '</span></span>';
+
+        var iloscSkladnikow = p.skladniki.length;
+        var liniaSkladnikow = '';
+        if (iloscSkladnikow) {
+          var wierszeSkladnikow = p.skladniki.map(function (s) {
+            var ilosc = (Number(s.ilosc) || 0) * razemPorcje;
+            return '<div class="dzisiaj-ingredient-line">+ ' + s.nazwa + ' — ' + (Math.round(ilosc * 100) / 100) + ' ' + s.jednostka + '</div>';
+          }).join('');
+          liniaSkladnikow = '<div class="dzisiaj-ingredients-grid">' + wierszeSkladnikow + '</div>';
+        } else {
+          liniaSkladnikow = '<div class="dzisiaj-ingredient-line">Brak podanych składników.</div>';
+        }
+
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.style.cursor = 'pointer';
+        card.onclick = function (idPrz) { return function () { pokazSzczegoly(idPrz); }; }(p.id);
+        card.innerHTML =
+          '<div class="dzisiaj-card">' + thumbHtml +
+          '<div class="dzisiaj-content">' +
+          '<div class="row-top"><span class="label-sm card-title-row" style="flex-wrap:wrap; gap:6px;">' + pills + '</span>' +
+          '<span class="badge-kcal">' + Math.round(p.kcal * razemPorcje) + ' kcal</span></div>' +
+          '<p class="meal-title" style="margin-top:6px;">' + p.nazwa + (wpisy.length > 1 ? ' <span class="label-sm" style="font-weight:400;">(razem, ' + razemPorcje + ' porcje)</span>' : '') + '</p>' +
+          liniaSkladnikow +
+          '</div></div>';
+
+        container.appendChild(card);
+      });
+    });
+  }
+
+  function tydzienPoprzedni() {
+    var start = new Date(state.tydzienStart + 'T00:00:00');
+    start.setDate(start.getDate() - 7);
+    state.tydzienStart = formatDate(start);
+    wczytajTydzien();
+  }
+
+  function tydzienNastepny() {
+    var start = new Date(state.tydzienStart + 'T00:00:00');
+    start.setDate(start.getDate() + 7);
+    state.tydzienStart = formatDate(start);
+    wczytajTydzien();
+  }
+
+  function wczytajTydzien() {
+    var start = new Date(state.tydzienStart + 'T00:00:00');
+    var end = new Date(start); end.setDate(end.getDate() + 6);
+    var endIso = formatDate(end);
+
+    document.getElementById('tydzien-zakres').innerText =
+      start.getDate() + '.' + String(start.getMonth()+1).padStart(2,'0') + ' – ' + end.getDate() + '.' + String(end.getMonth()+1).padStart(2,'0') + '.' + end.getFullYear();
+
+    document.getElementById('tydzien-lista').innerHTML = '<div class="loading">Wczytywanie…</div>';
+    db.getPlanZakresuRaw(state.tydzienStart, endIso).then(function (rows) {
+      state.tydzienPlan = mapPlanRows(rows);
+      renderujTydzien();
+    }).catch(pokazBlad);
+  }
+
+  function renderujTydzien() {
+    var container = document.getElementById('tydzien-lista');
+    container.innerHTML = '';
+
+    var dni = ['nd','pn','wt','śr','cz','pt','sb'];
+    var start = new Date(state.tydzienStart + 'T00:00:00');
+    var dzisIso = formatDate(new Date());
+
+    var dniInfo = [];
+    var maxNumer = 3;
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(start); d.setDate(d.getDate() + i);
+      var iso = formatDate(d);
+      var wpisyDnia = state.tydzienPlan.filter(function (w) { return w.data === iso; });
+      wpisyDnia.forEach(function (w) { if (w.numerPosilku > maxNumer) maxNumer = w.numerPosilku; });
+      dniInfo.push({ d: d, iso: iso, wpisy: wpisyDnia, jestDzis: iso === dzisIso });
+    }
+
+    var table = document.createElement('table');
+    table.className = 'cal-table';
+
+    var thead = document.createElement('thead');
+    var trHead = document.createElement('tr');
+    var thCorner = document.createElement('th');
+    thCorner.className = 'cal-corner';
+    trHead.appendChild(thCorner);
+    dniInfo.forEach(function (info) {
+      var th = document.createElement('th');
+      if (info.jestDzis) th.className = 'cal-today';
+      th.innerHTML = dni[info.d.getDay()] + '<br>' + info.d.getDate() + '/' + (info.d.getMonth() + 1);
+      trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    for (var numer = 1; numer <= maxNumer; numer++) {
+      var tr = document.createElement('tr');
+      var tdLabel = document.createElement('td');
+      tdLabel.className = 'cal-slot-label';
+      tdLabel.innerText = nazwaSlotu(numer);
+      tr.appendChild(tdLabel);
+
+      dniInfo.forEach(function (info) {
+        var td = document.createElement('td');
+        if (info.jestDzis) td.className = 'cal-today';
+        var liniaHtml = '';
+        state.osoby.forEach(function (osoba) {
+          var wpis = info.wpisy.find(function (w) {
+            return w.osoba === osoba.imie && String(w.numerPosilku) === String(numer);
+          });
+          var paleta = paletaOsoby(osoba.imie);
+          liniaHtml += '<div class="cal-person-line"><span class="cal-person-name" style="color:' + paleta.accent + ';">' + osoba.imie + '</span><br>' +
+            (wpis && wpis.przepis ? wpis.przepis.nazwa : '<span class="cal-empty">—</span>') + '</div>';
+        });
+        td.innerHTML = liniaHtml;
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    container.appendChild(table);
+  }
+
+  function renderujFiltrPrzepisow() {
+    var el = document.getElementById('przepisy-filter');
+    el.innerHTML = '';
+    var kategorie = [{ id: 'wszystkie', nazwa: 'Wszystkie', ikona: 'restaurant_menu' }]
+      .concat(TYPY_POSILKOW.map(function (t) { return { id: t, nazwa: t.charAt(0).toUpperCase() + t.slice(1), ikona: ikonaTypu(t) }; }));
+    kategorie.forEach(function (k) {
+      var chip = document.createElement('button');
+      chip.className = 'filter-chip' + (state.filtrPrzepisy === k.id ? ' active' : '');
+      chip.innerHTML = '<span class="material-symbols-outlined">' + k.ikona + '</span>' + k.nazwa;
+      chip.onclick = function () {
+        state.filtrPrzepisy = k.id;
+        renderujFiltrPrzepisow();
+        renderujPrzepisy();
+      };
+      el.appendChild(chip);
+    });
+  }
+
+  function renderujPrzepisy() {
+    var container = document.getElementById('przepisy-list');
+    var szukaj = (document.getElementById('przepisy-szukaj').value || '').trim().toLowerCase();
+    var lista = state.przepisy.filter(function (p) {
+      var pasujeTyp = state.filtrPrzepisy === 'wszystkie' || p.typPosilku === state.filtrPrzepisy;
+      var pasujeTekst = !szukaj || p.nazwa.toLowerCase().indexOf(szukaj) !== -1;
+      return pasujeTyp && pasujeTekst;
+    });
+    if (!state.przepisy.length) {
+      container.innerHTML = '<p class="label-sm" style="margin-top:20px;">Brak przepisów. Dodaj pierwszy przyciskiem +.</p>';
+      return;
+    }
+    if (!lista.length) {
+      container.innerHTML = '<p class="label-sm" style="margin-top:20px;">Brak przepisów pasujących do wyszukiwania.</p>';
+      return;
+    }
+    container.innerHTML = '';
+    lista.forEach(function (p) {
+      var row = document.createElement('div');
+      row.className = 'card recipe-card';
+      row.onclick = function () { pokazSzczegoly(p.id); };
+      row.innerHTML =
+        '<div class="card-title-row">' + miniaturaPrzepisuHtml(p) +
+        '<div><div class="meal-title" style="margin:0">' + p.nazwa + '</div>' +
+        '<div class="meta">' + p.typPosilku + '</div></div></div><span class="badge-kcal">' + p.kcal + ' kcal</span>';
+      container.appendChild(row);
+    });
+  }
+
+  function pokazSzczegoly(id) {
+    var p = state.przepisy.find(function (x) { return String(x.id) === String(id); });
+    if (!p) return;
+    currentRecipeId = id;
+    document.getElementById('szczegoly-nazwa').innerText = p.nazwa;
+    var hero = document.getElementById('szczegoly-zdjecie');
+    if (p.zdjecieUrl) {
+      hero.src = p.zdjecieUrl;
+      hero.style.display = 'block';
+    } else {
+      hero.style.display = 'none';
+    }
+    document.getElementById('szczegoly-makro').innerHTML =
+      '<div class="summary-card"><div class="label-sm">Kalorie</div><div class="num">' + p.kcal + '</div></div>' +
+      '<div class="summary-card"><div class="label-sm">Makro</div><div class="macro" style="font-size:14px; margin-top:6px;">B ' + p.bialko + 'g · T ' + p.tluszcz + 'g · W ' + p.wegle + 'g</div></div>';
+    var skl = document.getElementById('szczegoly-skladniki');
+    skl.innerHTML = p.skladniki.length
+      ? p.skladniki.map(function (s) { return '<div class="shopping-item"><span>' + s.nazwa + ' — ' + s.ilosc + ' ' + s.jednostka + '</span></div>'; }).join('')
+      : '<p class="label-sm">Brak podanych składników.</p>';
+    document.getElementById('szczegoly-przygotowanie').innerText = p.przygotowanie || '(brak opisu)';
+    otworzModal('modal-szczegoly');
+  }
+
+  async function usunPrzepisPotwierdz(id) {
+    var ok = await pokazPotwierdzenie('Usunąć ten przepis?');
+    if (!ok) return;
+    db.deletePrzepis(id).then(function () {
+      zamknijModal('modal-szczegoly');
+      odswiezPrzepisy();
+    }).catch(pokazBlad);
+  }
+
+  function odswiezPrzepisy() {
+    db.getPrzepisy().then(function (r) { state.przepisy = r; renderujPrzepisy(); }).catch(pokazBlad);
+  }
+
+  function anulujFormularzPrzepisu() {
+    zamknijModal('modal-formularz');
+  }
+
+  function otworzFormularzPrzepisu() {
+    state.editingRecipeId = null;
+    state.formZdjecieUrl = '';
+    document.getElementById('formularz-tytul').innerText = 'Nowy przepis';
+    ['f-nazwa','f-kcal','f-bialko','f-tluszcz','f-wegle','f-przygotowanie'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f-zdjecie').value = '';
+    var podglad = document.getElementById('f-zdjecie-preview');
+    podglad.src = '';
+    podglad.classList.remove('shown');
+    document.getElementById('f-skladniki-lista').innerHTML = '';
+    otworzModal('modal-formularz');
+  }
+
+  function pokazPodgladZdjecia(input) {
+    if (!input.files || !input.files[0]) return;
+    var podglad = document.getElementById('f-zdjecie-preview');
+    podglad.src = URL.createObjectURL(input.files[0]);
+    podglad.classList.add('shown');
+  }
+
+  function edytujPrzepis(id) {
+    var p = state.przepisy.find(function (x) { return String(x.id) === String(id); });
+    if (!p) return;
+    zamknijModal('modal-szczegoly');
+    state.editingRecipeId = id;
+    state.formZdjecieUrl = p.zdjecieUrl || '';
+    document.getElementById('f-zdjecie').value = '';
+    var podglad = document.getElementById('f-zdjecie-preview');
+    if (p.zdjecieUrl) {
+      podglad.src = p.zdjecieUrl;
+      podglad.classList.add('shown');
+    } else {
+      podglad.src = '';
+      podglad.classList.remove('shown');
+    }
+    document.getElementById('formularz-tytul').innerText = 'Edytuj przepis';
+    document.getElementById('f-nazwa').value = p.nazwa;
+    document.getElementById('f-typ').value = p.typPosilku;
+    document.getElementById('f-kcal').value = p.kcal;
+    document.getElementById('f-bialko').value = p.bialko;
+    document.getElementById('f-tluszcz').value = p.tluszcz;
+    document.getElementById('f-wegle').value = p.wegle;
+    document.getElementById('f-przygotowanie').value = p.przygotowanie;
+    document.getElementById('f-skladniki-lista').innerHTML = '';
+    p.skladniki.forEach(function (s) { dodajWierszSkladnika(s.id, s.ilosc); });
+    otworzModal('modal-formularz');
+  }
+
+  function dodajWierszSkladnika(wybranyId, ilosc) {
+    var lista = document.getElementById('f-skladniki-lista');
+    var row = document.createElement('div');
+    row.className = 'ingredient-row';
+    var opcje = state.skladniki.map(function (s) {
+      var sel = (wybranyId && String(s.id) === String(wybranyId)) ? 'selected' : '';
+      return '<option value="' + s.id + '" ' + sel + '>' + s.nazwa + ' (' + s.jednostka + ')</option>';
+    }).join('');
+    row.innerHTML =
+      '<select>' + opcje + '</select>' +
+      '<input type="number" placeholder="ilość" value="' + (ilosc || '') + '">' +
+      '<button onclick="this.parentElement.remove()">×</button>';
+    lista.appendChild(row);
+  }
+
+  function dodajNowySkladnikDoBazy() {
+    var nazwa = document.getElementById('nowy-skladnik-nazwa').value.trim();
+    var kategoria = document.getElementById('nowy-skladnik-kategoria').value;
+    var jednostka = document.getElementById('nowy-skladnik-jednostka').value.trim() || 'szt';
+    if (!nazwa) { pokazKomunikat('Podaj nazwę składnika.'); return; }
+    db.saveSkladnik({ nazwa: nazwa, kategoria: kategoria, jednostka: jednostka }).then(function () {
+      document.getElementById('nowy-skladnik-nazwa').value = '';
+      return db.getSkladniki();
+    }).then(function (r) {
+      state.skladniki = r;
+      pokazKomunikat('Dodano "' + nazwa + '" do bazy. Możesz go teraz wybrać z listy składników.');
+    }).catch(pokazBlad);
+  }
+
+  async function zapiszPrzepis() {
+    var nazwa = document.getElementById('f-nazwa').value.trim();
+    if (!nazwa) { pokazKomunikat('Podaj nazwę przepisu.'); return; }
+
+    var skladnikiWiersze = Array.from(document.querySelectorAll('#f-skladniki-lista .ingredient-row'));
+    var skladniki = skladnikiWiersze.map(function (row) {
+      var select = row.querySelector('select');
+      var input = row.querySelector('input');
+      return { id: select.value, ilosc: Number(input.value) || 0 };
+    }).filter(function (s) { return s.id; });
+
+    var zapiszBtn = document.querySelector('#modal-formularz .btn.primary');
+    var plikZdjecia = document.getElementById('f-zdjecie').files[0];
+    var zdjecieUrl = state.formZdjecieUrl || '';
+
+    try {
+      if (plikZdjecia) {
+        if (zapiszBtn) { zapiszBtn.disabled = true; zapiszBtn.innerText = 'Przetwarzanie zdjęcia…'; }
+        zdjecieUrl = await wyslijZdjeciePrzepisu(plikZdjecia);
+      }
+
+      var przepis = {
+        id: state.editingRecipeId,
+        nazwa: nazwa,
+        typPosilku: document.getElementById('f-typ').value,
+        kcal: Number(document.getElementById('f-kcal').value) || 0,
+        bialko: Number(document.getElementById('f-bialko').value) || 0,
+        tluszcz: Number(document.getElementById('f-tluszcz').value) || 0,
+        wegle: Number(document.getElementById('f-wegle').value) || 0,
+        przygotowanie: document.getElementById('f-przygotowanie').value,
+        zdjecieUrl: zdjecieUrl,
+        skladniki: skladniki
+      };
+
+      if (zapiszBtn) { zapiszBtn.innerText = 'Zapisywanie…'; }
+      await db.savePrzepis(przepis);
+      zamknijModal('modal-formularz');
+      odswiezPrzepisy();
+      wczytajPlanTygodnia();
+    } catch (e) {
+      pokazBlad(e);
+    } finally {
+      if (zapiszBtn) { zapiszBtn.disabled = false; zapiszBtn.innerText = 'Zapisz przepis'; }
+    }
+  }
+
+  function wczytajListeZakupow() {
+    var od = document.getElementById('zakupy-od').value;
+    var doD = document.getElementById('zakupy-do').value;
+    if (!od || !doD) { pokazKomunikat('Wybierz zakres dat.'); return; }
+    document.getElementById('zakupy-wynik').innerHTML = '<div class="loading">Wczytywanie…</div>';
+    db.getPlanZakresuRaw(od, doD).then(function (rows) {
+      var plan = mapPlanRows(rows);
+      var pogrupowane = obliczListeZakupow(plan);
+      renderujListeZakupow(pogrupowane);
+    }).catch(pokazBlad);
+  }
+
+  function obliczListeZakupow(plan) {
+    var suma = {};
+    plan.forEach(function (wpis) {
+      if (!wpis.przepis) return;
+      var porcje = wpis.porcje || 1;
+      wpis.przepis.skladniki.forEach(function (s) {
+        var key = s.id;
+        if (!suma[key]) {
+          suma[key] = { nazwa: s.nazwa, kategoria: s.kategoria, jednostka: s.jednostka, ilosc: 0 };
+        }
+        suma[key].ilosc += (Number(s.ilosc) || 0) * porcje;
+      });
+    });
+    var pogrupowane = {};
+    Object.keys(suma).forEach(function (key) {
+      var item = suma[key];
+      var kat = item.kategoria || 'inne';
+      if (!pogrupowane[kat]) pogrupowane[kat] = [];
+      pogrupowane[kat].push({ nazwa: item.nazwa, ilosc: item.ilosc, jednostka: item.jednostka });
+    });
+    return pogrupowane;
+  }
+
+  function renderujListeZakupow(pogrupowane) {
+    var container = document.getElementById('zakupy-wynik');
+    var kategorie = Object.keys(pogrupowane);
+    if (!kategorie.length) {
+      container.innerHTML = '<p class="label-sm">Brak zaplanowanych posiłków z przypisanymi składnikami w tym zakresie.</p>';
+      return;
+    }
+    container.innerHTML = '';
+    kategorie.forEach(function (kat) {
+      var block = document.createElement('div');
+      block.className = 'shopping-cat';
+      var items = pogrupowane[kat].map(function (it) {
+        return '<div class="shopping-item" onclick="this.classList.toggle(\'checked\')">' +
+          '<input type="checkbox" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'checked\')">' +
+          '<span>' + it.nazwa + ' — ' + (Math.round(it.ilosc * 100) / 100) + ' ' + it.jednostka + '</span></div>';
+      }).join('');
+      block.innerHTML = '<h3>' + kat + '</h3>' + items;
+      container.appendChild(block);
+    });
+  }
+
+  // ===================== USTAWIENIA / CZYSZCZENIE STAREGO PLANU =====================
+  function otworzUstawienia() {
+    var input = document.getElementById('ustawienia-data');
+    if (!input.value) {
+      var miesiacTemu = new Date();
+      miesiacTemu.setMonth(miesiacTemu.getMonth() - 1);
+      input.value = formatDate(miesiacTemu);
+    }
+    document.getElementById('ustawienia-domyslna-liczba').value = state.domyslnaLiczbaPosilkow || 3;
+    renderujUstawieniaOsoby();
+    renderujNieuzywaneSkladniki();
+    otworzModal('modal-ustawienia');
+  }
+
+  // ===================== OSOBY: EDYCJA IMION I CELÓW =====================
+  function renderujUstawieniaOsoby() {
+    var el = document.getElementById('ustawienia-osoby-lista');
+    el.innerHTML = '';
+    state.osoby.forEach(function (o) {
+      var blok = document.createElement('div');
+      blok.className = 'ust-osoba-blok';
+      blok.innerHTML =
+        '<label style="margin-top:0;">Imię</label>' +
+        '<input type="text" class="ust-osoba-imie" data-id="' + o.id + '" value="' + o.imie + '">' +
+        '<label>Cel kalorii (kcal/dzień)</label>' +
+        '<input type="number" class="ust-osoba-kcal" data-id="' + o.id + '" value="' + (o.celKcal != null ? o.celKcal : '') + '" placeholder="np. 1800">' +
+        '<label>Cel wagi (kg)</label>' +
+        '<input type="number" step="0.1" class="ust-osoba-waga" data-id="' + o.id + '" value="' + (o.celWaga != null ? o.celWaga : '') + '" placeholder="np. 70">';
+      el.appendChild(blok);
+    });
+  }
+
+  async function zapiszOsobyZUstawien() {
+    var imionaInputs = document.querySelectorAll('.ust-osoba-imie');
+    try {
+      for (var i = 0; i < imionaInputs.length; i++) {
+        var id = imionaInputs[i].getAttribute('data-id');
+        var imie = imionaInputs[i].value.trim();
+        if (!imie) continue;
+        var kcalEl = document.querySelector('.ust-osoba-kcal[data-id="' + id + '"]');
+        var wagaEl = document.querySelector('.ust-osoba-waga[data-id="' + id + '"]');
+        var celKcal = (kcalEl && kcalEl.value !== '') ? Number(kcalEl.value) : null;
+        var celWaga = (wagaEl && wagaEl.value !== '') ? Number(wagaEl.value) : null;
+        await db.updateOsobaPelna(id, imie, celKcal, celWaga);
+      }
+      var r = await db.getOsoby();
+      state.osoby = r;
+      renderujUstawieniaOsoby();
+      renderujWszystko();
+      await pokazKomunikat('Zapisano zmiany.');
+    } catch (e) {
+      pokazBlad(e);
+    }
+  }
+
+  // ===================== KOPIA ZAPASOWA =====================
+  function pobierzKopieZapasowa() {
+    try {
+      var dane = {
+        eksport_z_dnia: new Date().toISOString(),
+        osoby: state.osoby,
+        skladniki: state.skladniki,
+        przepisy: state.przepisy
+      };
+      var blob = new Blob([JSON.stringify(dane, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'planer-posilkow-kopia-' + formatDate(new Date()) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      pokazBlad(e);
+    }
+  }
+
+  // ===================== NIEUŻYWANE SKŁADNIKI =====================
+  function renderujNieuzywaneSkladniki() {
+    var el = document.getElementById('ustawienia-nieuzywane-lista');
+    var uzywane = {};
+    state.przepisy.forEach(function (p) {
+      p.skladniki.forEach(function (s) { uzywane[s.id] = true; });
+    });
+    var nieuzywane = state.skladniki.filter(function (s) { return !uzywane[s.id]; });
+    if (!nieuzywane.length) {
+      el.innerHTML = '<p class="label-sm">Brak nieużywanych składników.</p>';
+      return;
+    }
+    el.innerHTML = '';
+    nieuzywane.forEach(function (s) {
+      var row = document.createElement('div');
+      row.className = 'shopping-item';
+      row.innerHTML =
+        '<span>' + s.nazwa + ' <span class="label-sm">(' + s.kategoria + ')</span></span>' +
+        '<button class="del-btn" title="Usuń"><span class="material-symbols-outlined">close</span></button>';
+      row.querySelector('.del-btn').onclick = async function () {
+        var ok = await pokazPotwierdzenie('Usunąć składnik "' + s.nazwa + '" z bazy?');
+        if (!ok) return;
+        db.deleteSkladnik(s.id).then(async function () {
+          var r = await db.getSkladniki();
+          state.skladniki = r;
+          renderujNieuzywaneSkladniki();
+        }).catch(pokazBlad);
+      };
+      el.appendChild(row);
+    });
+  }
+
+  async function wyczyscStaryPlan() {
+    var dataGraniczna = document.getElementById('ustawienia-data').value;
+    if (!dataGraniczna) { pokazKomunikat('Wybierz datę.'); return; }
+    try {
+      var liczba = await db.policzPlanPrzed(dataGraniczna);
+      if (liczba === 0) {
+        await pokazKomunikat('Nie znaleziono zaplanowanych posiłków sprzed ' + dataGraniczna + '.');
+        return;
+      }
+      var ok = await pokazPotwierdzenie('Usunąć ' + liczba + ' zaplanowanych posiłków sprzed ' + dataGraniczna + '? Tej operacji nie można cofnąć.');
+      if (!ok) return;
+      await db.usunPlanPrzed(dataGraniczna);
+      zamknijModal('modal-ustawienia');
+      wczytajPlanTygodnia();
+      await pokazKomunikat('Usunięto ' + liczba + ' zaplanowanych posiłków.');
+    } catch (e) {
+      pokazBlad(e);
+    }
+  }
+
+  // ===================== ZAKUPY DODATKOWE (ręcznie dodane) =====================
+  function wczytajZakupyDodatkowe() {
+    var container = document.getElementById('zakupy-dodatkowe-wynik');
+    if (container) container.innerHTML = '<div class="loading">Wczytywanie…</div>';
+    db.getZakupyDodatkowe().then(function (r) {
+      state.zakupyDodatkowe = r;
+      renderujZakupyDodatkowe();
+    }).catch(pokazBlad);
+  }
+
+  function renderujZakupyDodatkowe() {
+    var container = document.getElementById('zakupy-dodatkowe-wynik');
+    if (!container) return;
+    if (!state.zakupyDodatkowe.length) {
+      container.innerHTML = '<p class="label-sm">Brak dodatkowych pozycji.</p>';
+      return;
+    }
+    container.innerHTML = state.zakupyDodatkowe.map(function (it) {
+      return '<div class="shopping-item' + (it.kupione ? ' checked' : '') + '" data-id="' + it.id + '">' +
+        '<input type="checkbox" ' + (it.kupione ? 'checked' : '') + ' onchange="przelaczKupioneDodatkowy(' + it.id + ', this.checked)">' +
+        '<span>' + it.nazwa + (it.ilosc ? ' — ' + it.ilosc : '') + '</span>' +
+        '<button class="del-btn" onclick="usunZakupDodatkowyPotwierdz(' + it.id + ')"><span class="material-symbols-outlined">close</span></button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function dodajZakupDodatkowy() {
+    var nazwaEl = document.getElementById('dodatkowy-nazwa');
+    var iloscEl = document.getElementById('dodatkowy-ilosc');
+    var nazwa = nazwaEl.value.trim();
+    var ilosc = iloscEl.value.trim();
+    if (!nazwa) return;
+    db.dodajZakupDodatkowy(nazwa, ilosc).then(function () {
+      nazwaEl.value = '';
+      iloscEl.value = '';
+      nazwaEl.focus();
+      wczytajZakupyDodatkowe();
+    }).catch(pokazBlad);
+  }
+
+  function przelaczKupioneDodatkowy(id, kupione) {
+    db.ustawKupioneDodatkowy(id, kupione).then(function () {
+      var item = state.zakupyDodatkowe.find(function (z) { return z.id === id; });
+      if (item) item.kupione = kupione;
+      var el = document.querySelector('.shopping-item[data-id="' + id + '"]');
+      if (el) el.classList.toggle('checked', kupione);
+    }).catch(pokazBlad);
+  }
+
+  async function usunZakupDodatkowyPotwierdz(id) {
+    var ok = await pokazPotwierdzenie('Usunąć tę pozycję z listy?');
+    if (!ok) return;
+    db.usunZakupDodatkowy(id).then(wczytajZakupyDodatkowe).catch(pokazBlad);
+  }
+
+  // ===================== WIDOK: WAGA =====================
+  function inicjalizujWagaTab() {
+    if (!state.wagaOsoba && state.osoby.length) state.wagaOsoba = state.osoby[0].imie;
+    if (!document.getElementById('waga-nowa-data').value) {
+      document.getElementById('waga-nowa-data').value = formatDate(new Date());
+    }
+    renderujWagaChipy();
+    wczytajWage();
+  }
+
+  function renderujWagaChipy() {
+    var el = document.getElementById('waga-osoby-chips');
+    el.innerHTML = '';
+    state.osoby.forEach(function (o) {
+      var chip = document.createElement('button');
+      chip.className = 'day-chip' + (o.imie === state.wagaOsoba ? ' active' : '');
+      chip.innerText = o.imie;
+      chip.onclick = function () {
+        state.wagaOsoba = o.imie;
+        renderujWagaChipy();
+        wczytajWage();
+      };
+      el.appendChild(chip);
+    });
+  }
+
+  function wczytajWage() {
+    if (!state.wagaOsoba) return;
+    document.getElementById('waga-lista').innerHTML = '<div class="loading">Wczytywanie…</div>';
+    document.getElementById('waga-cel-card').innerHTML = '<div class="loading">Wczytywanie…</div>';
+    db.getPomiaryWagi(state.wagaOsoba).then(function (r) {
+      state.wagaPomiary = r;
+      renderujWage();
+    }).catch(pokazBlad);
+  }
+
+  function renderujWage() {
+    var osoba = state.osoby.find(function (o) { return o.imie === state.wagaOsoba; });
+    var celEl = document.getElementById('waga-cel-card');
+    var ostatni = state.wagaPomiary.length ? state.wagaPomiary[state.wagaPomiary.length - 1] : null;
+
+    if (!osoba || !osoba.celWaga) {
+      celEl.innerHTML =
+        '<div class="label-sm">Brak ustawionego celu wagi dla ' + (osoba ? osoba.imie : '') + '.</div>' +
+        '<div class="label-sm" style="margin-top:4px;">Ustaw go w Ustawieniach (ikona koła zębatego).</div>' +
+        (ostatni ? '<div class="num" style="margin-top:8px;">' + ostatni.waga + ' kg</div>' : '');
+    } else if (!ostatni) {
+      celEl.innerHTML =
+        '<div class="label-sm">Cel: ' + osoba.celWaga + ' kg</div>' +
+        '<div class="macro" style="margin-top:4px;">Brak jeszcze żadnych pomiarów.</div>';
+    } else {
+      var roznica = Number(ostatni.waga) - Number(osoba.celWaga);
+      var opis;
+      if (Math.abs(roznica) < 0.05) opis = 'Cel osiągnięty 🎉';
+      else if (roznica > 0) opis = 'Jeszcze ' + roznica.toFixed(1) + ' kg do celu';
+      else opis = 'Poniżej celu o ' + Math.abs(roznica).toFixed(1) + ' kg';
+      celEl.innerHTML =
+        '<div class="label-sm">Cel: ' + osoba.celWaga + ' kg</div>' +
+        '<div class="num" style="margin-top:4px;">' + ostatni.waga + ' kg</div>' +
+        '<div class="macro">' + opis + '</div>';
+    }
+
+    renderujWykresWagi();
+
+    var lista = document.getElementById('waga-lista');
+    if (!state.wagaPomiary.length) {
+      lista.innerHTML = '<p class="label-sm">Brak pomiarów.</p>';
+      return;
+    }
+    lista.innerHTML = '';
+    state.wagaPomiary.slice().reverse().forEach(function (w) {
+      var row = document.createElement('div');
+      row.className = 'shopping-item';
+      row.innerHTML =
+        '<span>' + w.data + ' — ' + w.waga + ' kg</span>' +
+        '<button class="del-btn" title="Usuń"><span class="material-symbols-outlined">close</span></button>';
+      row.querySelector('.del-btn').onclick = async function () {
+        var ok = await pokazPotwierdzenie('Usunąć ten pomiar?');
+        if (!ok) return;
+        db.usunPomiarWagi(w.id).then(wczytajWage).catch(pokazBlad);
+      };
+      lista.appendChild(row);
+    });
+  }
+
+  function renderujWykresWagi() {
+    var el = document.getElementById('waga-wykres');
+    if (state.wagaPomiary.length < 2) { el.innerHTML = ''; return; }
+    var dane = state.wagaPomiary;
+    var wartosci = dane.map(function (d) { return Number(d.waga); });
+    var min = Math.min.apply(null, wartosci), max = Math.max.apply(null, wartosci);
+    if (min === max) { min -= 1; max += 1; }
+    var w = 300, h = 90, pad = 8;
+    var pts = dane.map(function (d, i) {
+      var x = pad + (w - 2 * pad) * (dane.length === 1 ? 0 : i / (dane.length - 1));
+      var y = pad + (h - 2 * pad) * (1 - (Number(d.waga) - min) / (max - min));
+      return x + ',' + y;
+    }).join(' ');
+    el.innerHTML =
+      '<div class="card"><svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%; height:90px; display:block;">' +
+      '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>';
+  }
+
+  function dodajPomiarWagiHandler() {
+    var data = document.getElementById('waga-nowa-data').value;
+    var wartosc = document.getElementById('waga-nowa-wartosc').value;
+    if (!state.wagaOsoba) return;
+    if (!data || !wartosc) { pokazKomunikat('Podaj datę i wagę.'); return; }
+    db.dodajPomiarWagi(state.wagaOsoba, data, Number(wartosc)).then(function () {
+      document.getElementById('waga-nowa-wartosc').value = '';
+      wczytajWage();
+    }).catch(pokazBlad);
+  }
+</script>
+</body>
+</html>
