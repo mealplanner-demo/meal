@@ -901,38 +901,38 @@
       const { error } = await sb.from('zakupy_dodatkowe').delete().eq('id', id);
       if (error) throw error;
     },
+
     async getUstawienia() {
-  const { data, error } = await sb.from('ustawienia').select('*');
-  if (error) throw error;
-  const obj = {};
-  data.forEach(row => { obj[row.klucz] = row.wartosc; });
-  return obj;
-},
+      const { data, error } = await sb.from('ustawienia').select('*');
+      if (error) throw error;
+      const obj = {};
+      data.forEach(row => { obj[row.klucz] = row.wartosc; });
+      return obj;
+    },
 
-async setUstawienie(klucz, wartosc) {
-  const { error } = await sb.from('ustawienia').upsert(
-    { klucz: klucz, wartosc: wartosc },
-    { onConflict: 'klucz' }
-  );
-  if (error) throw error;
-},
+    async setUstawienie(klucz, wartosc) {
+      const { error } = await sb.from('ustawienia').upsert(
+        { klucz: klucz, wartosc: wartosc },
+        { onConflict: 'klucz' }
+      );
+      if (error) throw error;
+    },
 
-async getZakupyZaznaczenia() {
-  const { data, error } = await sb.from('zakupy_zaznaczenia').select('*');
-  if (error) throw error;
-  const obj = {};
-  data.forEach(r => { obj[r.id_skladnika] = r.zaznaczone; });
-  return obj;
-},
+    async getZakupyZaznaczenia() {
+      const { data, error } = await sb.from('zakupy_zaznaczenia').select('*');
+      if (error) throw error;
+      const obj = {};
+      data.forEach(r => { obj[r.id_skladnika] = r.zaznaczone; });
+      return obj;
+    },
 
-async ustawZaznaczenieZakupu(idSkladnika, zaznaczone) {
-  const { error } = await sb.from('zakupy_zaznaczenia').upsert(
-    { id_skladnika: idSkladnika, zaznaczone: zaznaczone },
-    { onConflict: 'id_skladnika' }
-  );
-  if (error) throw error;
-}
-    
+    async ustawZaznaczenieZakupu(idSkladnika, zaznaczone) {
+      const { error } = await sb.from('zakupy_zaznaczenia').upsert(
+        { id_skladnika: idSkladnika, zaznaczone: zaznaczone },
+        { onConflict: 'id_skladnika' }
+      );
+      if (error) throw error;
+    }
   };
 
   // ===================== ZDJĘCIA PRZEPISÓW (Supabase Storage) =====================
