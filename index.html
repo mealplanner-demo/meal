@@ -87,11 +87,12 @@
     }
     header h1 { font-size: 21px; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
     #logout-btn {
-      background: none; border: none; color: var(--text-3); display: inline-flex;
-      align-items: center; gap: 4px; font-size: 12px; cursor: pointer;
-      transition: color .15s var(--ease);
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      width: 36px; height: 36px; padding: 0; border: 1px solid var(--border); border-radius: 11px;
+      background: var(--card); color: var(--text-2); font-size: 0; cursor: pointer;
+      box-shadow: var(--shadow-xs); transition: color .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease), transform .15s var(--ease);
     }
-    #logout-btn:hover { color: var(--danger); }
+    #logout-btn:hover { color: var(--danger); background: var(--danger-bg); border-color: var(--danger); }
     #settings-btn, #theme-toggle-btn {
       background: none; border: none; color: var(--text-3); display: inline-flex;
       align-items: center; justify-content: center; cursor: pointer; padding: 2px;
@@ -286,12 +287,66 @@
     }
     .shopping-item .del-btn:hover { color: var(--danger); background: #f4e6e6; }
     .shopping-item .del-btn .material-symbols-outlined { font-size: 16px; }
+    .weight-chart-card { padding: 20px; border-radius: 24px; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .weight-chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .weight-chart-title { font-size: 13px; color: var(--text-3); font-weight: 700; }
+    .weight-chart-current { margin-top: 4px; font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -.04em; }
+    .weight-chart-current small { font-size: 14px; font-weight: 700; color: var(--text-3); letter-spacing: 0; }
+    .weight-periods { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); }
+    .weight-period { border: 0; border-radius: 999px; background: transparent; color: var(--text-3); font: 700 11px inherit; padding: 7px 10px; cursor: pointer; }
+    .weight-period.active { color: #fff; background: var(--accent); box-shadow: 0 4px 10px rgba(47,125,88,.22); }
+    .weight-chart { width: 100%; height: 220px; display: block; overflow: visible; }
+    .weight-empty { padding: 28px 8px; text-align: center; color: var(--text-3); font-size: 13px; }
+    .weight-goal-strip { margin-top: 16px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .weight-goal-strip strong { color: var(--accent); font-size: 18px; }
+    #view-waga { max-width: 920px; }
+    #view-waga > .day-scroller { margin: 0 0 14px; padding: 4px 0 10px; }
+    #waga-osoby-chips .day-chip { background: rgba(255,255,255,.58); border: 1px solid var(--border); }
+    #waga-osoby-chips .day-chip.active { background: var(--accent); color: #fff; border-color: transparent; }
+    .weight-overview-card { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0,1fr) 190px; gap: 20px; padding: 24px; border-radius: 26px; border: 1px solid rgba(139,216,213,.62); background: linear-gradient(135deg, #e1f5f3 0%, #f9ffff 58%, #d4eeee 100%); box-shadow: var(--shadow-md); }
+    #view-waga #waga-cel-card { padding: 10px; border-color: transparent; background: rgba(255,255,255,.22); box-shadow: 0 12px 28px rgba(52,122,123,.1); }
+    #view-waga .weight-overview-card { border-color: rgba(178, 222, 219, .48); background: radial-gradient(circle at 92% 15%, rgba(190,235,229,.26), transparent 34%), linear-gradient(145deg, rgba(232,248,246,.74), rgba(250,255,254,.7) 58%, rgba(222,242,240,.52)); box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 18px rgba(52,122,123,.07); }
+    #view-waga .weight-overview-card::after { background: rgba(53,175,167,.06); box-shadow: 0 0 0 22px rgba(53,175,167,.035), 0 0 0 44px rgba(53,175,167,.02); }
+    #view-waga .weight-progress { background: rgba(255,255,255,.52); border-color: rgba(255,255,255,.62); }
+    .weight-overview-card::after { content: ''; position: absolute; right: -46px; bottom: -68px; width: 190px; height: 190px; border-radius: 50%; background: rgba(53,175,167,.12); box-shadow: 0 0 0 22px rgba(53,175,167,.06), 0 0 0 44px rgba(53,175,167,.04); }
+    .weight-overview-label { color: #3d7b80; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .weight-overview-name { margin-top: 4px; color: var(--text); font-size: 14px; font-weight: 800; }
+    .weight-overview-value { margin-top: 16px; color: var(--text); font-size: 42px; font-weight: 800; letter-spacing: -.07em; line-height: 1; }
+    .weight-overview-value small { color: var(--text-2); font-size: 16px; letter-spacing: 0; }
+    .weight-overview-status { margin-top: 10px; color: var(--text-2); font-size: 12px; line-height: 1.5; }
+    .weight-progress { position: relative; z-index: 1; align-self: end; padding: 16px; border-radius: 20px; background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.88); }
+    .weight-progress-ring { position: relative; display: grid; place-items: center; width: 92px; height: 92px; margin: 0 auto 12px; border-radius: 50%; background: conic-gradient(var(--accent) var(--weight-progress, 0%), rgba(17,153,168,.12) 0); }
+    .weight-progress-ring::after { content: ''; position: absolute; width: 72px; height: 72px; border-radius: 50%; background: #f4fcfc; }
+    .weight-progress-ring strong { position: relative; z-index: 1; color: var(--accent); font-size: 18px; }
+    .weight-progress-text { color: var(--text-2); font-size: 10px; text-align: center; line-height: 1.4; }
+    .weight-progress-text strong { display: block; color: var(--text); font-size: 14px; }
+    #waga-wykres { margin-top: 18px; }
+    #waga-wykres .weight-chart-card { border-radius: 26px; }
+    #waga-lista { padding: 4px 4px 0; }
+    #waga-lista .shopping-item { padding: 12px 4px; }
+    @media (max-width: 600px) {
+      .weight-overview-card { grid-template-columns: 1fr; padding: 20px; }
+      .weight-progress { display: flex; align-items: center; gap: 14px; }
+      .weight-progress-ring { margin: 0; flex: 0 0 auto; }
+      .weight-progress-text { text-align: left; }
+    }
+    @media (max-width: 600px) { .weight-chart-card { padding: 16px; } .weight-chart-head { display: block; } .weight-periods { margin-top: 14px; justify-content: space-between; } .weight-period { flex: 1; } }
 
-    .dodaj-skladnik-row { display: flex; gap: 6px; margin-top: 4px; margin-bottom: 18px; }
-    .dodaj-skladnik-row input { flex: 1; }
-    .dodaj-skladnik-row input.ilosc-input { flex: 0 0 90px; }
+    .dodaj-skladnik-row { display: flex; gap: 6px; margin-top: 4px; margin-bottom: 18px; align-items: flex-end; }
+    .dodaj-skladnik-row > input { flex: 1 1 auto; min-width: 0; height: 46px; box-sizing: border-box; }
+    .dodaj-skladnik-row #dodatkowy-ilosc {
+      flex: 0 0 72px !important; width: 72px !important; min-width: 72px !important;
+      height: 46px !important; min-height: 46px !important; box-sizing: border-box;
+    }
+    .shopping-extra-field {
+      position: relative; display: flex; flex: 0 0 72px; min-width: 72px;
+      height: 46px; align-items: stretch;
+    }
+    .shopping-extra-field .label-sm {
+      position: absolute; left: 0; top: -17px; margin: 0; font-size: 9px;
+    }
     .dodaj-skladnik-row button {
-      flex: 0 0 auto; width: 42px; background: var(--accent); color: #fff; border: none;
+      flex: 0 0 auto; width: 42px; height: 46px; background: var(--accent); color: #fff; border: none;
       border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
     }
 
@@ -435,6 +490,10 @@
       width: 32px; height: 32px; border-radius: 50%; background: var(--card);
       border: 1px solid var(--border); color: var(--text-2); font-size: 0; flex: 0 0 auto;
     }
+    .modal-header-actions { display: inline-flex; align-items: center; gap: 6px; }
+    .modal-header-actions .modal-add-recipe { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--accent-border); border-radius: 10px; background: var(--accent-bg); color: var(--accent); cursor: pointer; transition: transform .15s var(--ease), background .15s var(--ease); }
+    .modal-header-actions .modal-add-recipe:hover { background: #d5ead9; transform: translateY(-1px); }
+    .modal-header-actions .modal-add-recipe .material-symbols-outlined { font-size: 20px; }
 
     .sticky-controls-view {
       position: sticky;
@@ -470,6 +529,29 @@
     .btn.danger-outline { color: var(--danger); border-color: var(--danger); }
 
     .plan-controls-row { display: flex; gap: 8px; justify-content: center; margin: 4px 0 14px; }
+    .plan-date-picker {
+      display: flex; align-items: center; gap: 10px; width: 100%; margin: 2px 0 10px; padding: 7px 8px 7px 12px;
+      border: 1px solid var(--border); border-radius: 18px; background: var(--card); box-shadow: var(--shadow-sm);
+    }
+    .plan-date-picker-icon {
+      display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto;
+      border-radius: 11px; background: var(--accent-bg); color: var(--accent);
+    }
+    .plan-date-picker-copy { display: grid; gap: 2px; min-width: 0; flex: 1; }
+    .plan-date-picker-copy span { color: var(--text-3); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .plan-date-picker input {
+      min-width: 0; width: 100%; padding: 0; border: 0; outline: 0; box-shadow: none; background: transparent;
+      color: var(--text); font: 800 13px inherit; cursor: pointer;
+    }
+    .plan-date-picker input:focus { border: 0; box-shadow: none; }
+    .plan-today-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex: 0 0 auto;
+      min-height: 34px; padding: 7px 12px; border: 0; border-radius: 11px; background: var(--accent);
+      color: #fff; font: 800 11px inherit; cursor: pointer; transition: transform .15s var(--ease), background .15s var(--ease);
+    }
+    .plan-today-btn:hover { background: var(--accent-light); }
+    .plan-today-btn:active { transform: scale(.95); }
+    .plan-today-btn .material-symbols-outlined { font-size: 16px; }
     .link-btn {
       background: none; border: none; color: var(--accent); font-size: 13px; font-weight: 600;
       display: inline-flex; align-items: center; gap: 4px; cursor: pointer; padding: 6px 10px;
@@ -683,6 +765,10 @@
     .ust-osoba-head label { margin-bottom: 4px; }
     .ust-osoba-head strong { font-size: 12px; color: var(--text-2); }
     .ust-osoba-usun { color: var(--danger); }
+    .ust-osoba-kolor { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
+    .ust-osoba-kolor-label { margin: 0; width: 100%; }
+    .ust-osoba-kolor-btn { width: 24px; height: 24px; padding: 0; border: 2px solid transparent; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(23,49,58,.12); }
+    .ust-osoba-kolor-btn.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--accent); }
     .ust-nowa-osoba { border: 1px dashed var(--accent-border); border-radius: 13px; padding: 12px; }
     .btn { border-color: var(--border); border-radius: 13px; min-height: 46px; }
     .btn.primary { background: var(--accent); box-shadow: 0 8px 18px rgba(46,118,82,.2); }
@@ -730,25 +816,747 @@
       .fab { right: calc(50% - 292px); }
       .modal { max-width: 560px; }
     }
+
+    /* ===== DESKTOP APP SHELL ===== */
+    .desktop-sidebar { display: none; }
+    .app-shell { min-height: 100vh; }
+    .sidebar-people { display: none; }
+    @media (min-width: 900px) {
+      html { min-height: 100%; background: var(--bg); }
+      body { min-height: 100vh; max-width: none; margin: 0; padding: 0 26px 34px 272px; background: radial-gradient(ellipse 70% 42% at 78% 0%, rgba(190,235,229,.5), transparent 100%), radial-gradient(ellipse 60% 42% at 38% 100%, rgba(218,241,239,.58), transparent 100%), var(--bg); }
+      .app-shell { max-width: 1500px; margin: 0 auto; }
+      .desktop-sidebar {
+        display: flex; position: fixed; inset: 0 auto 0 0; width: 238px; padding: 28px 18px 22px;
+        flex-direction: column; background: rgba(255,255,255,.78); border-right: 1px solid rgba(216,226,218,.9);
+        backdrop-filter: blur(22px); z-index: 15;
+      }
+      .sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 0 12px 34px; color: var(--text); }
+      .sidebar-brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: var(--accent); color: white; box-shadow: 0 8px 16px rgba(46,118,82,.2); }
+      .sidebar-brand strong { font-size: 15px; letter-spacing: -.04em; }
+      .sidebar-caption { padding: 0 12px 10px; color: var(--text-3); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+      .sidebar-nav { display: grid; gap: 4px; }
+      .sidebar-nav button {
+        display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: 12px;
+        background: transparent; color: var(--text-2); font: 700 12px inherit; text-align: left; cursor: pointer;
+        transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+      }
+      .sidebar-nav button:hover { color: var(--text); background: var(--accent-bg); transform: translateX(2px); }
+      .sidebar-nav button.active { color: var(--accent); background: var(--accent-bg); }
+      .sidebar-nav .material-symbols-outlined { font-size: 20px; }
+      .sidebar-divider { height: 1px; margin: 24px 12px 22px; background: var(--border); }
+      .sidebar-people { display: grid; gap: 8px; }
+      .sidebar-person { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 11px; color: var(--text-2); font-size: 11px; font-weight: 700; }
+      .sidebar-person::before { content: ''; width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--accent-light); box-shadow: 0 0 0 4px var(--accent-bg); }
+      .sidebar-footer { margin-top: auto; display: grid; gap: 8px; }
+      .sidebar-footer button { justify-content: flex-start; }
+      .sidebar-footer .sidebar-logout { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 42px; padding: 11px 12px; border: 0; border-radius: 12px; background: transparent; color: var(--text-2); font: 700 12px inherit; text-align: left; cursor: pointer; transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease); }
+      .sidebar-footer .sidebar-logout:hover { color: var(--danger); background: var(--danger-bg); transform: translateX(2px); }
+      .sidebar-footer .sidebar-logout .material-symbols-outlined { font-size: 20px !important; }
+      header { position: relative; max-width: none; padding: 34px 8px 24px; background: radial-gradient(ellipse 72% 130% at 38% 0%, rgba(255,255,255,.62), rgba(236,248,247,.28) 55%, transparent 100%); border: 0; }
+      header::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 34px; pointer-events: none; background: linear-gradient(180deg, transparent, rgba(238,248,248,.42)); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+      header h1 { font-size: 30px; }
+      header #logout-btn { display: none; }
+      .view { padding: 0 8px 32px; }
+      .view.active { animation: dailyReveal .24s cubic-bezier(.22,1,.36,1); }
+      #view-plan { width: 100%; max-width: 1400px; }
+      #view-plan > .plan-person-picker, #view-plan > .plan-start-label, #view-plan > #skocz-do-daty,
+      #view-plan > #day-scroller, #view-plan > #plan-cards, #view-plan > #plan-controls-row,
+      #view-plan > .section-title, #view-plan > #summary-grid { display: none; }
+      #view-plan #plan-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      #view-plan #plan-cards .meal-slot { margin-bottom: 0; }
+      #view-plan .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      #view-dzisiaj { max-width: 900px; margin: 0; }
+      #view-tydzien { max-width: 1080px; margin: 0; }
+      #view-przepisy { max-width: 1080px; margin: 0; }
+      #view-przepisy .sticky-controls-view { position: relative; top: auto; z-index: 1; isolation: auto; margin: 0 -8px; padding: 8px 8px 12px; background: radial-gradient(ellipse 80% 100% at 42% 0%, rgba(255,255,255,.58), rgba(238,248,248,.22) 62%, transparent 100%) !important; box-shadow: none; }
+      #view-przepisy #przepisy-list { position: relative; z-index: 0; }
+      #view-zakupy, #view-waga { max-width: 760px; }
+      #view-trening { max-width: 1180px; }
+      .training-toolbar { position: relative; display:flex; align-items:center; justify-content:space-between; gap:12px; margin: -10px -10px 16px; padding: 10px 10px 18px; flex-wrap:wrap; background: radial-gradient(ellipse 75% 130% at 38% 0%, rgba(255,255,255,.42), rgba(235,248,246,.2) 58%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); }
+      .training-month-nav { display:flex; align-items:center; gap:8px; }
+      .training-month-nav button { width:36px; height:36px; border:1px solid var(--border); border-radius:11px; background:var(--card); color:var(--text-2); cursor:pointer; }
+      .training-month-title { min-width:170px; text-align:center; font-size:20px; font-weight:800; }
+      .training-layout { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(280px,.8fr); gap:16px; }
+      .training-calendar-card, .training-editor-card { background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.3), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.92), rgba(235,247,245,.68)); border:1px solid rgba(217,235,233,.78); border-radius:24px; padding:18px; box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 12px 28px rgba(52,122,123,.07); }
+      .training-weekdays, .training-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+      .training-weekdays { margin-bottom:6px; color:var(--text-3); font-size:10px; font-weight:800; text-align:center; text-transform:uppercase; }
+      .training-day { min-height:78px; padding:8px; border:1px solid transparent; border-radius:14px; background:var(--surface); cursor:pointer; text-align:left; color:var(--text); }
+      .training-day.muted { opacity:.42; }
+      .training-day.selected { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-bg); }
+      .training-day.today { background:#eef8f1; }
+      .training-day-number { font-size:13px; font-weight:800; }
+      .training-day-name { display:block; margin-top:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--accent); font-size:10px; font-weight:700; }
+      .training-day .training-day-name { color:var(--training-type-color, var(--accent)); }
+      .training-day .training-day-name.completed { color:var(--text-3); text-decoration:line-through; }
+      .training-day .training-dot { display:inline-block; width:7px; height:7px; margin-right:5px; border-radius:50%; background:var(--training-type-color, var(--accent)); vertical-align:middle; }
+      .training-day .training-dot.completed { background:var(--text-3); }
+      .training-dot { display:inline-block; width:7px; height:7px; margin-right:4px; border-radius:50%; background:#efb92b; }
+      .training-dot.done { background:#23b882; } .training-dot.missed { background:#ed6b6b; }
+      .training-editor-card h2 { margin:0 0 4px; font-size:18px; }
+      .training-editor-date { color:var(--text-3); font-size:12px; margin-bottom:16px; }
+      .training-editor-card textarea { min-height:105px; }
+      .training-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .training-status { display:flex; gap:6px; margin:8px 0 14px; }
+      .training-status button { flex:1; padding:9px 5px; border:1px solid var(--border); border-radius:10px; background:var(--surface); color:var(--text-2); font:700 11px inherit; cursor:pointer; }
+      .training-status button.active { background:var(--accent-bg); border-color:var(--accent-border); color:var(--accent); }
+      .training-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+      .training-stat { padding:12px; border-radius:14px; background:var(--surface); }
+      .training-stat strong { display:block; margin-top:3px; font-size:19px; }
+      .training-color-palette { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+      .training-color-swatch { width:30px; height:30px; padding:0; border:2px solid transparent; border-radius:50%; cursor:pointer; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+      .training-color-swatch.active { border-color:var(--text); box-shadow:0 0 0 2px var(--card), 0 0 0 4px var(--text); }
+      .training-type-row { display:grid !important; grid-template-columns:minmax(150px,1fr) minmax(240px,auto) 38px; align-items:center; gap:16px; padding:12px 0 !important; }
+      .training-type-row .rodzaj-trening-nazwa { min-width:0; }
+      .training-type-row .training-color-palette { justify-content:flex-end; flex-wrap:nowrap; }
+      .training-color-input {
+        width:30px !important; height:30px !important; padding:0 !important; border:2px solid transparent !important;
+        border-radius:50% !important; cursor:pointer; appearance:none; -webkit-appearance:none;
+        box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
+      }
+      .training-color-input:focus { outline:none; box-shadow:0 0 0 2px var(--card), 0 0 0 4px var(--text); }
+      .training-custom-color { position:relative; flex:0 0 auto; }
+      .training-custom-trigger { width:34px; height:34px; padding:0; border:2px solid var(--card); border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px var(--border); }
+      .training-color-popover { position:absolute; z-index:30; top:calc(100% + 10px); right:0; display:none; box-sizing:border-box; width:264px; max-width:calc(100vw - 24px); padding:13px; border:1px solid var(--border); border-radius:18px; background:var(--card); box-shadow:0 14px 32px rgba(30,45,35,.2); overflow:hidden; }
+      .training-color-popover.open { display:grid; gap:10px; }
+      .training-color-popover:before { content:""; position:absolute; right:12px; top:-7px; width:14px; height:14px; background:var(--card); border-left:1px solid var(--border); border-top:1px solid var(--border); transform:rotate(45deg); }
+      .training-color-popover-row { display:grid; grid-template-columns:repeat(9, minmax(0, 1fr)); gap:4px; width:100%; }
+      .training-color-popover .training-color-swatch { position:relative; width:22px; height:22px; justify-self:center; }
+      .training-color-popover .training-color-swatch.active { box-shadow:0 0 0 2px var(--card), 0 0 0 4px var(--accent); }
+      .training-color-popover .training-color-swatch.active:after { content:"✓"; position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:18px; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,.35); }
+      .training-color-popover-label { color:var(--text-3); font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+      .training-color-popover-section { display:grid; gap:7px; padding-top:9px; border-top:1px solid var(--border); }
+      .training-color-popover-section:first-child { padding-top:0; border-top:0; }
+      .training-color-theme { display:flex; gap:6px; max-width:100%; overflow:hidden; }
+      .training-color-theme .training-color-swatch { width:20px; height:20px; flex:0 0 20px; }
+      .training-color-custom { display:flex; align-items:center; gap:8px; box-sizing:border-box; width:100%; min-width:0; padding:8px; border:1px solid var(--border); border-radius:12px; color:var(--text-2); font-size:12px; }
+      .training-color-custom-plus { width:24px; height:24px; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text-2); cursor:pointer; }
+      @media (max-width:600px) { .training-type-row { grid-template-columns:1fr 38px; gap:10px; } .training-type-row .training-color-palette { grid-column:1 / -1; justify-content:flex-start; } }
+      @media(max-width:850px){ .training-layout{grid-template-columns:1fr;} }
+      @media(max-width:600px){ .training-calendar-card,.training-editor-card{padding:13px;border-radius:18px;} .training-day{min-height:64px;padding:6px;border-radius:10px;} .training-day-name{margin-top:6px;} .training-weekdays{font-size:8px;} .training-fields{grid-template-columns:1fr 1fr;} }
+      .tabbar { display: none; }
+      .fab { right: 42px; bottom: 36px; }
+    }
+
+    .weekly-board { display: none; }
+    .plan-board-toolbar { display: none; }
+    .settings-page { width: 100%; max-width: 1100px; margin: 0 auto; padding: 4px 0 28px; }
+    .settings-page > .settings-content { padding: 22px; border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: var(--shadow-sm); }
+    .settings-page h2 { margin: 0; font-size: 24px; letter-spacing: -.04em; }
+    .settings-page .settings-intro { margin: 6px 0 22px; color: var(--text-2); font-size: 13px; line-height: 1.5; }
+    .settings-page .section-title:first-of-type { margin-top: 0; }
+    .settings-tabs { display: flex; gap: 6px; margin-bottom: 18px; overflow-x: auto; }
+    .settings-tab { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 11px; background: var(--card); color: var(--text-2); font: 700 12px inherit; cursor: pointer; transition: color .18s var(--ease), background .18s var(--ease), border-color .18s var(--ease); }
+    .settings-tab.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+    .settings-tab .material-symbols-outlined { font-size: 18px; }
+    .settings-panel { display: none; }
+    .settings-panel.active { display: block; animation: dailyReveal .2s var(--ease); }
+    .settings-ingredient-toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .settings-ingredient-toolbar input { flex: 1; }
+    .settings-ingredient-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px auto; gap: 8px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .settings-ingredient-row input, .settings-ingredient-row select { min-height: 38px; padding: 8px 10px; font-size: 12px; }
+    .settings-ingredient-row .btn { min-height: 38px; width: auto; padding: 8px 10px; }
+    .settings-duplicate-group { margin: 14px 0; padding: 12px; border: 1px solid #f0d2c4; border-radius: 13px; background: #fff8f4; }
+    .settings-duplicate-group p { margin: 0 0 8px; color: var(--text-2); font-size: 11px; }
+    .settings-duplicate-group strong { color: var(--text); }
+    .settings-page .del-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 9px; background: var(--card); color: var(--text-3); cursor: pointer; transition: color .18s var(--ease), background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease); }
+    .settings-page .del-btn:hover { color: var(--danger); background: var(--danger-bg); border-color: var(--danger); transform: translateY(-1px); }
+    .settings-page .del-btn .material-symbols-outlined { font-size: 18px; }
+    .settings-page .ust-osoba-head .del-btn { transform: translateY(-3px); }
+    .settings-page .ust-osoba-head .del-btn:hover { transform: translateY(-4px); }
+    #view-przepisy .sticky-controls-view { position: relative; top: auto; z-index: 1; box-shadow: none; }
+    #view-przepisy .sticky-controls-view { position: sticky !important; top: 0 !important; z-index: 1000 !important; isolation: isolate; background: var(--bg) !important; box-shadow: 0 14px 0 var(--bg), 0 20px 22px rgba(32,35,31,.08); }
+    #modal-wybor, #modal-formularz { z-index: 1200 !important; }
+    body.form-przepisu-open #view-przepisy .sticky-controls-view { visibility: hidden; }
+    #view-przepisy .sticky-controls-view { border-radius: 0 0 24px 24px; }
+    #view-przepisy .search-box { border-radius: 999px; overflow: hidden; }
+    #view-przepisy .search-box input { border-radius: 999px; }
+    #view-przepisy #przepisy-filter .filter-chip { border-radius: 999px; }
+    #view-przepisy .category-arrow { border-radius: 999px; }
+    #view-przepisy #przepisy-list { padding-top: 18px; }
+    .shopping-range { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+    .shopping-range-field { min-width: 0; }
+    .shopping-range-field label { margin: 0 0 5px; }
+    .shopping-range-field input { min-width: 0; }
+    .shopping-range .btn { width: auto; min-height: 46px; white-space: nowrap; }
+    .shopping-list-toolbar { display: flex; justify-content: flex-end; margin: 0 0 12px; }
+    .shopping-list-toolbar .btn { width: auto; min-height: 38px; padding: 8px 12px; }
+    #view-zakupy { max-width: 920px; }
+    #view-zakupy .shopping-range { padding: 16px; border: 1px solid rgba(218,236,234,.9); border-radius: 22px; background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.4), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.94), rgba(232,247,244,.78)); box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 10px 24px rgba(52,122,123,.07); }
+    .shopping-hero { margin: 0 -2px 18px; padding: 26px 24px 24px; border-radius: 28px; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.58), transparent 48%), linear-gradient(145deg, #d9f5f1 0%, #ccefeb 46%, #c2e7e5 100%); color: #176c6d; text-align: center; box-shadow: 0 14px 28px rgba(42, 137, 137, .12); }
+    .shopping-hero h2 { margin: 0; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.06em; }
+    .shopping-hero p { margin: 7px 0 0; color: #397d7d; font-size: 12px; font-weight: 700; }
+    .shopping-summary { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 20px 0 16px; padding: 17px 18px; border-radius: 20px; background: radial-gradient(circle at 100% 0%, rgba(216,246,241,.62), transparent 42%), linear-gradient(145deg, rgba(255,255,255,.96), rgba(239,250,248,.88)); border: 1px solid rgba(218, 236, 234, .9); box-shadow: var(--shadow-sm); }
+    #shopping-summary[hidden] { display: none; }
+    .shopping-summary-label { color: var(--text-2); font-size: 12px; font-weight: 700; }
+    .shopping-summary-count { color: var(--accent); font-size: 13px; font-weight: 800; }
+    .shopping-summary-track { grid-column: 1 / -1; height: 8px; overflow: hidden; border-radius: 999px; background: #e2efed; }
+    .shopping-summary-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #79d0c4, #1199a8); transition: width .25s var(--ease); }
+    .shopping-cat { position: relative; margin-bottom: 15px; overflow: hidden; border-radius: 22px; background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.48), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.96) 0%, rgba(241,250,248,.9) 52%, rgba(225,243,240,.76) 100%); border: 1px solid rgba(218, 236, 234, .9); box-shadow: inset 0 1px 0 rgba(255,255,255,.94), 0 10px 24px rgba(52, 122, 123, .08); }
+    .shopping-cat::after { content: ''; position: absolute; right: -38px; bottom: -54px; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.28); box-shadow: 0 0 0 18px rgba(160,224,218,.08), 0 0 0 36px rgba(160,224,218,.05); pointer-events: none; }
+    .shopping-cat h3 { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; margin: 0; padding: 13px 17px; background: linear-gradient(115deg, rgba(239,247,241,.72) 0%, rgba(235,247,246,.5) 48%, rgba(222,243,240,.18) 100%); color: var(--text); font-size: 13px; text-transform: capitalize; letter-spacing: 0; }
+    .shopping-cat h3::after { content: '⌃'; color: var(--text-3); font-size: 17px; }
+    .shopping-cat .shopping-item { position: relative; z-index: 1; margin: 0; padding: 13px 17px; border-bottom: 1px solid rgba(220, 235, 232, .58); background: linear-gradient(100deg, rgba(255,255,255,.34), rgba(248,253,252,.08)); font-size: 14px; cursor: pointer; transition: background .18s var(--ease); }
+    .shopping-cat .shopping-item:last-child { border-bottom: 0; }
+    .shopping-cat .shopping-item:hover { background: linear-gradient(100deg, rgba(207,244,237,.48), rgba(238,251,249,.2)); }
+    .shopping-item input[type=checkbox] { appearance: none; width: 22px; height: 22px; flex: 0 0 22px; margin: 0; border: 2px solid #7d8583; border-radius: 50%; background: transparent; cursor: pointer; }
+    .shopping-item input[type=checkbox]:checked { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 4px var(--card); }
+    .shopping-item.checked { background: linear-gradient(100deg, rgba(214,235,220,.7), rgba(239,248,241,.3)); }
+    .shopping-item.checked span { color: #7e8581; }
+    .shopping-list-toolbar .btn { border-radius: 999px; }
+    @media (max-width: 600px) { .shopping-range { grid-template-columns: 1fr 1fr; } .shopping-range .btn { grid-column: 1 / -1; } }
+    #modal-wybor, #modal-formularz { align-items: center !important; justify-content: center; padding: 18px; }
+    #modal-wybor > .modal, #modal-formularz > .modal { margin: 0; border-radius: 26px; max-height: 88vh; box-shadow: 0 22px 64px rgba(20, 35, 24, .2); animation: modalPopIn .2s var(--ease); }
+    #modal-formularz .modal { width: min(100%, 700px); max-width: 700px; padding: 24px 26px 30px; }
+    #modal-formularz .modal-header { margin: -24px -26px 28px; padding: 20px 26px 14px; }
+    #modal-formularz label { margin-top: 16px; font-size: 11px; }
+    #modal-formularz input, #modal-formularz select, #modal-formularz textarea { min-height: 46px; padding: 12px 14px; font-size: 15px; }
+    #modal-formularz textarea { min-height: 120px; }
+    #modal-formularz .form-photo-field { margin-top: 24px; padding-bottom: 8px; }
+    #modal-formularz .form-photo-field > label { display: block; margin-top: 0 !important; margin-bottom: 8px; line-height: 1.4; }
+    #modal-formularz .f-zdjecie-wrap { min-height: 62px; margin-top: 0; }
+    .form-macro-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .form-macro-field { min-width: 0; }
+    .form-macro-field label { margin-top: 0 !important; white-space: nowrap; font-size: 10px !important; }
+    .form-macro-field input { width: 100%; min-width: 0; }
+    .new-ingredient-row { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(130px, .65fr) 105px; gap: 8px; align-items: end; }
+    .new-ingredient-field { min-width: 0; }
+    .new-ingredient-field label { margin: 0 0 4px !important; font-size: 10px !important; white-space: nowrap; }
+    .new-ingredient-field input, .new-ingredient-field select { min-width: 0; width: 100%; }
+    @media (max-width: 600px) { #modal-wybor, #modal-formularz { padding: 12px; } #modal-wybor > .modal, #modal-formularz > .modal { border-radius: 22px; max-height: 92vh; } #modal-formularz .modal { padding: 20px 18px 26px; } #modal-formularz .modal-header { margin: -20px -18px 16px; padding: 17px 18px 12px; } }
+    @media (max-width: 600px) { .form-macro-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .new-ingredient-row { grid-template-columns: 1fr 1fr; } .new-ingredient-field:first-child { grid-column: 1 / -1; } }
+    @media (max-width: 899px) { #view-przepisy .sticky-controls-view { top: 54px !important; } }
+    @media (min-width: 700px) {
+      .settings-content { display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: 40px; align-items: start; }
+      .settings-content > h2, .settings-content > .settings-intro { grid-column: 1 / -1; }
+      .settings-tabs { grid-column: 1; grid-row: 3; display: flex; flex-direction: column; gap: 7px; margin: 0; overflow: visible; }
+      .settings-tab { width: 100%; justify-content: flex-start; padding: 12px 13px; text-align: left; }
+      .settings-panel { grid-column: 2; grid-row: 3; min-width: 0; }
+    }
+    @media (max-width: 600px) { .settings-ingredient-row { grid-template-columns: 1fr; gap: 5px; } .settings-ingredient-row .btn { width: 100%; } }
+    #modal-wybor, #modal-szczegoly { align-items: center; padding: 18px; }
+    #modal-wybor .modal, #modal-szczegoly .modal { width: 100%; max-width: 560px; max-height: 88vh; margin: 0; border-radius: 26px; box-shadow: 0 20px 60px rgba(20, 35, 24, .2); animation: modalPopIn .2s var(--ease); }
+    #modal-wybor .modal { padding-bottom: 20px; }
+    #modal-szczegoly .modal { overflow-y: auto; }
+    @media (max-width: 600px) {
+      #modal-wybor, #modal-szczegoly { padding: 12px; }
+      #modal-wybor .modal, #modal-szczegoly .modal { max-height: 92vh; border-radius: 22px; }
+    }
+    @media (min-width: 900px) {
+      .plan-board-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 0 2px 18px; padding: 14px 16px; border: 1px solid rgba(216,226,218,.46); border-radius: 22px; background: radial-gradient(circle at 82% 20%, rgba(255,255,255,.72), transparent 38%), linear-gradient(90deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,.72) 18%, rgba(233,248,246,.72) 78%, rgba(255,255,255,.16) 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 10px 24px rgba(52,122,123,.05); }
+      .plan-board-toolbar .toolbar-field { display: grid; gap: 6px; min-width: 170px; }
+      .plan-board-toolbar .toolbar-field:last-child { min-width: 190px; }
+      .plan-board-toolbar label { margin: 0; color: var(--text-3); font-size: 9px; letter-spacing: .08em; }
+      .plan-board-toolbar input, .plan-board-toolbar select { min-height: 40px; padding: 8px 11px; border-radius: 10px; font-size: 12px; font-weight: 700; }
+      #view-plan > .plan-date-picker { display: none; }
+      #view-plan > #plan-cards { display: none; }
+      .weekly-board { display: grid; grid-template-columns: repeat(7, minmax(165px, 1fr)); gap: 12px; overflow-x: auto; padding: 4px 2px 24px; }
+      .weekly-day { min-width: 0; }
+      .weekly-day-head { display: flex; align-items: center; justify-content: space-between; padding: 0 8px 10px; color: var(--text-2); }
+      .weekly-day-head strong { color: var(--text); font-size: 12px; text-transform: uppercase; }
+      .weekly-day-head span { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; font-size: 12px; font-weight: 800; }
+      .weekly-day.today .weekly-day-head { color: var(--accent); }
+      .weekly-day.today .weekly-day-head span { background: var(--accent); color: #fff; box-shadow: 0 5px 12px rgba(46,118,82,.22); }
+      .weekly-day-column { position: relative; display: grid; gap: 9px; min-width: 0; padding: 10px; overflow: hidden; border-radius: 20px; background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.34), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.78), rgba(231,246,243,.5)); border: 1px solid rgba(216,226,218,.72); box-shadow: inset 0 1px 0 rgba(255,255,255,.82), 0 10px 22px rgba(52,122,123,.05); }
+      .weekly-kcal { position: relative; overflow: hidden; padding: 12px 10px; border-radius: 16px; background: radial-gradient(circle at 100% 0%, rgba(221,246,241,.5), transparent 42%), linear-gradient(145deg, rgba(255,255,255,.95), rgba(241,250,248,.78)); border: 1px solid rgba(255,255,255,.78); box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 7px 16px rgba(52,122,123,.07); text-align: center; }
+      .weekly-kcal strong { display: block; color: var(--text); font-size: 14px; }
+      .weekly-kcal span { display: block; margin-top: 3px; color: var(--text-3); font-size: 9px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+      .weekly-kcal .weekly-macro { display: flex; justify-content: space-around; gap: 4px; margin-top: 9px; color: var(--text-3); font-size: 10px; letter-spacing: 0; }
+      .weekly-kcal .weekly-macro span { margin: 0; font-size: 10px; letter-spacing: 0; text-transform: none; }
+      .weekly-kcal .weekly-macro .macro-b { color: #6f9d5f; }
+      .weekly-kcal .weekly-macro .macro-w { color: #ed9669; }
+      .weekly-kcal .weekly-macro .macro-t { color: #df6482; }
+      .weekly-kcal.goal-ok { background: linear-gradient(145deg, #ffffff 55%, #effbea 100%); }
+      .weekly-kcal.goal-over { background: linear-gradient(145deg, #ffffff 45%, #fff0f0 100%); }
+      .weekly-goal { margin-top: 10px; overflow: hidden; color: var(--text-3); font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; white-space: nowrap; text-overflow: ellipsis; }
+      .weekly-goal-track { height: 5px; margin-top: 5px; overflow: hidden; border-radius: 999px; background: var(--border); }
+      .weekly-goal-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9bd37e, #4da65b); }
+      .weekly-kcal.goal-over .weekly-goal-fill { background: linear-gradient(90deg, #f3ad7a, #d95c6c); }
+      .weekly-person-breakdown { display: grid; gap: 4px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); text-align: left; }
+      .weekly-person-breakdown div { display: flex; align-items: center; justify-content: space-between; gap: 6px; color: var(--text-2); font-size: 9px; line-height: 1.2; white-space: nowrap; }
+      .weekly-person-breakdown span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .weekly-person-breakdown strong { flex: 0 0 auto; color: var(--text); font-size: 9px; white-space: nowrap; }
+      .weekly-meal { min-width: 0; min-height: 112px; padding: 12px; overflow: hidden; border: 1px solid rgba(217,235,233,.88); border-radius: 18px; background: radial-gradient(circle at 100% 0%, rgba(196,238,232,.28), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.94), rgba(239,249,247,.72)); box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 18px rgba(52,122,123,.06); cursor: pointer; transition: transform .18s var(--ease), box-shadow .18s var(--ease); }
+      .weekly-meal:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+      .weekly-meal-label { display: flex; align-items: center; justify-content: space-between; gap: 5px; color: var(--text-3); font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+      .weekly-meal-label .material-symbols-outlined { font-size: 14px; }
+      .weekly-recipe { display: flex; align-items: flex-start; min-width: 0; gap: 7px; margin-top: 10px; color: var(--text); font-size: 11px; font-weight: 800; line-height: 1.25; }
+      .weekly-recipe.person-colored { margin-left: -4px; margin-right: -4px; padding: 6px 5px; border-left: 3px solid var(--person-color); border-radius: 9px; background: var(--person-bg); }
+      .weekly-recipe.person-colored { position: relative; overflow: hidden; padding: 10px 8px; border: 1px solid rgba(255,255,255,.82); border-left: 3px solid var(--person-color); border-radius: 15px; background: linear-gradient(135deg, rgba(255,255,255,.64), var(--person-bg)); box-shadow: inset 0 1px 0 rgba(255,255,255,.86), 0 6px 14px rgba(52,122,123,.09); }
+      .weekly-recipe.person-colored::after { content: ''; position: absolute; right: -22px; bottom: -30px; width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,.22); pointer-events: none; }
+      .weekly-recipe.person-colored > * { position: relative; z-index: 1; }
+      .weekly-recipe small { display: block; margin-bottom: 2px; color: var(--text-3); font-size: 8px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+      .weekly-recipe + .weekly-recipe { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--border); }
+      .weekly-recipe-content { display: grid; grid-template-rows: auto auto; align-items: start; gap: 5px; min-width: 0; flex: 1; }
+      .weekly-recipe-content > span { display: block; min-width: 0; }
+      .weekly-recipe-content > span small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .weekly-recipe-content .weekly-recipe-name { overflow-wrap: anywhere; white-space: normal; line-height: 1.25; }
+      .weekly-recipe-actions { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 4px; width: max-content; min-width: max-content; flex: 0 0 auto; }
+      .weekly-recipe-actions .weekly-action { width: 23px; height: 23px; border-radius: 7px; }
+      .weekly-recipe-actions .material-symbols-outlined { font-size: 14px; }
+      .weekly-recipe .type-icon, .weekly-recipe .recipe-thumb { width: 25px; height: 25px; border-radius: 7px; }
+      .weekly-recipe .type-icon .material-symbols-outlined { font-size: 15px; }
+      .weekly-recipe .recipe-thumb { object-fit: cover; }
+      .weekly-empty { display: grid; place-items: center; min-height: 82px; margin: 10px 8px; border: 1px dashed rgba(112, 190, 187, .42); border-radius: 12px; background: linear-gradient(135deg, rgba(255,255,255,.54), rgba(225,246,243,.5)); color: #679295; font-size: 9px; font-weight: 700; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
+      .weekly-meal-actions { display: flex; gap: 6px; margin-top: 12px; opacity: 0; transform: translateY(4px); transition: opacity .18s var(--ease), transform .18s var(--ease); }
+      .weekly-meal:hover .weekly-meal-actions, .weekly-meal:focus-within .weekly-meal-actions { opacity: 1; transform: translateY(0); }
+      .weekly-action { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: var(--accent-bg); color: var(--text-2); cursor: pointer; }
+      .weekly-action:hover { color: var(--accent); background: #d5ead9; }
+      .weekly-action.danger:hover { color: var(--danger); background: var(--danger-bg); }
+      .weekly-action .material-symbols-outlined { font-size: 17px; }
+    }
+
+    /* ===== LOGIN VISUAL ===== */
+    #login-screen {
+      overflow: auto; padding: 20px; background: #e9efe9;
+    }
+    .login-layout {
+      display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(340px, .92fr); width: min(100%, 1060px); min-height: min(700px, calc(100vh - 40px));
+      overflow: hidden; border: 1px solid rgba(255,255,255,.7); border-radius: 30px; background: var(--card); box-shadow: 0 28px 70px rgba(32, 62, 43, .16);
+    }
+    .login-visual {
+      position: relative; display: flex; min-height: 620px; padding: 42px; flex-direction: column; justify-content: space-between; overflow: hidden; color: white;
+      background: linear-gradient(180deg, rgba(24,62,37,.12), rgba(20,53,32,.8)), url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1300&q=85') center/cover;
+    }
+    .login-visual::after { content: ''; position: absolute; inset: auto -8% -12% auto; width: 270px; height: 270px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; box-shadow: 0 0 0 30px rgba(255,255,255,.06), 0 0 0 60px rgba(255,255,255,.04); }
+    .login-brand { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; width: fit-content; font-size: 14px; font-weight: 800; letter-spacing: -.03em; }
+    .login-brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,.95); color: var(--accent); }
+    .login-visual-copy { position: relative; z-index: 1; max-width: 420px; }
+    .login-visual-copy .eyebrow { margin: 0 0 12px; color: #d4efda; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .login-visual-copy h2 { max-width: 430px; margin: 0 0 14px; font-size: clamp(32px, 4vw, 52px); line-height: 1.02; letter-spacing: -.065em; }
+    .login-visual-copy p { max-width: 350px; margin: 0; color: rgba(255,255,255,.78); font-size: 13px; line-height: 1.6; }
+    .login-note { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 9px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(20,53,32,.25); backdrop-filter: blur(8px); font-size: 11px; font-weight: 700; }
+    .login-note .material-symbols-outlined { font-size: 16px; color: #c9edcf; }
+    .login-panel { display: flex; justify-content: center; align-items: center; padding: 54px clamp(28px, 6vw, 72px); background: rgba(255,255,255,.92); }
+    .login-box { max-width: 340px; }
+    .login-box h1 { margin-bottom: 8px; font-size: 29px; letter-spacing: -.06em; }
+    .login-box p.sub { margin-bottom: 28px; color: var(--text-2); font-size: 13px; line-height: 1.6; }
+    .login-box label { margin-top: 17px; color: var(--text-2); font-size: 10px; letter-spacing: .08em; }
+    .login-box input { min-height: 48px; border-color: #dbe5dc; border-radius: 13px; background: #fbfdfb; }
+    .login-box .btn.primary { min-height: 50px; margin-top: 22px !important; border-radius: 13px; }
+    #login-error { padding: 10px 12px; border-radius: 10px; background: var(--danger-bg); }
+    @media (max-width: 720px) {
+      #login-screen { align-items: flex-start; padding: 14px; }
+      .login-layout { display: block; min-height: auto; border-radius: 24px; }
+      .login-visual { min-height: 245px; padding: 24px; }
+      .login-visual-copy h2 { max-width: 280px; font-size: 32px; }
+      .login-visual-copy p { display: none; }
+      .login-note { font-size: 10px; }
+      .login-panel { padding: 32px 24px 40px; }
+      .login-box { max-width: none; width: 100%; }
+    }
+
+    /* ===== MODERN MINT DASHBOARD THEME ===== */
+    :root {
+      --bg: #eef8f8;
+      --card: rgba(255,255,255,.88);
+      --border: #d9ebeb;
+      --text: #17313a;
+      --text-2: #668087;
+      --text-3: #9ab0b4;
+      --accent: #1199a8;
+      --accent-light: #35b8bd;
+      --accent-bg: #dff5f3;
+      --accent-border: #8bd8d5;
+      --shadow-xs: 0 2px 8px rgba(26,92,98,.05);
+      --shadow-sm: 0 10px 26px rgba(30,90,97,.08);
+      --shadow-md: 0 16px 34px rgba(30,90,97,.13);
+      --shadow-lg: 0 24px 55px rgba(30,90,97,.17);
+      --radius: 18px;
+      --radius-lg: 26px;
+    }
+    [data-theme="dark"] {
+      --bg: #102125;
+      --card: rgba(24,44,49,.92);
+      --border: #2d5156;
+      --text: #effbfb;
+      --text-2: #acc6c8;
+      --text-3: #78969a;
+      --accent: #55c9c7;
+      --accent-light: #7ddbd5;
+      --accent-bg: #1e4b4d;
+      --accent-border: #4d9c9d;
+    }
+    body {
+      background:
+        radial-gradient(circle at 93% 2%, rgba(175,231,232,.5), transparent 28rem),
+        radial-gradient(circle at 8% 90%, rgba(218,241,239,.65), transparent 24rem),
+        var(--bg);
+    }
+    header {
+      background: rgba(238,248,248,.74);
+      border-bottom: 1px solid rgba(217,235,235,.8);
+      backdrop-filter: blur(20px);
+    }
+    [data-theme="dark"] header { background: rgba(16,33,37,.78); }
+    header {
+      background: transparent !important;
+      border-bottom: 0 !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      isolation: isolate;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -28px -8% -24px;
+      background:
+        radial-gradient(ellipse at 38% 18%, rgba(255,255,255,.48), transparent 48%),
+        linear-gradient(180deg, rgba(233,248,246,.42), rgba(233,248,246,.12) 66%, transparent 100%);
+      filter: blur(16px);
+      opacity: .78;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%), linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%), linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+      mask-composite: intersect;
+    }
+    input, select, textarea {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(25,90,95,.035);
+    }
+    input:hover, select:hover, textarea:hover { border-color: var(--accent-border); }
+    .card, .summary-card, .settings-page > .settings-content,
+    .training-calendar-card, .training-editor-card {
+      border-color: rgba(217,235,235,.92);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(14px);
+    }
+    #view-plan .card:not(.meal-selection-card),
+    #view-plan .summary-grid .summary-card,
+    #view-dzisiaj .today-summary,
+    #view-dzisiaj .card,
+    #view-przepisy .recipe-card,
+    #view-trening .training-calendar-card,
+    #view-trening .training-editor-card,
+    #view-waga .card,
+    #view-waga .weight-chart-card {
+      background:
+        radial-gradient(circle at 100% 0%, rgba(184, 235, 229, .28), transparent 35%),
+        linear-gradient(145deg, rgba(255,255,255,.96) 0%, rgba(244,251,250,.9) 52%, rgba(225,243,240,.72) 100%);
+      border-color: rgba(215, 235, 233, .9);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 12px 28px rgba(52, 122, 123, .08);
+    }
+    #view-dzisiaj .today-summary {
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,.3), transparent 36%),
+        linear-gradient(145deg, #bdebe1 0%, #91d8d0 54%, #70c4c3 100%);
+    }
+    #view-plan > .card,
+    #view-plan > .summary-grid .summary-card,
+    #view-dzisiaj .card,
+    #view-przepisy .recipe-card,
+    #view-trening .training-calendar-card,
+    #view-trening .training-editor-card,
+    #view-waga .card,
+    #view-waga .weight-chart-card {
+      border-radius: 22px;
+    }
+    #view-waga .weight-chart-card {
+      background: rgba(255,255,255,.9);
+      border-color: rgba(217,229,229,.9);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.96), 0 12px 28px rgba(38,72,76,.1);
+    }
+    #view-waga #waga-cel-card {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .card[onclick]:hover, .card.recipe-card:hover, .card.osoba-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn, .link-btn, .settings-tab {
+      border-color: var(--border);
+      border-radius: 12px;
+      font-weight: 800;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+    }
+    .btn:hover, .link-btn:hover, .settings-tab:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-xs);
+    }
+    .btn.primary, .plan-today-btn {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      box-shadow: 0 9px 20px rgba(17,153,168,.2);
+    }
+    .btn.primary:hover, .plan-today-btn:hover { background: var(--accent); }
+    .badge-kcal { background: var(--accent-bg); color: var(--accent); }
+    .progress-bar-track { background: #d8eeee; }
+    .progress-bar-fill { background: linear-gradient(90deg, var(--accent-light), var(--accent)) !important; }
+    .day-chip.active, #view-plan .day-chip.active .day-number {
+      background: var(--accent);
+      box-shadow: 0 6px 15px rgba(17,153,168,.24);
+    }
+    .plan-date-picker {
+      border-color: rgba(139,216,213,.7);
+      box-shadow: 0 10px 24px rgba(28,112,118,.08);
+    }
+    .plan-date-picker-icon { background: var(--accent-bg); color: var(--accent); }
+    #view-plan .meal-selection-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 128px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .88);
+      border-radius: 24px;
+      background-color: rgba(245, 253, 252, .78) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.96), inset 0 -18px 32px rgba(135, 215, 208, .08), 0 12px 26px rgba(52, 122, 123, .12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+    }
+    #view-plan .meal-selection-card::after {
+      content: '';
+      position: absolute;
+      right: -42px;
+      bottom: -66px;
+      width: 168px;
+      height: 168px;
+      border-radius: 50%;
+      background: rgba(151, 224, 218, .18);
+      box-shadow: 0 0 0 18px rgba(255,255,255,.2), 0 0 0 36px rgba(151,224,218,.08);
+      pointer-events: none;
+    }
+    #view-plan .meal-selection-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    #view-plan .meal-selection-card .row-top {
+      min-height: 28px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.68);
+    }
+    #view-plan .meal-selection-card .osoba-pill {
+      padding: 6px 11px;
+      border: 1px solid rgba(255,255,255,.68);
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(50, 100, 100, .08);
+      font-size: 10px;
+      letter-spacing: .02em;
+    }
+    #view-plan .meal-selection-card .meal-title {
+      margin: 14px 0 0;
+      color: #244e53;
+      font-size: 16px;
+      line-height: 1.25;
+      letter-spacing: -.025em;
+    }
+    #view-plan .meal-selection-card .empty-slot {
+      min-height: 34px;
+      margin: 14px 0 0;
+      border: 1px dashed rgba(92, 177, 174, .48);
+      border-radius: 12px;
+      background: rgba(255,255,255,.48);
+      color: #47777b;
+      font-size: 9px;
+      font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+    #view-plan .meal-selection-card .empty-slot .material-symbols-outlined {
+      color: #35afa7;
+    }
+    #view-plan .meal-selection-card:has(.meal-title) {
+      background-image: linear-gradient(135deg, rgba(255,255,255,.24), rgba(255,255,255,.06)) !important;
+    }
+    #view-plan .meal-selection-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(126, 205, 199, .95);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.98), inset 0 -18px 32px rgba(135, 215, 208, .12), 0 18px 34px rgba(52, 122, 123, .18);
+    }
+    .desktop-sidebar {
+      background: linear-gradient(180deg, #123e45 0%, #0c3038 100%);
+      border-right-color: rgba(8,40,47,.9);
+      box-shadow: 8px 0 28px rgba(9,49,57,.18);
+    }
+    [data-theme="dark"] .desktop-sidebar { background: linear-gradient(180deg, #0d3037 0%, #08252c 100%); border-right-color: #08252c; }
+    .desktop-sidebar .sidebar-brand,
+    .desktop-sidebar .sidebar-caption,
+    .desktop-sidebar .sidebar-person,
+    .desktop-sidebar .sidebar-nav button,
+    .desktop-sidebar .sidebar-footer .sidebar-logout { color: rgba(235,250,250,.68); }
+    .desktop-sidebar .sidebar-brand { color: #f4ffff; }
+    .desktop-sidebar .sidebar-brand-mark { background: linear-gradient(135deg, #4bd2ce, #1199a8); color: #08343b; box-shadow: 0 8px 18px rgba(0,0,0,.18); }
+    .desktop-sidebar .sidebar-nav button.active {
+      background: linear-gradient(135deg, #20aeb5, #168f9d);
+      color: #fff;
+      box-shadow: 0 9px 20px rgba(2,25,31,.2);
+    }
+    .desktop-sidebar .sidebar-nav button:hover {
+      background: rgba(106,214,211,.14);
+      color: #f4ffff;
+    }
+    .desktop-sidebar .sidebar-divider { background: rgba(190,235,235,.16); }
+    .desktop-sidebar .sidebar-person::before { background: #5bd0ca; box-shadow: 0 0 0 4px rgba(91,208,202,.14); }
+    .desktop-sidebar .sidebar-footer .sidebar-logout:hover { background: rgba(240,255,255,.1); color: #fff; }
+    .today-summary {
+      background: linear-gradient(135deg, #b6e9df 0%, #72c9c8 100%);
+      box-shadow: 0 16px 32px rgba(17,153,168,.18);
+      color: #123d43;
+    }
+    [data-theme="dark"] .today-summary { background: linear-gradient(135deg, #236a6d, #1b4e55); color: #effbfb; }
+    .training-day.today { background: #e4f6f4; }
+    [data-theme="dark"] .training-day.today { background: #1c4145; }
+    .modal-overlay { backdrop-filter: blur(8px); }
+    .modal { border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow-lg); }
+
+    /* Login screen inspired by the rounded split-panel reference. */
+    #login-screen {
+      overflow: auto;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 9% 18%, rgba(109,214,211,.18) 0 16px, transparent 17px),
+        radial-gradient(circle at 86% 77%, rgba(109,214,211,.17) 0 35px, transparent 36px),
+        radial-gradient(circle at 74% 8%, rgba(255,255,255,.1) 0 62px, transparent 63px),
+        linear-gradient(135deg, #0c3439 0%, #124b4d 48%, #0b3038 100%);
+    }
+    .login-layout {
+      width: min(100%, 1040px);
+      min-height: min(650px, calc(100vh - 56px));
+      overflow: hidden;
+      border: 1px solid rgba(177,239,234,.18);
+      border-radius: 34px;
+      background: #123e45;
+      box-shadow: 0 30px 80px rgba(2,24,29,.3);
+    }
+    .login-visual {
+      min-height: 590px;
+      padding: 42px;
+      color: #17313a;
+      background:
+        radial-gradient(circle at 23% 30%, rgba(123,205,202,.25) 0 30px, transparent 31px),
+        radial-gradient(circle at 76% 72%, rgba(123,205,202,.23) 0 22px, transparent 23px),
+        linear-gradient(145deg, #f7ffff 0%, #e6f7f6 58%, #ccebea 100%);
+    }
+    .login-visual::before {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      top: -18%;
+      right: -34%;
+      width: 80%;
+      height: 136%;
+      border-radius: 50%;
+      background: rgba(255,255,255,.86);
+      box-shadow: -24px 0 0 rgba(216,242,241,.72);
+    }
+    .login-visual::after {
+      inset: auto auto 12% 12%;
+      width: 180px;
+      height: 180px;
+      border: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(17,153,168,.18) 0 44%, transparent 45%),
+        radial-gradient(circle at 50% 50%, transparent 0 63%, rgba(255,255,255,.8) 64% 65%, transparent 66%);
+      box-shadow: none;
+    }
+    .login-brand, .login-visual-copy, .login-note { z-index: 1; }
+    .login-brand { color: #17313a; }
+    .login-brand-mark { background: #1199a8; color: #fff; box-shadow: 0 8px 16px rgba(17,153,168,.2); }
+    .login-visual-copy .eyebrow { color: #168f9d; }
+    .login-visual-copy h2 { max-width: 400px; color: #17313a; }
+    .login-visual-copy p { color: #668087; }
+    .login-note { border-color: rgba(17,153,168,.18); background: rgba(255,255,255,.62); color: #2d6970; }
+    .login-note .material-symbols-outlined { color: #1199a8; }
+    .login-panel {
+      padding: 54px clamp(30px, 6vw, 76px);
+      background: linear-gradient(160deg, #123e45 0%, #0d3038 100%);
+      color: #efffff;
+    }
+    .login-box h1 { color: #f4ffff; font-size: 34px; letter-spacing: -.06em; }
+    .login-box p.sub { color: rgba(229,250,250,.68); }
+    .login-box label { color: rgba(229,250,250,.72); }
+    .login-box input {
+      min-height: 48px;
+      border: 1px solid rgba(187,238,235,.12);
+      border-radius: 999px;
+      background: rgba(5,28,34,.42);
+      color: #f4ffff;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+    }
+    .login-box input::placeholder { color: rgba(229,250,250,.42); }
+    .login-box input:focus { border-color: #58cfca; box-shadow: 0 0 0 4px rgba(88,207,202,.14); }
+    .login-box .btn.primary {
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #67d6d0, #23aeb2);
+      color: #07383d;
+      box-shadow: 0 12px 22px rgba(3,22,27,.24);
+    }
+    .login-box .btn.primary:hover { background: linear-gradient(135deg, #83e1da, #35bcc0); }
+    #login-error { color: #ffd0d0; background: rgba(143,46,57,.28); }
+    @media (max-width: 899px) {
+      body { background:
+        radial-gradient(circle at 100% 0, rgba(175,231,232,.45), transparent 18rem),
+        var(--bg); }
+      header { padding-top: 20px; }
+      .view { padding-left: 16px; padding-right: 16px; }
+      .card, .summary-card { border-radius: 20px; }
+    }
+    @media (max-width: 720px) {
+      #login-screen { padding: 14px; }
+      .login-layout { border-radius: 26px; }
+      .login-visual { min-height: 290px; padding: 28px; }
+      .login-visual::before { right: -45%; width: 92%; }
+      .login-visual-copy h2 { font-size: 31px; }
+      .login-panel { padding: 36px 26px 42px; }
+    }
   </style>
 </head>
 <body>
 
 <!-- ===================== EKRAN LOGOWANIA ===================== -->
 <div id="login-screen">
-  <div class="login-box">
-    <h1>Planer posiłków</h1>
-    <p class="sub">Zaloguj się, żeby zobaczyć plan.</p>
-    <label>E-mail</label>
-    <input id="login-email" type="email" autocomplete="username">
-    <label>Hasło</label>
-    <input id="login-password" type="password" autocomplete="current-password">
-    <button class="btn primary" style="margin-top:16px;" onclick="zaloguj()">Zaloguj się</button>
-    <div id="login-error"></div>
+  <div class="login-layout">
+    <section class="login-visual" aria-label="Planowanie posiłków">
+      <div class="login-brand"><span class="login-brand-mark"><span class="material-symbols-outlined">restaurant</span></span>Planer posiłków</div>
+      <div class="login-visual-copy">
+        <p class="eyebrow">Jedz dobrze. Planuj prościej.</p>
+        <h2>Twój tydzień zaczyna się od dobrego planu.</h2>
+        <p>Przepisy, lista zakupów i posiłki całej rodziny w jednym spokojnym miejscu.</p>
+      </div>
+      <div class="login-note"><span class="material-symbols-outlined">eco</span>Dobrze zaplanowany tydzień w Twoim stylu</div>
+    </section>
+    <section class="login-panel">
+      <div class="login-box">
+        <h1>Witaj ponownie</h1>
+        <p class="sub">Zaloguj się, żeby zobaczyć swój plan posiłków.</p>
+        <label for="login-email">E-mail</label>
+        <input id="login-email" type="email" autocomplete="username">
+        <label for="login-password">Hasło</label>
+        <input id="login-password" type="password" autocomplete="current-password">
+        <button class="btn primary" onclick="zaloguj()">Zaloguj się</button>
+        <div id="login-error"></div>
+      </div>
+    </section>
   </div>
 </div>
 
 <div id="app-root">
+
+<aside class="desktop-sidebar" aria-label="Główna nawigacja">
+  <div class="sidebar-brand">
+    <span class="sidebar-brand-mark"><span class="material-symbols-outlined">restaurant</span></span>
+    <strong>Planer posiłków</strong>
+  </div>
+  <div class="sidebar-caption">Nawigacja</div>
+  <nav class="sidebar-nav">
+    <button class="active" data-sidebar-view="plan" onclick="pokazWidok('plan')"><span class="material-symbols-outlined">calendar_month</span>Plan</button>
+    <button data-sidebar-view="dzisiaj" onclick="pokazWidok('dzisiaj')"><span class="material-symbols-outlined">today</span>Dzisiaj</button>
+    <button data-sidebar-view="przepisy" onclick="pokazWidok('przepisy')"><span class="material-symbols-outlined">menu_book</span>Przepisy</button>
+    <button data-sidebar-view="zakupy" onclick="pokazWidok('zakupy')"><span class="material-symbols-outlined">shopping_cart</span>Zakupy</button>
+    <button data-sidebar-view="trening" onclick="pokazWidok('trening')"><span class="material-symbols-outlined">fitness_center</span>Trening</button>
+    <button data-sidebar-view="waga" onclick="pokazWidok('waga')"><span class="material-symbols-outlined">monitor_weight</span>Waga</button>
+      <button data-sidebar-view="ustawienia" onclick="otworzUstawienia()"><span class="material-symbols-outlined">settings</span>Ustawienia</button>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="sidebar-logout" onclick="wyloguj()"><span class="material-symbols-outlined" style="font-size:16px;">logout</span>Wyloguj</button>
+  </div>
+</aside>
 
 <header>
   <h1 id="page-title">Plan tygodnia</h1>
@@ -759,14 +1567,38 @@
 
 <!-- ===================== WIDOK: PLAN ===================== -->
 <div class="view active" id="view-plan">
+  <div class="plan-board-toolbar">
+    <div class="toolbar-field">
+      <label for="weekly-range-date">Początek zakresu</label>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <input type="date" id="weekly-range-date" onchange="skoczDoDaty(this.value)">
+        <button type="button" class="plan-today-btn" onclick="idzDoDzisiaj()" title="Przejdź do bieżącej daty">
+          <span class="material-symbols-outlined" aria-hidden="true">today</span>Dziś
+        </button>
+      </div>
+    </div>
+    <div class="toolbar-field">
+      <label for="weekly-person">Plan dla osoby</label>
+      <select id="weekly-person" aria-label="Wybierz osobę do wyświetlenia" onchange="zmienOsobePlanu(this.value)"></select>
+    </div>
+  </div>
   <div class="plan-person-picker">
     <span class="material-symbols-outlined" aria-hidden="true">person</span>
     <select id="plan-osoba" aria-label="Wybierz osobę do uzupełniania planu" onchange="zmienOsobePlanu(this.value)"></select>
     <span class="material-symbols-outlined plan-person-chevron" aria-hidden="true">expand_more</span>
   </div>
-  <label class="plan-start-label" style="margin-top:0;">Początek planu</label>
-  <input type="date" id="skocz-do-daty" onchange="skoczDoDaty(this.value)">
+  <div class="plan-date-picker">
+    <span class="plan-date-picker-icon material-symbols-outlined" aria-hidden="true">calendar_month</span>
+    <div class="plan-date-picker-copy">
+      <span>Data planu</span>
+      <input type="date" id="skocz-do-daty" aria-label="Wybierz datę planu" onchange="skoczDoDaty(this.value)">
+    </div>
+    <button type="button" class="plan-today-btn" onclick="idzDoDzisiaj()">
+      <span class="material-symbols-outlined" aria-hidden="true">today</span>Dziś
+    </button>
+  </div>
   <div class="day-scroller" id="day-scroller" style="margin-top:12px;"></div>
+  <div class="weekly-board" id="weekly-board"></div>
   <div id="plan-cards"><div class="loading">Wczytywanie…</div></div>
   <div class="plan-controls-row" id="plan-controls-row"></div>
 
@@ -827,20 +1659,76 @@
 
 <!-- ===================== WIDOK: ZAKUPY ===================== -->
 <div class="view" id="view-zakupy">
-  <label>Od</label>
-  <input type="date" id="zakupy-od">
-  <label>Do</label>
-  <input type="date" id="zakupy-do">
-  <button class="btn primary" style="margin-top:14px" onclick="wczytajListeZakupow()">Pokaż listę zakupów</button>
+  <div class="shopping-hero">
+    <h2>Lista zakupów</h2>
+    <p>Twoje produkty uporządkowane według kategorii</p>
+  </div>
+  <div class="shopping-range">
+    <div class="shopping-range-field"><label for="zakupy-od">Od</label><input type="date" id="zakupy-od"></div>
+    <div class="shopping-range-field"><label for="zakupy-do">Do</label><input type="date" id="zakupy-do"></div>
+    <button class="btn primary" onclick="wczytajListeZakupow()">Pokaż listę</button>
+  </div>
+  <div class="shopping-summary" id="shopping-summary" hidden></div>
   <div id="zakupy-wynik" style="margin-top:18px"></div>
 
   <div class="section-title">Dodatkowe (ręcznie)</div>
   <div class="dodaj-skladnik-row">
     <input id="dodatkowy-nazwa" placeholder="np. papier toaletowy" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
-    <input id="dodatkowy-ilosc" class="ilosc-input" placeholder="ilość (opcj.)" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
+    <div class="shopping-extra-field">
+      <span class="label-sm">Ilość</span>
+      <input id="dodatkowy-ilosc" class="ilosc-input" placeholder="" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
+    </div>
     <button onclick="dodajZakupDodatkowy()"><span class="material-symbols-outlined">add</span></button>
   </div>
   <div id="zakupy-dodatkowe-wynik"></div>
+</div>
+
+<!-- ===================== WIDOK: TRENING ===================== -->
+<div class="view" id="view-trening">
+  <div class="training-toolbar">
+    <div>
+      <div class="label-sm">Plan treningowy</div>
+      <div class="training-month-nav">
+        <button onclick="zmienMiesiacTreningu(-1)" aria-label="Poprzedni miesiąc">‹</button>
+        <div class="training-month-title" id="trening-miesiac"></div>
+        <button onclick="zmienMiesiacTreningu(1)" aria-label="Następny miesiąc">›</button>
+      </div>
+    </div>
+    <select id="trening-osoba" onchange="zmienOsobeTreningu(this.value)" style="max-width:220px;"></select>
+  </div>
+  <div class="training-layout">
+    <section class="training-calendar-card">
+      <div class="training-weekdays"><span>Pon</span><span>Wt</span><span>Śr</span><span>Czw</span><span>Pt</span><span>Sob</span><span>Nd</span></div>
+      <div class="training-calendar" id="trening-kalendarz"></div>
+      <div class="training-summary" id="trening-podsumowanie"></div>
+    </section>
+    <section class="training-editor-card">
+      <h2 id="trening-edytor-tytul">Wybierz dzień</h2>
+      <div class="training-editor-date" id="trening-edytor-data"></div>
+      <label for="trening-nazwa">Nazwa treningu</label>
+      <input id="trening-nazwa" placeholder="np. Bieg spokojny, siła, rower">
+      <label for="trening-typ">Rodzaj treningu</label>
+      <select id="trening-typ">
+        <option value="rower">Rower</option><option value="bieganie">Bieganie</option>
+        <option value="gory">Góry</option><option value="spacer">Spacer</option><option value="silownia">Siłownia</option>
+      </select>
+      <label for="trening-opis">Plan dnia</label>
+      <textarea id="trening-opis" placeholder="Opisz, co zrobić tego dnia…"></textarea>
+      <div class="training-fields">
+        <div><label for="trening-tempo">Tempo</label><input id="trening-tempo" placeholder="np. 5:30/km"></div>
+        <div><label for="trening-tetno">Tętno</label><input id="trening-tetno" placeholder="np. 145 bpm"></div>
+        <div><label for="trening-ftp">FTP</label><input id="trening-ftp" placeholder="np. 220 W"></div>
+        <div><label for="trening-czas">Czas</label><input id="trening-czas" placeholder="np. 45 min"></div>
+      </div>
+      <label>Status</label>
+      <div class="training-status">
+        <button data-status="planned" onclick="ustawStatusTreningu('planned')">Planowany</button>
+        <button data-status="done" onclick="ustawStatusTreningu('done')">Wykonany</button>
+        <button data-status="missed" onclick="ustawStatusTreningu('missed')">Pominięty</button>
+      </div>
+      <button class="btn primary" style="width:100%;" onclick="zapiszTreningDnia()">Zapisz trening</button>
+    </section>
+  </div>
 </div>
 
 <!-- ===================== WIDOK: WAGA ===================== -->
@@ -866,7 +1754,6 @@
 <div class="tabbar">
   <button class="tab active" onclick="pokazWidok('plan')"><span class="icon material-symbols-outlined">calendar_month</span>Plan</button>
   <button class="tab" onclick="pokazWidok('dzisiaj')"><span class="icon material-symbols-outlined">today</span>Dzisiaj</button>
-  <button class="tab" onclick="pokazWidok('tydzien')"><span class="icon material-symbols-outlined">view_week</span>Tydzień</button>
   <button class="tab" onclick="pokazWidok('przepisy')"><span class="icon material-symbols-outlined">menu_book</span>Przepisy</button>
   <button class="tab" onclick="pokazWidok('zakupy')"><span class="icon material-symbols-outlined">shopping_cart</span>Zakupy</button>
   <button class="tab tab-settings" onclick="otworzUstawienia()" title="Ustawienia"><span class="icon material-symbols-outlined">settings</span>Ustawienia</button>
@@ -877,7 +1764,10 @@
   <div class="modal">
     <div class="modal-header">
       <h2>Wybierz przepis</h2>
-      <button class="close-x" onclick="zamknijModal('modal-wybor')"><span class="material-symbols-outlined">close</span></button>
+      <div class="modal-header-actions">
+        <button class="modal-add-recipe" title="Dodaj nowy przepis" onclick="otworzFormularzPrzepisu(true)"><span class="material-symbols-outlined">add</span></button>
+        <button class="close-x" onclick="zamknijModal('modal-wybor')"><span class="material-symbols-outlined">close</span></button>
+      </div>
     </div>
     <div class="sticky-controls-modal">
       <p class="label-sm" id="wybor-podtytul" style="margin:0 0 10px;"></p>
@@ -928,14 +1818,16 @@
       <button class="close-x" onclick="anulujFormularzPrzepisu()"><span class="material-symbols-outlined">close</span></button>
     </div>
 
-    <label>Zdjęcie</label>
-    <div class="f-zdjecie-wrap">
-      <img id="f-zdjecie-preview" class="f-zdjecie-preview" alt="">
-      <label class="f-zdjecie-input-label" for="f-zdjecie">
-        <span class="material-symbols-outlined" style="font-size:18px;">photo_camera</span>
-        Wybierz zdjęcie
-      </label>
-      <input type="file" id="f-zdjecie" accept="image/*" onchange="pokazPodgladZdjecia(this)">
+    <div class="form-photo-field">
+      <label for="f-zdjecie">Zdjęcie</label>
+      <div class="f-zdjecie-wrap">
+        <img id="f-zdjecie-preview" class="f-zdjecie-preview" alt="">
+        <label class="f-zdjecie-input-label" for="f-zdjecie">
+          <span class="material-symbols-outlined" style="font-size:18px;">photo_camera</span>
+          Wybierz zdjęcie
+        </label>
+        <input type="file" id="f-zdjecie" accept="image/*" onchange="pokazPodgladZdjecia(this)">
+      </div>
     </div>
 
     <label>Nazwa</label>
@@ -949,17 +1841,12 @@
       <option>przekąska</option>
     </select>
 
-    <label>Kcal</label>
-    <input id="f-kcal" type="number" inputmode="numeric">
-
-    <label>Białko (g)</label>
-    <input id="f-bialko" type="number" inputmode="numeric">
-
-    <label>Tłuszcz (g)</label>
-    <input id="f-tluszcz" type="number" inputmode="numeric">
-
-    <label>Węglowodany (g)</label>
-    <input id="f-wegle" type="number" inputmode="numeric">
+    <div class="form-macro-row">
+      <div class="form-macro-field"><label for="f-kcal">Kcal</label><input id="f-kcal" type="number" inputmode="numeric"></div>
+      <div class="form-macro-field"><label for="f-bialko">Białko</label><input id="f-bialko" type="number" inputmode="numeric"></div>
+      <div class="form-macro-field"><label for="f-tluszcz">Tłuszcz</label><input id="f-tluszcz" type="number" inputmode="numeric"></div>
+      <div class="form-macro-field"><label for="f-wegle">Węglowodany</label><input id="f-wegle" type="number" inputmode="numeric"></div>
+    </div>
 
     <label>Sposób przygotowania</label>
     <textarea id="f-przygotowanie" placeholder="Krok po kroku…"></textarea>
@@ -971,18 +1858,18 @@
     <div style="margin-top:10px; font-size:12px; color:var(--text-3);">
       Nie ma składnika na liście? Dodaj go najpierw poniżej — pojawi się od razu w wyborze.
     </div>
-    <div class="ingredient-row" style="margin-top:8px;">
-      <input id="nowy-skladnik-nazwa" placeholder="Nazwa nowego składnika">
-      <select id="nowy-skladnik-kategoria">
-        <option value="nabiał">nabiał</option>
-        <option value="warzywa">warzywa</option>
-        <option value="owoce">owoce</option>
-        <option value="mięso">mięso</option>
-        <option value="pieczywo">pieczywo</option>
-        <option value="przyprawy">przyprawy</option>
-        <option value="inne">inne</option>
-      </select>
-      <input id="nowy-skladnik-jednostka" placeholder="jedn." style="flex:0 0 60px;">
+    <div class="ingredient-row new-ingredient-row" style="margin-top:8px;">
+      <div class="new-ingredient-field"><label for="nowy-skladnik-nazwa">Nazwa składnika</label><input id="nowy-skladnik-nazwa" placeholder="np. Pomidor"></div>
+      <div class="new-ingredient-field"><label for="nowy-skladnik-kategoria">Kategoria</label><select id="nowy-skladnik-kategoria">
+          <option value="nabiał">nabiał</option>
+          <option value="warzywa">warzywa</option>
+          <option value="owoce">owoce</option>
+          <option value="mięso">mięso</option>
+          <option value="pieczywo">pieczywo</option>
+          <option value="przyprawy">przyprawy</option>
+          <option value="inne">inne</option>
+        </select></div>
+      <div class="new-ingredient-field"><label for="nowy-skladnik-jednostka">Jednostka</label><input id="nowy-skladnik-jednostka" placeholder="g / szt"></div>
     </div>
     <button class="btn small" style="margin-top:8px;" onclick="dodajNowySkladnikDoBazy()">Dodaj do bazy składników</button>
 
@@ -1006,41 +1893,92 @@
   </div>
 </div>
 
-<!-- ===================== MODAL: USTAWIENIA ===================== -->
-<div class="modal-overlay" id="modal-ustawienia" style="align-items:center;">
-  <div class="modal" style="border-radius:18px; max-width:380px; padding:20px 18px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-      <h2 style="margin:0; font-size:16px;">Ustawienia</h2>
-      <button class="close-x" onclick="zamknijModal('modal-ustawienia')"><span class="material-symbols-outlined">close</span></button>
+<!-- ===================== WIDOK: USTAWIENIA ===================== -->
+<div class="view" id="view-ustawienia">
+  <div class="settings-page">
+    <div class="settings-content">
+      <h2>Ustawienia</h2>
+      <p class="settings-intro">Zarządzaj osobami, celami i danymi swojego planera.</p>
+      <div class="settings-tabs" role="tablist" aria-label="Sekcje ustawień">
+        <button class="settings-tab active" data-settings-tab="osoby" onclick="ustawieniaZakladka('osoby')"><span class="material-symbols-outlined">group</span>Osoby</button>
+        <button class="settings-tab" data-settings-tab="treningi" onclick="ustawieniaZakladka('treningi')"><span class="material-symbols-outlined">fitness_center</span>Treningi</button>
+        <button class="settings-tab" data-settings-tab="skladniki" onclick="ustawieniaZakladka('skladniki')"><span class="material-symbols-outlined">grocery</span>Składniki i kategorie</button>
+        <button class="settings-tab" data-settings-tab="dane" onclick="ustawieniaZakladka('dane')"><span class="material-symbols-outlined">database</span>Dane i porządki</button>
+      </div>
+
+      <section class="settings-panel active" id="ustawienia-panel-osoby">
+        <div class="section-title" style="margin-top:0;">Osoby — imiona i cele</div>
+        <div id="ustawienia-osoby-lista"></div>
+        <div id="ustawienia-nowe-osoby"></div>
+        <button class="btn small" style="margin-top:4px;" onclick="dodajWierszOsoby()"><span class="material-symbols-outlined" style="font-size:17px;">person_add</span> Dodaj osobę</button>
+        <button class="btn primary small" style="margin-top:4px;" onclick="zapiszOsobyZUstawien()">Zapisz zmiany osób</button>
+
+        <div class="section-title">Domyślna liczba posiłków</div>
+        <p class="label-sm" style="margin:0 0 8px;">Dla dni, w których jeszcze nic nie zaplanowano.</p>
+        <select id="ustawienia-domyslna-liczba" onchange="zapiszDomyslnaLiczbePosilkow()">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+
+        <div class="section-title">Nazwy posiłków</div>
+        <p class="label-sm" style="margin:0 0 8px;">Nadaj slotom własne nazwy, np. Śniadanie, Lunch lub Podwieczorek.</p>
+        <div id="ustawienia-nazwy-posilkow"></div>
+        <button class="btn primary small" style="margin-top:8px;" onclick="zapiszNazwyPosilkowZUstawien()">Zapisz nazwy posiłków</button>
+
+      </section>
+
+      <section class="settings-panel" id="ustawienia-panel-treningi">
+        <div class="section-title" style="margin-top:0;">Rodzaje treningu i kolory</div>
+        <p class="label-sm" style="margin:0 0 12px;">Dodaj własny rodzaj treningu i wybierz jego kolor w kalendarzu.</p>
+        <div id="ustawienia-treningi-lista"></div>
+        <button class="btn small" style="margin-top:8px;" onclick="dodajRodzajTreninguZUstawien()"><span class="material-symbols-outlined">add</span> Dodaj rodzaj</button>
+      </section>
+
+      <section class="settings-panel" id="ustawienia-panel-skladniki">
+        <div class="section-title" style="margin-top:0;">Składniki i kategorie</div>
+        <p class="label-sm" style="margin:0 0 12px;">Zmieniaj nazwy i kategorie oraz łącz zdublowane pozycje.</p>
+        <div class="settings-ingredient-toolbar">
+          <input id="ustawienia-skladniki-szukaj" placeholder="Szukaj składnika…" oninput="renderujZarzadzanieSkladnikami()">
+          <button class="btn small" onclick="renderujZarzadzanieSkladnikami()"><span class="material-symbols-outlined">refresh</span></button>
+        </div>
+        <div id="ustawienia-duplikaty-lista"></div>
+        <div id="ustawienia-skladniki-lista"><p class="label-sm">Wczytywanie…</p></div>
+        <div class="section-title">Nie używane</div>
+        <div id="ustawienia-nieuzywane-lista"><p class="label-sm">Wczytywanie…</p></div>
+      </section>
+
+      <section class="settings-panel" id="ustawienia-panel-dane">
+        <div class="section-title" style="margin-top:0;">Kopia zapasowa</div>
+        <p class="label-sm" style="margin:0 0 8px;">Pobierz plik JSON ze wszystkimi przepisami i składnikami.</p>
+        <button class="btn" onclick="pobierzKopieZapasowa()"><span class="material-symbols-outlined" style="font-size:16px;">download</span> Pobierz kopię zapasową</button>
+
+        <div class="section-title" style="margin-top:26px;">Wyczyść stary plan</div>
+        <p class="label-sm" style="margin:0 0 8px;">Usuwa zaplanowane posiłki sprzed wybranej daty. Same przepisy i składniki zostają.</p>
+        <label>Usuń wszystko sprzed</label>
+        <input id="ustawienia-data" type="date">
+        <button class="btn primary" style="margin-top:14px; color:var(--danger); background:var(--card); border-color:var(--danger);" onclick="wyczyscStaryPlan()">Wyczyść</button>
+      </section>
     </div>
+  </div>
+</div>
 
-    <div class="section-title" style="margin-top:14px;">Osoby — imiona i cele</div>
-    <div id="ustawienia-osoby-lista"></div>
-    <div id="ustawienia-nowe-osoby"></div>
-    <button class="btn small" style="margin-top:4px;" onclick="dodajWierszOsoby()"><span class="material-symbols-outlined" style="font-size:17px;">person_add</span> Dodaj osobę</button>
-    <button class="btn primary small" style="margin-top:4px;" onclick="zapiszOsobyZUstawien()">Zapisz zmiany osób</button>
-
-    <div class="section-title">Domyślna liczba posiłków</div>
-    <p class="label-sm" style="margin:0 0 8px;">Dla dni, w których jeszcze nic nie zaplanowano.</p>
-    <select id="ustawienia-domyslna-liczba" onchange="zapiszDomyslnaLiczbePosilkow()">
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-    </select>
-
-    <div class="section-title">Kopia zapasowa</div>
-    <p class="label-sm" style="margin:0 0 8px;">Pobierz plik JSON ze wszystkimi przepisami i składnikami.</p>
-    <button class="btn" onclick="pobierzKopieZapasowa()"><span class="material-symbols-outlined" style="font-size:16px;">download</span> Pobierz kopię zapasową</button>
-
-    <div class="section-title">Porządki w składnikach</div>
-    <p class="label-sm" style="margin:0 0 8px;">Składniki, które nie występują w żadnym przepisie.</p>
-    <div id="ustawienia-nieuzywane-lista"><p class="label-sm">Wczytywanie…</p></div>
-
-    <div class="section-title" style="margin-top:14px;">Wyczyść stary plan</div>
-    <p class="label-sm" style="margin:0 0 8px;">Usuwa zaplanowane posiłki sprzed wybranej daty. Same przepisy i składniki zostają — usuwany jest tylko plan tygodniowy.</p>
-    <label>Usuń wszystko sprzed</label>
-    <input id="ustawienia-data" type="date">
-    <button class="btn primary" style="margin-top:14px; color:var(--danger); background:var(--card); border-color:var(--danger);" onclick="wyczyscStaryPlan()">Wyczyść</button>
+<!-- ===================== MODAL: POTWIERDZENIE / KOMUNIKAT ===================== -->
+<div class="modal-overlay" id="modal-copy-meal" style="align-items:center;">
+  <div class="modal" style="border-radius:22px; max-width:380px; padding:24px 20px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+      <h2 style="margin:0; font-size:19px;">Kopiuj posiłek</h2>
+      <button class="close-x" onclick="zamknijModal('modal-copy-meal')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <p class="label-sm" style="margin:0 0 18px;">Dla osoby: <strong id="copy-meal-person"></strong></p>
+    <label for="copy-meal-date">Na dzień</label>
+    <input id="copy-meal-date" type="date">
+    <label for="copy-meal-type">Typ posiłku</label>
+    <select id="copy-meal-type"></select>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn ghost" onclick="zamknijModal('modal-copy-meal')">Anuluj</button>
+      <button class="btn primary" onclick="zatwierdzKopiePosilku()"><span class="material-symbols-outlined">content_copy</span>Kopiuj</button>
+    </div>
   </div>
 </div>
 
@@ -1211,18 +2149,70 @@
 
     async ustawPosilek(wpis) {
       if (!wpis.idPrzepisu) {
-        const { error } = await sb.from('plan_tygodnia').delete()
+        const { data, error } = await sb.from('plan_tygodnia').delete()
           .eq('data', wpis.data).eq('osoba', wpis.osoba).eq('numer_posilku', wpis.numerPosilku);
         if (error) throw error;
-        return { ok: true };
+        return { ok: true, deleted: Array.isArray(data) ? data.length : null };
       }
       const row = {
         data: wpis.data, osoba: wpis.osoba, numer_posilku: wpis.numerPosilku,
         id_przepisu: wpis.idPrzepisu, porcje: wpis.porcje || 1
       };
-      const { error } = await sb.from('plan_tygodnia').upsert(row, { onConflict: 'data,osoba,numer_posilku' });
-      if (error) throw error;
+      const { data: existingRows, error: findError } = await sb.from('plan_tygodnia')
+        .select('*')
+        .eq('data', row.data)
+        .eq('osoba', row.osoba)
+        .eq('numer_posilku', row.numer_posilku)
+        .limit(1);
+      if (findError) throw findError;
+      if (existingRows && existingRows.length) {
+        const { error: updateError } = await sb.from('plan_tygodnia')
+          .update({ id_przepisu: row.id_przepisu, porcje: row.porcje })
+          .eq('data', row.data)
+          .eq('osoba', row.osoba)
+          .eq('numer_posilku', row.numer_posilku);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await sb.from('plan_tygodnia').insert(row);
+        if (insertError) throw insertError;
+      }
       return { ok: true };
+    },
+
+    async getTreningi(osobaImie, dataOd, dataDo) {
+      const { data, error } = await sb.from('treningi').select('*')
+        .eq('osoba', osobaImie).gte('data', dataOd).lte('data', dataDo).order('data');
+      if (error) throw error;
+      return data;
+    },
+
+    async zapiszTrening(wpis) {
+      const { data: { user }, error: userError } = await sb.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error('Sesja wygasła. Zaloguj się ponownie.');
+      const row = {
+        user_id: user.id, osoba: wpis.osoba, data: wpis.data, nazwa: wpis.nazwa || null, typ: wpis.typ || 'bieganie', opis: wpis.opis || null,
+        tempo: wpis.tempo || null, tetno: wpis.tetno || null, ftp: wpis.ftp || null,
+        czas: wpis.czas || null, status: wpis.status || 'planned'
+      };
+      const { error } = await sb.from('treningi').upsert(row, { onConflict: 'user_id,osoba,data' });
+      if (error) throw error;
+    },
+
+    async getRodzajeTreningow() {
+      const { data, error } = await sb.from('rodzaje_treningow').select('*').order('nazwa');
+      if (error) throw error;
+      return data;
+    },
+
+    async zapiszRodzajTreningu(rodzaj) {
+      const { data: { user }, error: userError } = await sb.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error('Sesja wygasła. Zaloguj się ponownie.');
+      const { error } = await sb.from('rodzaje_treningow').upsert({
+        id: rodzaj.id || undefined, user_id: user.id, nazwa: rodzaj.nazwa, kolor: rodzaj.kolor
+      }, { onConflict: 'user_id,nazwa' });
+      if (error) throw error;
     },
 
     async updateOsoba(id, imie, celKcal) {
@@ -1271,6 +2261,14 @@
     async deleteSkladnik(id) {
       const { error } = await sb.from('skladniki').delete().eq('id', id);
       if (error) throw error;
+    },
+
+    async mergeSkladnik(duplicateId, keepId) {
+      const { error: updateError } = await sb.from('skladniki_przepisu')
+        .update({ id_skladnika: keepId }).eq('id_skladnika', duplicateId);
+      if (updateError) throw updateError;
+      const { error: deleteError } = await sb.from('skladniki').delete().eq('id', duplicateId);
+      if (deleteError) throw deleteError;
     },
 
     async getCalyPlanRaw() {
@@ -1399,8 +2397,30 @@
     }));
   }
 
+  var sesjaWygaslaObsluzona = false;
+
+  function czyBladSesji(err) {
+    var tekst = String(err && (err.message || err.code || err) || '').toLowerCase();
+    return tekst.indexOf('jwt') !== -1 || tekst.indexOf('token') !== -1 && (
+      tekst.indexOf('expired') !== -1 || tekst.indexOf('invalid') !== -1 || tekst.indexOf('refresh') !== -1
+    );
+  }
+
+  function pokazEkranLogowaniaPoWygasnieciuSesji() {
+    if (sesjaWygaslaObsluzona) return;
+    sesjaWygaslaObsluzona = true;
+    if (sb) sb.auth.signOut({ scope: 'local' }).catch(function () {});
+    document.getElementById('app-root').classList.remove('ready');
+    document.getElementById('login-screen').classList.remove('hidden');
+    pokazBladLoginu('Sesja wygasła. Zaloguj się ponownie.');
+  }
+
   function pokazBlad(err) {
     console.error(err);
+    if (czyBladSesji(err)) {
+      pokazEkranLogowaniaPoWygasnieciuSesji();
+      return;
+    }
     pokazKomunikat('Wystąpił błąd: ' + (err && err.message ? err.message : err));
   }
 
@@ -1463,6 +2483,7 @@
         pokazBladLoginu('Błąd logowania: ' + error.message);
         return;
       }
+      sesjaWygaslaObsluzona = false;
       pokazAplikacje();
     } catch (e) {
       console.error(e);
@@ -1496,13 +2517,22 @@
 
   window.addEventListener('load', async () => {
     if (!sb) return;
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      pokazAplikacje();
-    } else {
-      document.getElementById('login-password').addEventListener('keydown', e => {
-        if (e.key === 'Enter') zaloguj();
-      });
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        pokazAplikacje();
+      } else {
+        document.getElementById('login-password').addEventListener('keydown', e => {
+          if (e.key === 'Enter') zaloguj();
+        });
+      }
+    } catch (err) {
+      if (czyBladSesji(err)) {
+        pokazEkranLogowaniaPoWygasnieciuSesji();
+      } else {
+        console.error(err);
+        pokazBladLoginu('Nie udało się sprawdzić sesji. Odśwież stronę i spróbuj ponownie.');
+      }
     }
   });
 
@@ -1517,31 +2547,54 @@
     baseDate: new Date(),
     editingRecipeId: null,
     pickingSlot: null,
+    tworzenieZWyboru: false,
+    copySlot: null,
+    osobyKolory: {},
     filtrPrzepisy: 'wszystkie',
     iloscPosilkowDaty: {},
     nazwyPosilkow: {},
+    treningi: [],
+    treningMiesiac: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    treningOsoba: null,
+    treningData: formatDate(new Date()),
+    treningStatus: 'planned',
+    treningRodzaje: [
+      { nazwa: 'Rower', slug: 'rower', kolor: '#2b8ac6' },
+      { nazwa: 'Bieganie', slug: 'bieganie', kolor: '#e47739' },
+      { nazwa: 'Góry', slug: 'gory', kolor: '#7b61c9' },
+      { nazwa: 'Spacer', slug: 'spacer', kolor: '#3aa875' },
+      { nazwa: 'Siłownia', slug: 'silownia', kolor: '#d34f72' }
+    ],
     dzisiajPlan: [],
     tydzienPlan: [],
     tydzienStart: formatDate(getPoniedzialek(new Date())),
     zakupyDodatkowe: [],
     domyslnaLiczbaPosilkow: 3,
     wagaOsoba: null,
-    wagaPomiary: []
+    wagaPomiary: [],
+    wagaZakres: 'W'
   };
   var currentRecipeId = null;
   var TYPY_POSILKOW = ['śniadanie', 'obiad', 'kolacja', 'przekąska'];
 
   var PALETA_OSOB = [
-    { accent: '#4A4238', bg: '#EDE8DC', nazwa: 'Olive Night' },
-    { accent: '#8C8265', bg: '#F1EDE0', nazwa: 'Pelican' },
-    { accent: '#2F4735', bg: '#E3E9E0', nazwa: 'Mountain View' },
-    { accent: '#4B4139', bg: '#EFEAE2', nazwa: 'Wren' }
+    { accent: '#1199A8', bg: 'rgba(17,153,168,.10)', nazwa: 'Turkus' },
+    { accent: '#35AFA7', bg: 'rgba(53,175,167,.10)', nazwa: 'Mięta' },
+    { accent: '#6A92B8', bg: 'rgba(106,146,184,.10)', nazwa: 'Błękit' },
+    { accent: '#8A7DB8', bg: 'rgba(138,125,184,.10)', nazwa: 'Lawenda' },
+    { accent: '#D28A72', bg: 'rgba(210,138,114,.10)', nazwa: 'Korall' }
   ];
 
   function paletaOsoby(imieOsoby) {
     var idx = state.osoby.findIndex(function (o) { return o.imie === imieOsoby; });
     if (idx < 0) idx = 0;
-    return PALETA_OSOB[idx % PALETA_OSOB.length];
+    var osoba = state.osoby[idx];
+    var wybranyKolor = state.osobyKolory && osoba ? state.osobyKolory[String(osoba.id)] : null;
+    return PALETA_OSOB.find(function (kolor) { return kolor.accent.toLowerCase() === String(wybranyKolor).toLowerCase(); }) || PALETA_OSOB[idx % PALETA_OSOB.length];
+  }
+
+  function zapiszKoloryOsob() {
+    db.setUstawienie('koloryOsob', state.osobyKolory || {}).catch(pokazBlad);
   }
 
   function zapiszNazwyPosilkow() {
@@ -1625,8 +2678,11 @@
     Promise.all([db.getOsoby(), db.getUstawienia()]).then(function (wyniki) {
       state.osoby = wyniki[0];
       if (state.planOsoba === null && state.osoby.length) state.planOsoba = String(state.osoby[0].id);
-      renderujOsobyPlanu();
       var u = wyniki[1];
+      state.osobyKolory = u.koloryOsob || {};
+      renderujOsobyPlanu();
+      renderujUstawieniaOsoby();
+      renderujRodzajeTreningowUstawien();
       state.ulubionePrzepisy = Array.isArray(u.ulubionePrzepisy) ? u.ulubionePrzepisy.map(String) : [];
       state.nazwyPosilkow = u.nazwyPosilkow || {};
       state.domyslnaLiczbaPosilkow = (u.domyslnaLiczbaPosilkow != null) ? u.domyslnaLiczbaPosilkow : 3;
@@ -1668,19 +2724,38 @@
   function renderujOsobyPlanu() {
     var select = document.getElementById('plan-osoba');
     if (!select) return;
-    select.innerHTML = state.osoby.map(function (osoba) {
+    var opcjaWszystkie = '<option value="all">Wszystkie</option>';
+    select.innerHTML = opcjaWszystkie + state.osoby.map(function (osoba) {
       return '<option value="' + escapeHtml(osoba.id) + '">' + escapeHtml(osoba.imie) + '</option>';
     }).join('');
-    if (state.planOsoba !== null && state.osoby.some(function (osoba) { return String(osoba.id) === String(state.planOsoba); })) {
+    if (state.planOsoba === null) {
+      select.value = 'all';
+    } else if (state.osoby.some(function (osoba) { return String(osoba.id) === String(state.planOsoba); })) {
       select.value = String(state.planOsoba);
     } else if (state.osoby.length) {
       state.planOsoba = String(state.osoby[0].id);
       select.value = state.planOsoba;
     }
+    var weeklyPerson = document.getElementById('weekly-person');
+    if (weeklyPerson) {
+      weeklyPerson.innerHTML = select.innerHTML;
+      weeklyPerson.value = state.planOsoba === null ? 'all' : select.value;
+    }
+    var sidebarPeople = document.getElementById('sidebar-people');
+    if (sidebarPeople) {
+      sidebarPeople.innerHTML = state.osoby.map(function (osoba) {
+        return '<div class="sidebar-person">' + escapeHtml(osoba.imie) + '</div>';
+      }).join('');
+    }
   }
 
   function zmienOsobePlanu(id) {
-    state.planOsoba = id;
+    state.planOsoba = id === 'all' ? null : id;
+    var wybranaWartosc = state.planOsoba === null ? 'all' : String(state.planOsoba);
+    var planSelect = document.getElementById('plan-osoba');
+    var weeklySelect = document.getElementById('weekly-person');
+    if (planSelect) planSelect.value = wybranaWartosc;
+    if (weeklySelect) weeklySelect.value = wybranaWartosc;
     renderujPlanDnia();
   }
 
@@ -1695,12 +2770,16 @@
       });
     }
     if (aktywnaZakladka) aktywnaZakladka.classList.add('active');
-    var titles = { plan: 'Plan tygodnia', dzisiaj: 'Dzisiaj', tydzien: 'Podgląd tygodnia', przepisy: 'Przepisy', zakupy: 'Lista zakupów', waga: 'Waga' };
+    document.querySelectorAll('[data-sidebar-view]').forEach(function (button) {
+      button.classList.toggle('active', button.getAttribute('data-sidebar-view') === nazwa);
+    });
+    var titles = { plan: 'Plan tygodnia', dzisiaj: 'Dzisiaj', tydzien: 'Podgląd tygodnia', przepisy: 'Przepisy', zakupy: 'Lista zakupów', trening: 'Trening', waga: 'Waga', ustawienia: 'Ustawienia' };
     document.getElementById('page-title').innerText = titles[nazwa];
     document.getElementById('fab-add').style.display = (nazwa === 'przepisy') ? 'block' : 'none';
     if (nazwa === 'dzisiaj') wczytajDzisiaj();
     if (nazwa === 'tydzien') wczytajTydzien();
     if (nazwa === 'zakupy') wczytajZakupyDodatkowe();
+    if (nazwa === 'trening') inicjalizujTrening();
     if (nazwa === 'waga') inicjalizujWagaTab();
   }
 
@@ -1743,8 +2822,16 @@
     var d = new Date(iso + 'T00:00:00');
     state.baseDate = d;
     state.selectedDate = iso;
+    var dateInput = document.getElementById('skocz-do-daty');
+    var rangeInput = document.getElementById('weekly-range-date');
+    if (dateInput) dateInput.value = iso;
+    if (rangeInput) rangeInput.value = iso;
     zbudujDayScroller();
     wczytajPlanTygodnia();
+  }
+
+  function idzDoDzisiaj() {
+    skoczDoDaty(formatDate(new Date()));
   }
 
   function istniejeWpisDlaNumeru(numerPosilku) {
@@ -1754,9 +2841,18 @@
   }
 
   function iloscPosilkowDlaDnia(data) {
-    if (state.iloscPosilkowDaty.hasOwnProperty(data)) return state.iloscPosilkowDaty[data];
-    if (istniejeWpisDlaNumeru(4)) return 4;
-    return state.domyslnaLiczbaPosilkow || 3;
+    var ustawionaLiczba = state.iloscPosilkowDaty.hasOwnProperty(data) ? Number(state.iloscPosilkowDaty[data]) : 0;
+    var widoczneOsoby = state.osoby.filter(function (osoba) {
+      return state.planOsoba === null || String(osoba.id) === String(state.planOsoba);
+    });
+    var najwyzszyNumer = 0;
+    state.plan.forEach(function (wpis) {
+      if (wpis.data !== data || !wpis.przepis) return;
+      if (widoczneOsoby.some(function (osoba) { return osoba.imie === wpis.osoba; })) {
+        najwyzszyNumer = Math.max(najwyzszyNumer, Number(wpis.numerPosilku) || 0);
+      }
+    });
+    return Math.min(4, Math.max(ustawionaLiczba, najwyzszyNumer, Number(state.domyslnaLiczbaPosilkow) || 3));
   }
 
   function renderujPlanDnia() {
@@ -1794,9 +2890,10 @@
         });
         var paleta = paletaOsoby(osoba.imie);
         var card = document.createElement('div');
-        card.className = 'card osoba-card';
+        card.className = 'card osoba-card meal-selection-card';
         card.style.borderLeftColor = paleta.accent;
-        card.onclick = function () { otworzWyborPrzepisu(state.selectedDate, osoba.imie, numerPosilku); };
+        card.style.background = 'linear-gradient(135deg, ' + paleta.bg + ', var(--card) 72%)';
+        card.onclick = function () { otworzPlanowanyPosilek(state.selectedDate, osoba.imie, numerPosilku); };
 
         var pill = '<span class="osoba-pill" style="background:' + paleta.bg + ';color:' + paleta.accent + '">' + escapeHtml(osoba.imie) + '</span>';
 
@@ -1853,7 +2950,7 @@
         } else {
           card.innerHTML =
             '<div class="row-top">' + pill + '</div>' +
-            '<div class="empty-slot">+ wybierz przepis</div>';
+            '<div class="empty-slot">+wybierz posiłek</div>';
         }
         container.appendChild(card);
       });
@@ -1869,6 +2966,7 @@
       var div = document.createElement('div');
       div.className = 'summary-card osoba-card';
       div.style.borderLeftColor = paleta.accent;
+      div.style.background = 'linear-gradient(135deg, ' + paleta.bg + ', var(--card) 72%)';
       var celHtml = '';
       if (o.celKcal) {
         var proc = Math.max(0, Math.min(100, Math.round((s.kcal / o.celKcal) * 100)));
@@ -1878,10 +2976,194 @@
       div.innerHTML =
         '<div class="label-sm" style="color:' + paleta.accent + '; font-weight:600;">' + escapeHtml(o.imie) + ' · razem</div>' +
         '<div class="num">' + Math.round(s.kcal) + ' kcal</div>' +
-        '<div class="macro">B ' + Math.round(s.b) + 'g · T ' + Math.round(s.t) + 'g · W ' + Math.round(s.w) + 'g</div>' +
+        '<div class="macro">B ' + Math.round(s.b) + 'g · W ' + Math.round(s.w) + 'g · T ' + Math.round(s.t) + 'g</div>' +
         celHtml;
       grid.appendChild(div);
     });
+    renderujTygodniowyBoard();
+  }
+
+  function renderujTygodniowyBoard() {
+    var board = document.getElementById('weekly-board');
+    if (!board) return;
+    board.innerHTML = '';
+    var rangeInput = document.getElementById('weekly-range-date');
+    if (rangeInput) rangeInput.value = formatDate(state.baseDate);
+    var dni = ['nd', 'pn', 'wt', 'śr', 'cz', 'pt', 'sb'];
+    var baza = new Date(state.baseDate);
+    var wszystkieOsoby = state.osoby || [];
+    var osoby = wszystkieOsoby.filter(function (osoba) {
+      return state.planOsoba === null || String(osoba.id) === String(state.planOsoba);
+    });
+    for (let i = 0; i < 7; i++) {
+      let data = new Date(baza); data.setDate(baza.getDate() + i);
+      let iso = formatDate(data);
+      let dzien = document.createElement('section');
+      dzien.className = 'weekly-day' + (iso === formatDate(new Date()) ? ' today' : '');
+      var naglowek = document.createElement('div');
+      naglowek.className = 'weekly-day-head';
+      naglowek.innerHTML = '<strong>' + dni[data.getDay()] + '</strong><span>' + data.getDate() + '</span>';
+      naglowek.title = 'Pokaż plan z tego dnia';
+      naglowek.onclick = function (dateValue) {
+        return function () {
+          state.selectedDate = dateValue;
+          zbudujDayScroller();
+          renderujPlanDnia();
+        };
+      }(iso);
+      dzien.appendChild(naglowek);
+
+      let kolumna = document.createElement('div');
+      kolumna.className = 'weekly-day-column';
+      var suma = { kcal: 0, b: 0, w: 0, t: 0 };
+      var sumyOsob = {};
+      osoby.forEach(function (osoba) { sumyOsob[osoba.imie] = 0; });
+      state.plan.forEach(function (wpis) {
+        if (wpis.data !== iso || !wpis.przepis || !osoby.some(function (osoba) { return osoba.imie === wpis.osoba; })) return;
+        var porcje = wpis.porcje || 1;
+        suma.kcal += Number(wpis.przepis.kcal || 0) * porcje;
+        suma.b += Number(wpis.przepis.bialko || 0) * porcje;
+        suma.w += Number(wpis.przepis.wegle || 0) * porcje;
+        suma.t += Number(wpis.przepis.tluszcz || 0) * porcje;
+        sumyOsob[wpis.osoba] += Number(wpis.przepis.kcal || 0) * porcje;
+      });
+      let kcal = document.createElement('div');
+      var celKcal = state.planOsoba === null ? 0 : osoby.reduce(function (sumaCelu, osoba) { return sumaCelu + (Number(osoba.celKcal) || 0); }, 0);
+      var procentCelu = celKcal ? Math.round((suma.kcal / celKcal) * 100) : 0;
+      kcal.className = 'weekly-kcal' + (celKcal ? (suma.kcal > celKcal ? ' goal-over' : ' goal-ok') : '');
+      kcal.innerHTML = '<strong>' + Math.round(suma.kcal).toLocaleString('pl-PL') + ' kcal</strong><div class="weekly-macro"><span class="macro-b">' + Math.round(suma.b) + ' B</span><span class="macro-w">' + Math.round(suma.w) + ' W</span><span class="macro-t">' + Math.round(suma.t) + ' T</span></div>';
+      if (celKcal) {
+        let pasek = document.createElement('div');
+        pasek.className = 'weekly-goal';
+        pasek.innerHTML = (suma.kcal > celKcal ? 'Powyżej celu · ' : 'Cel · ') + Math.round(celKcal) + ' kcal<div class="weekly-goal-track"><div class="weekly-goal-fill" style="width:' + Math.min(100, procentCelu) + '%"></div></div>';
+        kcal.appendChild(pasek);
+      }
+      if (state.planOsoba === null) {
+        let breakdown = document.createElement('div');
+        breakdown.className = 'weekly-person-breakdown';
+        osoby.forEach(function (osoba) {
+          breakdown.innerHTML += '<div><span>' + escapeHtml(osoba.imie) + '</span><strong>' + Math.round(sumyOsob[osoba.imie] || 0) + ' kcal</strong></div>';
+        });
+        kcal.appendChild(breakdown);
+      }
+      kolumna.appendChild(kcal);
+
+      var liczbaPosilkow = iloscPosilkowDlaDnia(iso);
+      for (let numer = 1; numer <= liczbaPosilkow; numer++) {
+        let meal = document.createElement('div');
+        meal.className = 'weekly-meal';
+        meal.innerHTML = '<div class="weekly-meal-label"><span>' + escapeHtml(nazwaSlotu(numer)) + '</span><span class="material-symbols-outlined">' + ikonaTypu(nazwaSlotu(numer)) + '</span></div>';
+        let maPrzepis = false;
+        let wpisDocelowy = null;
+        osoby.forEach(function (osoba) {
+          var wpis = state.plan.find(function (p) {
+            return p.data === iso && p.osoba === osoba.imie && String(p.numerPosilku) === String(numer) && p.przepis;
+          });
+          if (!wpis) return;
+          maPrzepis = true;
+          if (!wpisDocelowy) wpisDocelowy = wpis;
+          let recipe = document.createElement('div');
+          let paletaOsobyWpisu = paletaOsoby(osoba.imie);
+          recipe.className = 'weekly-recipe person-colored';
+          recipe.style.setProperty('--person-color', paletaOsobyWpisu.accent);
+          recipe.style.setProperty('--person-bg', paletaOsobyWpisu.bg);
+          recipe.title = osoba.imie + ': ' + wpis.przepis.nazwa;
+          recipe.innerHTML = miniaturaPrzepisuHtml(wpis.przepis) +
+            '<div class="weekly-recipe-content"><span class="weekly-recipe-name"><small>' + escapeHtml(osoba.imie) + '</small>' + escapeHtml(wpis.przepis.nazwa) + '</span></div>';
+          recipe.onclick = function (dateValue, personName, mealNumber) {
+            return function (event) {
+              event.stopPropagation();
+              otworzPlanowanyPosilek(dateValue, personName, mealNumber);
+            };
+          }(iso, osoba.imie, numer);
+          let recipeActions = document.createElement('span');
+          recipeActions.className = 'weekly-recipe-actions';
+          recipeActions.style.cssText = 'display:flex; flex-direction:row; flex-wrap:nowrap; align-items:center; gap:4px; width:max-content; min-width:max-content;';
+          let replaceButton = document.createElement('button');
+          replaceButton.type = 'button';
+          replaceButton.className = 'weekly-action';
+          replaceButton.title = 'Zamień przepis dla ' + osoba.imie;
+          replaceButton.innerHTML = '<span class="material-symbols-outlined">sync</span>';
+          replaceButton.onclick = function (event) {
+            event.stopPropagation();
+            otworzWyborPrzepisu(iso, osoba.imie, numer);
+          };
+          let copyButton = document.createElement('button');
+          copyButton.type = 'button';
+          copyButton.className = 'weekly-action';
+          copyButton.title = 'Kopiuj posiłek dla ' + osoba.imie;
+          copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+          copyButton.onclick = function (event) {
+            event.stopPropagation();
+            otworzKopiePosilku(iso, osoba.imie, numer, wpis);
+          };
+          let removeButton = document.createElement('button');
+          removeButton.type = 'button';
+          removeButton.className = 'weekly-action danger';
+          removeButton.title = 'Usuń przepis dla ' + osoba.imie;
+          removeButton.innerHTML = '<span class="material-symbols-outlined">close</span>';
+          removeButton.onclick = async function (event) {
+            event.stopPropagation();
+            if (!await pokazPotwierdzenie('Usunąć przepis z tego posiłku dla ' + osoba.imie + '?')) return;
+            await wyczyscPosilek(iso, osoba.imie, numer);
+          };
+          recipeActions.appendChild(replaceButton);
+          recipeActions.appendChild(copyButton);
+          recipeActions.appendChild(removeButton);
+          recipe.querySelector('.weekly-recipe-content').appendChild(recipeActions);
+          meal.appendChild(recipe);
+        });
+        if (!maPrzepis) {
+          let empty = document.createElement('div');
+          empty.className = 'weekly-empty';
+          empty.innerText = '+wybierz posiłek';
+          meal.appendChild(empty);
+        }
+        let osobaDocelowa = wpisDocelowy
+          ? osoby.find(function (osoba) { return osoba.imie === wpisDocelowy.osoba; }) || osoby[0]
+          : osoby[0];
+        if (osobaDocelowa && !maPrzepis) {
+          let akcje = document.createElement('div');
+          akcje.className = 'weekly-meal-actions';
+          let zamienBtn = document.createElement('button');
+          zamienBtn.className = 'weekly-action';
+          zamienBtn.title = 'Zamień przepis';
+          zamienBtn.innerHTML = '<span class="material-symbols-outlined">sync</span>';
+          zamienBtn.onclick = function (event) {
+            event.stopPropagation();
+            otworzWyborPrzepisu(iso, osobaDocelowa.imie, numer);
+          };
+          let kopiujBtn = document.createElement('button');
+          kopiujBtn.className = 'weekly-action';
+          kopiujBtn.title = 'Kopiuj posiłek';
+          kopiujBtn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+          kopiujBtn.onclick = function (event) {
+            event.stopPropagation();
+            otworzKopiePosilku(iso, osobaDocelowa.imie, numer, wpisDocelowy);
+          };
+          let usunBtn = document.createElement('button');
+          usunBtn.className = 'weekly-action danger';
+          usunBtn.title = 'Usuń przepis';
+          usunBtn.innerHTML = '<span class="material-symbols-outlined">close</span>';
+          usunBtn.onclick = async function (event) {
+            event.stopPropagation();
+            if (!wpisDocelowy) return;
+            if (!await pokazPotwierdzenie('Usunąć przepis z tego posiłku?')) return;
+            wyczyscPosilek(iso, osobaDocelowa.imie, numer);
+          };
+          akcje.appendChild(zamienBtn);
+          akcje.appendChild(kopiujBtn);
+          akcje.appendChild(usunBtn);
+          meal.appendChild(akcje);
+        }
+        meal.onclick = function (dateValue, personName, mealNumber) {
+          return function () { otworzPlanowanyPosilek(dateValue, personName, mealNumber); };
+        }(iso, osobaDocelowa && osobaDocelowa.imie, numer);
+        kolumna.appendChild(meal);
+      }
+      dzien.appendChild(kolumna);
+      board.appendChild(dzien);
+    }
   }
 
   function renderujKontrolkiPlanu(liczbaPosilkow) {
@@ -1951,6 +3233,17 @@
       var sc = document.querySelector('#modal-wybor .sticky-controls-modal');
       if (mh && sc) sc.style.top = 'auto';
     }, 30);
+  }
+
+  function otworzPlanowanyPosilek(data, osoba, numerPosilku) {
+    var wpis = state.plan.find(function (p) {
+      return p.data === data && p.osoba === osoba && String(p.numerPosilku) === String(numerPosilku) && p.przepis;
+    });
+    if (wpis) {
+      pokazSzczegoly(wpis.idPrzepisu);
+    } else {
+      otworzWyborPrzepisu(data, osoba, numerPosilku);
+    }
   }
 
   function renderujListeWyboru() {
@@ -2032,9 +3325,62 @@
       }).catch(pokazBlad);
   }
 
-  function wyczyscPosilek(data, osobaImie, numerPosilku) {
-    db.ustawPosilek({ data: data, osoba: osobaImie, numerPosilku: numerPosilku, idPrzepisu: null })
-      .then(wczytajPlanTygodnia).catch(pokazBlad);
+  async function wyczyscPosilek(data, osobaImie, numerPosilku) {
+    try {
+      await db.ustawPosilek({ data: data, osoba: osobaImie, numerPosilku: numerPosilku, idPrzepisu: null });
+      state.plan = state.plan.filter(function (wpis) {
+        return !(wpis.data === data && wpis.osoba === osobaImie && String(wpis.numerPosilku) === String(numerPosilku));
+      });
+      renderujPlanDnia();
+      await wczytajPlanTygodnia();
+    } catch (err) {
+      pokazBlad(err);
+    }
+  }
+
+  function otworzKopiePosilku(data, osobaImie, numerPosilku, wpisZKarty) {
+    var wpis = wpisZKarty || state.plan.find(function (p) {
+      return p.data === data && p.osoba === osobaImie && String(p.numerPosilku) === String(numerPosilku) && p.przepis;
+    });
+    if (!wpis) return;
+    state.copySlot = { data: data, osoba: osobaImie, numerPosilku: numerPosilku, wpis: wpis };
+    var nastepnyDzien = new Date(data + 'T00:00:00');
+    nastepnyDzien.setDate(nastepnyDzien.getDate() + 1);
+    document.getElementById('copy-meal-date').value = formatDate(nastepnyDzien);
+    var typSelect = document.getElementById('copy-meal-type');
+    typSelect.innerHTML = '';
+    for (var numer = 1; numer <= 4; numer++) {
+      var option = document.createElement('option');
+      option.value = numer;
+      option.innerText = nazwaSlotu(numer);
+      if (numer === Number(numerPosilku)) option.selected = true;
+      typSelect.appendChild(option);
+    }
+    document.getElementById('copy-meal-person').innerText = osobaImie;
+    otworzModal('modal-copy-meal');
+  }
+
+  function zatwierdzKopiePosilku() {
+    var slot = state.copySlot;
+    if (!slot) return;
+    var wpis = slot.wpis || state.plan.find(function (p) {
+      return p.data === slot.data && p.osoba === slot.osoba && String(p.numerPosilku) === String(slot.numerPosilku) && p.przepis;
+    });
+    if (!wpis) return;
+    var dataDocelowa = document.getElementById('copy-meal-date').value;
+    var numerDocelowy = Number(document.getElementById('copy-meal-type').value);
+    if (!dataDocelowa || !numerDocelowy) return;
+    db.ustawPosilek({
+      data: dataDocelowa,
+      osoba: slot.osoba,
+      numerPosilku: numerDocelowy,
+      idPrzepisu: wpis.idPrzepisu,
+      porcje: wpis.porcje || 1
+    }).then(function () {
+      state.copySlot = null;
+      zamknijModal('modal-copy-meal');
+      wczytajPlanTygodnia();
+    }).catch(pokazBlad);
   }
 
   function renderujDzisiajDashboard() {
@@ -2377,7 +3723,7 @@
     }
     document.getElementById('szczegoly-makro').innerHTML =
       '<div class="summary-card"><div class="label-sm">Kalorie</div><div class="num">' + p.kcal + '</div></div>' +
-      '<div class="summary-card"><div class="label-sm">Makro</div><div class="macro" style="font-size:14px; margin-top:6px;">B ' + p.bialko + 'g · T ' + p.tluszcz + 'g · W ' + p.wegle + 'g</div></div>';
+      '<div class="summary-card"><div class="label-sm">Makro</div><div class="macro" style="font-size:14px; margin-top:6px;">B ' + p.bialko + 'g · W ' + p.wegle + 'g · T ' + p.tluszcz + 'g</div></div>';
     var skl = document.getElementById('szczegoly-skladniki');
     skl.innerHTML = p.skladniki.length
       ? p.skladniki.map(function (s) { return '<div class="shopping-item"><span>' + escapeHtml(s.nazwa) + ' — ' + escapeHtml(s.ilosc) + ' ' + escapeHtml(s.jednostka) + '</span></div>'; }).join('')
@@ -2400,11 +3746,15 @@
   }
 
   function anulujFormularzPrzepisu() {
+    document.body.classList.remove('form-przepisu-open');
     zamknijModal('modal-formularz');
   }
 
-  function otworzFormularzPrzepisu() {
+  function otworzFormularzPrzepisu(zWyboru) {
     state.editingRecipeId = null;
+    state.tworzenieZWyboru = !!zWyboru;
+    if (state.tworzenieZWyboru) zamknijModal('modal-wybor');
+    document.body.classList.add('form-przepisu-open');
     state.formZdjecieUrl = '';
     document.getElementById('formularz-tytul').innerText = 'Nowy przepis';
     ['f-nazwa','f-kcal','f-bialko','f-tluszcz','f-wegle','f-przygotowanie'].forEach(function (id) {
@@ -2414,7 +3764,7 @@
     var podglad = document.getElementById('f-zdjecie-preview');
     podglad.src = '';
     podglad.classList.remove('shown');
-    document.getElementById('f-skladniki-lista').innerHTML = '';
+    document.querySelector('#modal-formularz .modal').scrollTop = 0;
     otworzModal('modal-formularz');
   }
 
@@ -2524,7 +3874,15 @@
       if (zapiszBtn) { zapiszBtn.innerText = 'Zapisywanie…'; }
       await db.savePrzepis(przepis);
       zamknijModal('modal-formularz');
-      odswiezPrzepisy();
+      document.body.classList.remove('form-przepisu-open');
+      state.przepisy = await db.getPrzepisy();
+      renderujFiltrPrzepisow();
+      renderujPrzepisy();
+      if (state.tworzenieZWyboru && state.pickingSlot) {
+        renderujListeWyboru();
+        otworzModal('modal-wybor');
+      }
+      state.tworzenieZWyboru = false;
       wczytajPlanTygodnia();
     } catch (e) {
       pokazBlad(e);
@@ -2573,11 +3931,22 @@
     zaznaczenia = zaznaczenia || {};
     var container = document.getElementById('zakupy-wynik');
     var kategorie = Object.keys(pogrupowane);
+    var summary = document.getElementById('shopping-summary');
     if (!kategorie.length) {
+      if (summary) summary.hidden = true;
       container.innerHTML = '<p class="label-sm">Brak zaplanowanych posiłków z przypisanymi składnikami w tym zakresie.</p>';
       return;
     }
-    container.innerHTML = '';
+    var wszystkie = kategorie.reduce(function (total, kat) { return total + pogrupowane[kat].length; }, 0);
+    var wykonane = pogrupowane ? Object.keys(zaznaczenia).filter(function (id) {
+      return zaznaczenia[id] && kategorie.some(function (kat) { return pogrupowane[kat].some(function (item) { return String(item.id) === String(id); }); });
+    }).length : 0;
+    if (summary) {
+      summary.hidden = false;
+      summary.innerHTML = '<div class="shopping-summary-label">Postęp zakupów</div><div class="shopping-summary-count" id="shopping-summary-count">' + wykonane + ' z ' + wszystkie + '</div><div class="shopping-summary-track"><div class="shopping-summary-fill" style="width:' + (wszystkie ? Math.round((wykonane / wszystkie) * 100) : 0) + '%"></div></div>';
+    }
+    window.aktualnaListaZakupow = pogrupowane;
+    container.innerHTML = '<div class="shopping-list-toolbar"><button class="btn" onclick="kopiujListeZakupow()"><span class="material-symbols-outlined">content_copy</span>Kopiuj listę</button></div>';
     kategorie.forEach(function (kat) {
       var block = document.createElement('div');
       block.className = 'shopping-cat';
@@ -2597,15 +3966,18 @@
         var label = document.createElement('span');
         label.innerText = it.nazwa + ' — ' + (Math.round(it.ilosc * 100) / 100) + ' ' + it.jednostka;
 
-        function przelacz() {
-          var nowyStan = !checkbox.checked;
+        function ustawStan(nowyStan) {
           checkbox.checked = nowyStan;
           row.classList.toggle('checked', nowyStan);
           db.ustawZaznaczenieZakupu(it.id, nowyStan).catch(pokazBlad);
+          aktualizujPodsumowanieZakupow();
         }
 
-        row.onclick = przelacz;
-        checkbox.onclick = function (e) { e.stopPropagation(); przelacz(); };
+        row.onclick = function () { ustawStan(!checkbox.checked); };
+        checkbox.onclick = function (e) {
+          e.stopPropagation();
+          ustawStan(checkbox.checked);
+        };
 
         row.appendChild(checkbox);
         row.appendChild(label);
@@ -2614,6 +3986,44 @@
 
       container.appendChild(block);
     });
+  }
+
+  function aktualizujPodsumowanieZakupow() {
+    var summary = document.getElementById('shopping-summary');
+    if (!summary) return;
+    var rows = Array.from(document.querySelectorAll('#zakupy-wynik .shopping-item'));
+    var checked = rows.filter(function (row) { return row.classList.contains('checked'); }).length;
+    var count = summary.querySelector('.shopping-summary-count');
+    var fill = summary.querySelector('.shopping-summary-fill');
+    if (count) count.innerText = checked + ' z ' + rows.length;
+    if (fill) fill.style.width = (rows.length ? Math.round((checked / rows.length) * 100) : 0) + '%';
+  }
+
+  async function kopiujListeZakupow() {
+    var lista = window.aktualnaListaZakupow || {};
+    var tekst = Object.keys(lista).map(function (kategoria) {
+      var pozycje = lista[kategoria].map(function (item) {
+        return '- ' + item.nazwa + ' — ' + (Math.round(item.ilosc * 100) / 100) + ' ' + (item.jednostka || '');
+      }).join('\n');
+      return kategoria.toUpperCase() + '\n' + pozycje;
+    }).join('\n\n');
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(tekst);
+      } else {
+        var textarea = document.createElement('textarea');
+        textarea.value = tekst;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+      await pokazKomunikat('Lista zakupów została skopiowana do schowka.');
+    } catch (e) {
+      pokazBlad(e);
+    }
   }
 
   // ===================== USTAWIENIA / CZYSZCZENIE STAREGO PLANU =====================
@@ -2626,8 +4036,44 @@
     }
     document.getElementById('ustawienia-domyslna-liczba').value = state.domyslnaLiczbaPosilkow || 3;
     renderujUstawieniaOsoby();
+    renderujNazwyPosilkowZUstawien();
+    renderujZarzadzanieSkladnikami();
     renderujNieuzywaneSkladniki();
-    otworzModal('modal-ustawienia');
+    ustawieniaZakladka('osoby');
+    pokazWidok('ustawienia');
+  }
+
+  function ustawieniaZakladka(nazwa) {
+    document.querySelectorAll('[data-settings-tab]').forEach(function (tab) {
+      tab.classList.toggle('active', tab.getAttribute('data-settings-tab') === nazwa);
+    });
+    document.querySelectorAll('.settings-panel').forEach(function (panel) {
+      panel.classList.toggle('active', panel.id === 'ustawienia-panel-' + nazwa);
+    });
+  }
+
+  function renderujNazwyPosilkowZUstawien() {
+    var container = document.getElementById('ustawienia-nazwy-posilkow');
+    if (!container) return;
+    container.innerHTML = '';
+    for (var numer = 1; numer <= 4; numer++) {
+      var field = document.createElement('div');
+      field.className = 'settings-ingredient-row';
+      field.innerHTML = '<label style="margin:0;">Posiłek ' + numer + '</label><input class="ustawienie-nazwa-posilku" data-numer="' + numer + '" value="' + escapeHtml((state.nazwyPosilkow && state.nazwyPosilkow[numer]) || '') + '" placeholder="Posiłek ' + numer + '">';
+      container.appendChild(field);
+    }
+  }
+
+  function zapiszNazwyPosilkowZUstawien() {
+    var noweNazwy = {};
+    document.querySelectorAll('.ustawienie-nazwa-posilku').forEach(function (input) {
+      var wartosc = input.value.trim();
+      if (wartosc) noweNazwy[input.getAttribute('data-numer')] = wartosc;
+    });
+    state.nazwyPosilkow = noweNazwy;
+    zapiszNazwyPosilkow();
+    renderujPlanDnia();
+    pokazKomunikat('Zapisano nazwy posiłków.');
   }
 
   // ===================== OSOBY: EDYCJA IMION I CELÓW =====================
@@ -2639,14 +4085,28 @@
     state.osoby.forEach(function (o) {
       var blok = document.createElement('div');
       blok.className = 'ust-osoba-blok';
+      var kolorOsoby = paletaOsoby(o.imie);
+      var koloryHtml = PALETA_OSOB.map(function (kolor) {
+        var aktywny = kolor.accent.toLowerCase() === kolorOsoby.accent.toLowerCase();
+        return '<button type="button" class="ust-osoba-kolor-btn' + (aktywny ? ' active' : '') + '" data-osoba-kolor="' + kolor.accent + '" style="background:' + kolor.accent + ';" title="' + kolor.nazwa + '"></button>';
+      }).join('');
       blok.innerHTML =
         '<div class="ust-osoba-head"><label style="margin-top:0;">Imię</label><button type="button" class="del-btn ust-osoba-usun" title="Usuń osobę"><span class="material-symbols-outlined">delete</span></button></div>' +
         '<input type="text" class="ust-osoba-imie" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.imie) + '">' +
         '<label>Cel kalorii (kcal/dzień)</label>' +
         '<input type="number" class="ust-osoba-kcal" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.celKcal != null ? o.celKcal : '') + '" placeholder="np. 1800">' +
         '<label>Cel wagi (kg)</label>' +
-        '<input type="number" step="0.1" class="ust-osoba-waga" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.celWaga != null ? o.celWaga : '') + '" placeholder="np. 70">';
+        '<input type="number" step="0.1" class="ust-osoba-waga" data-id="' + escapeHtml(o.id) + '" value="' + escapeHtml(o.celWaga != null ? o.celWaga : '') + '" placeholder="np. 70">' +
+        '<div class="ust-osoba-kolor"><label class="ust-osoba-kolor-label">Kolor osoby</label>' + koloryHtml + '</div>';
       blok.querySelector('.ust-osoba-usun').onclick = function () { usunOsobeZUstawien(o.id, o.imie); };
+      blok.querySelectorAll('[data-osoba-kolor]').forEach(function (button) {
+        button.onclick = function () {
+          state.osobyKolory[String(o.id)] = button.getAttribute('data-osoba-kolor');
+          blok.querySelectorAll('[data-osoba-kolor]').forEach(function (item) { item.classList.toggle('active', item === button); });
+          zapiszKoloryOsob();
+          renderujPlanDnia();
+        };
+      });
       el.appendChild(blok);
     });
   }
@@ -2740,6 +4200,90 @@
     }
   }
 
+  var KATEGORIE_SKLADNIKOW = ['nabiał', 'warzywa', 'owoce', 'mięso', 'pieczywo', 'przyprawy', 'inne'];
+
+  function normalizujNazweSkladnika(nazwa) {
+    return String(nazwa || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function renderujZarzadzanieSkladnikami() {
+    var lista = document.getElementById('ustawienia-skladniki-lista');
+    var duplikatyLista = document.getElementById('ustawienia-duplikaty-lista');
+    if (!lista || !duplikatyLista) return;
+    var szukaj = (document.getElementById('ustawienia-skladniki-szukaj').value || '').trim().toLowerCase();
+    var grupy = {};
+    state.skladniki.forEach(function (s) {
+      var klucz = normalizujNazweSkladnika(s.nazwa);
+      if (!grupy[klucz]) grupy[klucz] = [];
+      grupy[klucz].push(s);
+    });
+    duplikatyLista.innerHTML = '';
+    Object.keys(grupy).forEach(function (klucz) {
+      if (grupy[klucz].length < 2) return;
+      var grupa = document.createElement('div');
+      grupa.className = 'settings-duplicate-group';
+      grupa.innerHTML = '<p><strong>Zdublowana nazwa:</strong> ' + escapeHtml(grupy[klucz][0].nazwa) + '</p>';
+      var zachowaj = grupy[klucz][0];
+      grupy[klucz].slice(1).forEach(function (duplikat) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:12px;';
+        row.innerHTML = '<span>' + escapeHtml(duplikat.nazwa) + ' (' + escapeHtml(duplikat.jednostka || 'bez jednostki') + ')</span>';
+        var button = document.createElement('button');
+        button.className = 'btn small';
+        button.innerText = 'Połącz z głównym';
+        button.onclick = function () { polaczSkladniki(zachowaj.id, duplikat.id); };
+        row.appendChild(button);
+        grupa.appendChild(row);
+      });
+      duplikatyLista.appendChild(grupa);
+    });
+    if (!duplikatyLista.children.length) duplikatyLista.innerHTML = '<p class="label-sm">Nie znaleziono zdublowanych nazw.</p>';
+
+    lista.innerHTML = '';
+    state.skladniki.filter(function (s) {
+      return !szukaj || s.nazwa.toLowerCase().indexOf(szukaj) !== -1;
+    }).forEach(function (s) {
+      var row = document.createElement('div');
+      row.className = 'settings-ingredient-row';
+      var categoryOptions = KATEGORIE_SKLADNIKOW.map(function (kategoria) {
+        return '<option value="' + escapeHtml(kategoria) + '"' + (s.kategoria === kategoria ? ' selected' : '') + '>' + escapeHtml(kategoria) + '</option>';
+      }).join('');
+      row.innerHTML = '<input class="settings-ingredient-name" value="' + escapeHtml(s.nazwa) + '" aria-label="Nazwa składnika">' +
+        '<select class="settings-ingredient-category" aria-label="Kategoria składnika">' + categoryOptions + '</select>' +
+        '<button class="btn small" title="Zapisz składnik"><span class="material-symbols-outlined">save</span></button>';
+      row.querySelector('button').onclick = function () { zapiszSkladnikZUstawien(s.id, row); };
+      lista.appendChild(row);
+    });
+  }
+
+  async function zapiszSkladnikZUstawien(id, row) {
+    var nazwa = row.querySelector('.settings-ingredient-name').value.trim();
+    var kategoria = row.querySelector('.settings-ingredient-category').value;
+    var obecny = state.skladniki.find(function (s) { return s.id === id; });
+    if (!nazwa || !obecny) return;
+    try {
+      await db.saveSkladnik({ id: id, nazwa: nazwa, kategoria: kategoria, jednostka: obecny.jednostka });
+      state.skladniki = await db.getSkladniki();
+      renderujZarzadzanieSkladnikami();
+      renderujNieuzywaneSkladniki();
+    } catch (e) { pokazBlad(e); }
+  }
+
+  async function polaczSkladniki(keepId, duplicateId) {
+    var zachowaj = state.skladniki.find(function (s) { return s.id === keepId; });
+    var duplikat = state.skladniki.find(function (s) { return s.id === duplicateId; });
+    if (!zachowaj || !duplikat) return;
+    var ok = await pokazPotwierdzenie('Połączyć składnik "' + duplikat.nazwa + '" ze składnikiem "' + zachowaj.nazwa + '"?');
+    if (!ok) return;
+    try {
+      await db.mergeSkladnik(duplicateId, keepId);
+      state.skladniki = await db.getSkladniki();
+      renderujZarzadzanieSkladnikami();
+      renderujNieuzywaneSkladniki();
+      await pokazKomunikat('Połączono zdublowane składniki.');
+    } catch (e) { pokazBlad(e); }
+  }
+
   // ===================== NIEUŻYWANE SKŁADNIKI =====================
   function renderujNieuzywaneSkladniki() {
     var el = document.getElementById('ustawienia-nieuzywane-lista');
@@ -2784,7 +4328,7 @@
       var ok = await pokazPotwierdzenie('Usunąć ' + liczba + ' zaplanowanych posiłków sprzed ' + dataGraniczna + '? Tej operacji nie można cofnąć.');
       if (!ok) return;
       await db.usunPlanPrzed(dataGraniczna);
-      zamknijModal('modal-ustawienia');
+      pokazWidok('plan');
       wczytajPlanTygodnia();
       await pokazKomunikat('Usunięto ' + liczba + ' zaplanowanych posiłków.');
     } catch (e) {
@@ -2847,6 +4391,191 @@
     db.usunZakupDodatkowy(id).then(wczytajZakupyDodatkowe).catch(pokazBlad);
   }
 
+  // ===================== WIDOK: TRENING =====================
+  var treningMiesiace = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+  function kluczTrening(osoba, data) { return String(osoba || '') + '|' + data; }
+  function znajdzTrening(data) { return state.treningi.find(function (t) { return t.data === data; }) || {}; }
+  async function inicjalizujTrening() {
+    if (!state.treningOsoba && state.osoby.length) state.treningOsoba = state.osoby[0].imie;
+    var select = document.getElementById('trening-osoba');
+    select.innerHTML = state.osoby.map(function (o) {
+      return '<option value="' + escapeHtml(o.imie) + '">' + escapeHtml(o.imie) + '</option>';
+    }).join('');
+    if (state.treningOsoba) select.value = state.treningOsoba;
+    try {
+      await wczytajRodzajeTreningow();
+      await wczytajTreningiMiesiaca();
+    } catch (error) {
+      state.treningi = [];
+      console.error(error);
+      pokazKomunikat('Utwórz tabele treningów w Supabase, aby zapisywać dane.');
+    }
+    renderujTrening();
+  }
+  async function wczytajRodzajeTreningow() {
+    var rodzaje = await db.getRodzajeTreningow();
+    if (rodzaje.length) state.treningRodzaje = rodzaje.map(function (r) {
+      return { id: r.id, nazwa: r.nazwa, slug: r.nazwa.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-'), kolor: r.kolor };
+    });
+    renderujRodzajeTreningowUstawien();
+  }
+  async function wczytajTreningiMiesiaca() {
+    if (!state.treningOsoba) { state.treningi = []; return; }
+    var year = state.treningMiesiac.getFullYear(), month = state.treningMiesiac.getMonth();
+    state.treningi = await db.getTreningi(state.treningOsoba, formatujDateTreningu(new Date(year, month, 1)), formatujDateTreningu(new Date(year, month + 1, 0)));
+  }
+  async function zmienOsobeTreningu(imie) { state.treningOsoba = imie; await wczytajTreningiMiesiaca(); renderujTrening(); }
+  async function zmienMiesiacTreningu(delta) {
+    state.treningMiesiac = new Date(state.treningMiesiac.getFullYear(), state.treningMiesiac.getMonth() + delta, 1);
+    await wczytajTreningiMiesiaca();
+    renderujTrening();
+  }
+  function ustawStatusTreningu(status) {
+    state.treningStatus = status;
+    document.querySelectorAll('.training-status button').forEach(function (b) { b.classList.toggle('active', b.dataset.status === status); });
+  }
+  function formatujDateTreningu(date) {
+    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  }
+  function wybierzDzienTreningu(data) {
+    state.treningData = data;
+    var wpis = znajdzTrening(data);
+    document.getElementById('trening-nazwa').value = wpis.nazwa || '';
+    document.getElementById('trening-typ').innerHTML = state.treningRodzaje.map(function (r) {
+      return '<option value="' + escapeHtml(r.slug) + '">' + escapeHtml(r.nazwa) + '</option>';
+    }).join('');
+    document.getElementById('trening-typ').value = wpis.typ || (state.treningRodzaje[0] && state.treningRodzaje[0].slug);
+    document.getElementById('trening-opis').value = wpis.opis || '';
+    document.getElementById('trening-tempo').value = wpis.tempo || '';
+    document.getElementById('trening-tetno').value = wpis.tetno || '';
+    document.getElementById('trening-ftp').value = wpis.ftp || '';
+    document.getElementById('trening-czas').value = wpis.czas || '';
+    state.treningStatus = wpis.status || 'planned';
+    ustawStatusTreningu(state.treningStatus);
+    renderujTreningKalendarz();
+    document.getElementById('trening-edytor-tytul').textContent = wpis.nazwa || 'Plan dnia';
+    document.getElementById('trening-edytor-data').textContent = new Date(data + 'T12:00:00').toLocaleDateString('pl-PL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  function renderujTrening() {
+    document.getElementById('trening-miesiac').textContent = treningMiesiace[state.treningMiesiac.getMonth()] + ' ' + state.treningMiesiac.getFullYear();
+    renderujTreningKalendarz();
+    wybierzDzienTreningu(state.treningData);
+  }
+  function renderujTreningKalendarz() {
+    var el = document.getElementById('trening-kalendarz');
+    if (!el) return;
+    var year = state.treningMiesiac.getFullYear(), month = state.treningMiesiac.getMonth();
+    var first = new Date(year, month, 1);
+    var start = (first.getDay() + 6) % 7;
+    var days = new Date(year, month + 1, 0).getDate();
+    var prevDays = new Date(year, month, 0).getDate();
+    var html = '';
+    for (var i = 0; i < 42; i++) {
+      var number = i - start + 1, date = new Date(year, month, number);
+      var inMonth = number >= 1 && number <= days;
+      if (!inMonth) date = new Date(year, month, number < 1 ? number : number);
+      var data = formatujDateTreningu(date), wpis = znajdzTrening(data);
+      var today = data === formatDate(new Date());
+      var rodzaj = state.treningRodzaje.find(function (r) { return r.slug === wpis.typ; });
+      html += '<button class="training-day' + (inMonth ? '' : ' muted') + (data === state.treningData ? ' selected' : '') + (today ? ' today' : '') + '" style="' + (rodzaj ? '--training-type-color:' + escapeHtml(rodzaj.kolor) : '') + '" onclick="wybierzDzienTreningu(\'' + data + '\')">' +
+        '<span class="training-day-number">' + date.getDate() + '</span>' +
+        (wpis && (wpis.nazwa || wpis.opis) ? '<span class="training-day-name' + (wpis.status === 'done' ? ' completed' : '') + '"><i class="training-dot' + (wpis.status === 'done' ? ' completed' : '') + '"></i>' + escapeHtml(wpis.nazwa || 'Trening') + '</span>' : '') + '</button>';
+    }
+    el.innerHTML = html;
+    var monthEntries = state.treningi;
+    document.getElementById('trening-podsumowanie').innerHTML = '<div class="training-stat"><span class="label-sm">Zaplanowane</span><strong>' + monthEntries.filter(function (t) { return t.status !== 'done'; }).length + '</strong></div><div class="training-stat"><span class="label-sm">Wykonane</span><strong>' + monthEntries.filter(function (t) { return t.status === 'done'; }).length + '</strong></div>';
+  }
+
+  function renderujRodzajeTreningowUstawien() {
+      var el = document.getElementById('ustawienia-treningi-lista');
+      if (!el) return;
+      var paletaSzara = ['#111111','#3f3f46','#71717a','#a1a1aa','#c4c4c8','#d4d4d8','#e4e4e7','#f4f4f5','#ffffff'];
+      var zywe = ['#d71945','#f21d35','#ff7a00','#ffd000','#36e636','#13d5d5','#4c82e8','#5b21b6','#d946ef'];
+      var pastele = ['#f5b2b8','#f6c8cc','#f8d8c2','#fae8be','#d9edcf','#c8e1e3','#cbdcf2','#d9d0ed','#e6cce2'];
+      var ciemne = ['#a8142f','#c51f4a','#9a4a20','#8d6919','#4c8b32','#286b73','#315a91','#56318d','#8b376b'];
+      function wierszKolorow(kolory, rodzaj, index) {
+        return '<div class="training-color-popover-row">' + kolory.map(function (kolor) {
+          return '<button type="button" class="training-color-swatch' + (kolor.toLowerCase() === String(rodzaj.kolor).toLowerCase() ? ' active' : '') + '" style="background:' + kolor + ';" title="Wybierz kolor" onclick="wybierzKolorTreningu(' + index + ', \'' + kolor + '\')"></button>';
+        }).join('') + '</div>';
+      }
+      el.innerHTML = state.treningRodzaje.map(function (r, i) {
+        var rows = '<div class="training-color-popover-section"><span class="training-color-popover-label">Jednolity</span>' + wierszKolorow(paletaSzara, r, i) + wierszKolorow(zywe, r, i) + wierszKolorow(pastele, r, i) + wierszKolorow(ciemne, r, i) + '</div>' +
+          '<div class="training-color-popover-section"><span class="training-color-popover-label">Motyw</span><div class="training-color-theme">' + ['#111111','#ffffff','#9ca3af','#f59e0b','#374151','#64748b','#f97316','#14b8a6','#eab308'].map(function (kolor) { return '<button type="button" class="training-color-swatch' + (kolor.toLowerCase() === String(r.kolor).toLowerCase() ? ' active' : '') + '" style="background:' + kolor + ';" onclick="wybierzKolorTreningu(' + i + ', \'' + kolor + '\')"></button>'; }).join('') + '</div></div>' +
+          '<div class="training-color-custom"><button type="button" class="training-color-custom-plus" onclick="otworzWlasnyKolorTreningu(' + i + ')">+</button><span>Własny kolor</span><input type="color" class="rodzaj-trening-kolor-native" data-index="' + i + '" value="' + escapeHtml(r.kolor) + '" onchange="wybierzWlasnyKolorTreningu(' + i + ', this.value)" style="position:absolute;opacity:0;pointer-events:none;"></div>';
+        return '<div class="shopping-item training-type-row"><input class="rodzaj-trening-nazwa" data-index="' + i + '" value="' + escapeHtml(r.nazwa) + '">' +
+          '<div class="training-color-palette"><div class="training-custom-color"><button type="button" class="training-custom-trigger" style="background:' + escapeHtml(r.kolor) + ';" onclick="przelaczPaleteTreningu(' + i + ')" title="Wybierz kolor"></button><div class="training-color-popover" data-palette="' + i + '">' + rows + '</div><input type="hidden" class="rodzaj-trening-kolor" data-index="' + i + '" value="' + escapeHtml(r.kolor) + '"></div></div>' +
+          '<button class="del-btn" onclick="zapiszRodzajTreninguZUstawien(' + i + ')" title="Zapisz"><span class="material-symbols-outlined">check</span></button></div>';
+      }).join('');
+    }
+    function przelaczPaleteTreningu(index) {
+      document.querySelectorAll('.training-color-popover').forEach(function (palette) {
+        palette.classList.toggle('open', palette.getAttribute('data-palette') === String(index) && !palette.classList.contains('open'));
+      });
+    }
+    function wybierzKolorTreningu(index, kolor) {
+      var input = document.querySelector('.rodzaj-trening-kolor[data-index="' + index + '"]');
+      if (input) input.value = kolor;
+      var row = input ? input.closest('.shopping-item') : null;
+      if (row) {
+        row.querySelector('.training-custom-trigger').style.background = kolor;
+        row.querySelectorAll('.training-color-swatch').forEach(function (swatch) {
+          swatch.classList.toggle('active', (swatch.getAttribute('style') || '').toLowerCase().indexOf(kolor.toLowerCase()) !== -1);
+        });
+        row.querySelector('.training-color-popover').classList.remove('open');
+      }
+    }
+    function otworzWlasnyKolorTreningu(index) {
+      var input = document.querySelector('.rodzaj-trening-kolor-native[data-index="' + index + '"]');
+      if (input) input.click();
+    }
+    function wybierzWlasnyKolorTreningu(index, kolor) {
+      wybierzKolorTreningu(index, kolor);
+      var input = document.querySelector('.rodzaj-trening-kolor-native[data-index="' + index + '"]');
+      if (input) input.closest('.training-color-popover').classList.remove('open');
+    }
+    function dodajRodzajTreninguZUstawien() {
+      state.treningRodzaje.push({ nazwa: 'Nowy trening', slug: 'nowy-trening-' + Date.now(), kolor: '#6b7280' });
+      renderujRodzajeTreningowUstawien();
+    }
+    async function zapiszRodzajTreninguZUstawien(index) {
+      var row = state.treningRodzaje[index];
+      var nameEl = document.querySelector('.rodzaj-trening-nazwa[data-index="' + index + '"]');
+      var colorEl = document.querySelector('.rodzaj-trening-kolor[data-index="' + index + '"]');
+      row.nazwa = nameEl.value.trim() || 'Trening';
+      row.kolor = colorEl.value;
+      row.slug = row.nazwa.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+      try {
+        await db.zapiszRodzajTreningu(row);
+        await wczytajRodzajeTreningow();
+        pokazKomunikat('Zapisano rodzaj treningu.');
+      } catch (error) {
+        if (error && /rodzaje_treningow|schema cache|relation .* does not exist/i.test(error.message || '')) {
+          pokazKomunikat('Najpierw uruchom plik rodzaje_treningow.sql w Supabase SQL Editor.');
+        } else {
+          pokazBlad(error);
+        }
+      }
+    }
+  function zapiszTreningDnia() {
+    if (!state.treningOsoba || !state.treningData) return;
+    var wpis = {
+      osoba: state.treningOsoba, data: state.treningData,
+      nazwa: document.getElementById('trening-nazwa').value.trim(),
+      typ: document.getElementById('trening-typ').value,
+      opis: document.getElementById('trening-opis').value.trim(),
+      tempo: document.getElementById('trening-tempo').value.trim(),
+      tetno: document.getElementById('trening-tetno').value.trim(),
+      ftp: document.getElementById('trening-ftp').value.trim(),
+      czas: document.getElementById('trening-czas').value.trim(),
+      status: state.treningStatus
+    };
+    db.zapiszTrening(wpis).then(async function () {
+      await wczytajTreningiMiesiaca();
+      renderujTrening();
+      pokazKomunikat('Zapisano plan treningu.');
+    }).catch(pokazBlad);
+  }
+
   // ===================== WIDOK: WAGA =====================
   function inicjalizujWagaTab() {
     if (!state.wagaOsoba && state.osoby.length) state.wagaOsoba = state.osoby[0].imie;
@@ -2887,26 +4616,37 @@
     var osoba = state.osoby.find(function (o) { return o.imie === state.wagaOsoba; });
     var celEl = document.getElementById('waga-cel-card');
     var ostatni = state.wagaPomiary.length ? state.wagaPomiary[state.wagaPomiary.length - 1] : null;
+    var cel = osoba && Number(osoba.celWaga);
+    var aktualna = ostatni ? Number(ostatni.waga) : null;
+    var postep = cel && aktualna ? Math.max(0, Math.min(100, Math.round((1 - Math.abs(aktualna - cel) / Math.max(cel, aktualna)) * 100))) : 0;
+    var dzisIso = formatDate(new Date());
+    var ostatniIso = ostatni && String(ostatni.data || '').slice(0, 10);
+    var etykietaPomiaru = ostatni && ostatniIso === dzisIso ? 'Dzisiejszy pomiar' : 'Ostatni pomiar';
+    var status = '';
 
     if (!osoba || !osoba.celWaga) {
+      status = 'Ustaw cel wagi w Ustawieniach, aby śledzić postęp.';
       celEl.innerHTML =
-        '<div class="label-sm">Brak ustawionego celu wagi dla ' + escapeHtml(osoba ? osoba.imie : '') + '.</div>' +
-        '<div class="label-sm" style="margin-top:4px;">Ustaw go w Ustawieniach (ikona koła zębatego).</div>' +
-        (ostatni ? '<div class="num" style="margin-top:8px;">' + ostatni.waga + ' kg</div>' : '');
+        '<div class="weight-overview-card"><div><div class="weight-overview-label">' + etykietaPomiaru + '</div><div class="weight-overview-name">' + escapeHtml(osoba ? osoba.imie : '') + '</div>' +
+        '<div class="weight-overview-value">' + (ostatni ? escapeHtml(ostatni.waga) : '—') + ' <small>kg</small></div><div class="weight-overview-status">Brak ustawionego celu wagi.<br>' + status + '</div></div>' +
+        '<div class="weight-progress"><div class="weight-progress-ring" style="--weight-progress:0%;"><strong>—</strong></div><div class="weight-progress-text">Cel wagi<strong>Nie ustawiono</strong></div></div></div>';
     } else if (!ostatni) {
+      status = 'Brak jeszcze żadnych pomiarów.';
       celEl.innerHTML =
-        '<div class="label-sm">Cel: ' + osoba.celWaga + ' kg</div>' +
-        '<div class="macro" style="margin-top:4px;">Brak jeszcze żadnych pomiarów.</div>';
+        '<div class="weight-overview-card"><div><div class="weight-overview-label">' + etykietaPomiaru + '</div><div class="weight-overview-name">' + escapeHtml(osoba.imie) + '</div>' +
+        '<div class="weight-overview-value">— <small>kg</small></div><div class="weight-overview-status">' + status + '</div></div>' +
+        '<div class="weight-progress"><div class="weight-progress-ring" style="--weight-progress:0%;"><strong>0%</strong></div><div class="weight-progress-text">Cel wagi<strong>' + escapeHtml(osoba.celWaga) + ' kg</strong></div></div></div>';
     } else {
       var roznica = Number(ostatni.waga) - Number(osoba.celWaga);
       var opis;
       if (Math.abs(roznica) < 0.05) opis = 'Cel osiągnięty 🎉';
       else if (roznica > 0) opis = 'Jeszcze ' + roznica.toFixed(1) + ' kg do celu';
       else opis = 'Poniżej celu o ' + Math.abs(roznica).toFixed(1) + ' kg';
+      status = opis;
       celEl.innerHTML =
-        '<div class="label-sm">Cel: ' + osoba.celWaga + ' kg</div>' +
-        '<div class="num" style="margin-top:4px;">' + ostatni.waga + ' kg</div>' +
-        '<div class="macro">' + opis + '</div>';
+        '<div class="weight-overview-card"><div><div class="weight-overview-label">' + etykietaPomiaru + '</div><div class="weight-overview-name">' + escapeHtml(osoba.imie) + '</div>' +
+        '<div class="weight-overview-value">' + escapeHtml(ostatni.waga) + ' <small>kg</small></div><div class="weight-overview-status">' + escapeHtml(status) + '</div></div>' +
+        '<div class="weight-progress"><div class="weight-progress-ring" style="--weight-progress:' + postep + '%;"><strong>' + postep + '%</strong></div><div class="weight-progress-text">Cel wagi<strong>' + escapeHtml(osoba.celWaga) + ' kg</strong></div></div></div>';
     }
 
     renderujWykresWagi();
@@ -2934,20 +4674,48 @@
 
   function renderujWykresWagi() {
     var el = document.getElementById('waga-wykres');
-    if (state.wagaPomiary.length < 2) { el.innerHTML = ''; return; }
-    var dane = state.wagaPomiary;
+    var osoba = state.osoby.find(function (o) { return o.imie === state.wagaOsoba; });
+    var dane = state.wagaPomiary.slice();
+    var ostatni = dane.length ? dane[dane.length - 1] : null;
+    var zakresy = ['D', 'W', 'M', 'R'];
+    var zakresHtml = zakresy.map(function (z) {
+      return '<button class="weight-period' + (state.wagaZakres === z ? ' active' : '') + '" onclick="ustawZakresWagi(\'' + z + '\')">' + z + '</button>';
+    }).join('');
+    if (!dane.length) {
+      el.innerHTML = '<div class="weight-chart-card"><div class="weight-chart-head"><div><div class="weight-chart-title">Aktualna waga</div><div class="weight-chart-current">— <small>kg</small></div></div><div class="weight-periods">' + zakresHtml + '</div></div><div class="weight-empty">Dodaj pierwszy pomiar, aby zobaczyć wykres zmian wagi.</div></div>';
+      return;
+    }
+    if (state.wagaZakres === 'D') dane = dane.slice(-1);
+    if (state.wagaZakres === 'W') dane = dane.slice(-7);
+    if (state.wagaZakres === 'M') dane = dane.slice(-30);
     var wartosci = dane.map(function (d) { return Number(d.waga); });
     var min = Math.min.apply(null, wartosci), max = Math.max.apply(null, wartosci);
     if (min === max) { min -= 1; max += 1; }
-    var w = 300, h = 90, pad = 8;
+    var w = 640, h = 220, pad = 28;
     var pts = dane.map(function (d, i) {
       var x = pad + (w - 2 * pad) * (dane.length === 1 ? 0 : i / (dane.length - 1));
       var y = pad + (h - 2 * pad) * (1 - (Number(d.waga) - min) / (max - min));
       return x + ',' + y;
     }).join(' ');
+    var grid = [0, .25, .5, .75, 1].map(function (ratio) {
+      var y = pad + (h - 2 * pad) * ratio;
+      var value = (max - (max - min) * ratio).toFixed(1);
+      return '<line x1="' + pad + '" y1="' + y + '" x2="' + (w - pad) + '" y2="' + y + '" stroke="#e8eee9" stroke-width="1"/><text x="2" y="' + (y + 4) + '" fill="#9aa59d" font-size="11">' + value + '</text>';
+    }).join('');
+    var points = dane.map(function (d, i) {
+      var x = pad + (w - 2 * pad) * (dane.length === 1 ? 0 : i / (dane.length - 1));
+      var y = pad + (h - 2 * pad) * (1 - (Number(d.waga) - min) / (max - min));
+      return '<circle cx="' + x + '" cy="' + y + '" r="4.5" fill="#fff" stroke="var(--accent)" stroke-width="3"/>';
+    }).join('');
+    var goal = osoba && osoba.celWaga ? '<div class="weight-goal-strip"><span>Cel wagi</span><strong>' + escapeHtml(osoba.celWaga) + ' kg</strong></div>' : '';
     el.innerHTML =
-      '<div class="card"><svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%; height:90px; display:block;">' +
-      '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>';
+      '<div class="weight-chart-card"><div class="weight-chart-head"><div><div class="weight-chart-title">Aktualna waga</div><div class="weight-chart-current">' + escapeHtml(ostatni.waga) + ' <small>kg</small></div></div><div class="weight-periods">' + zakresHtml + '</div></div>' +
+      '<svg class="weight-chart" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + grid + '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' + points + '</svg>' + goal + '</div>';
+  }
+
+  function ustawZakresWagi(zakres) {
+    state.wagaZakres = zakres;
+    renderujWykresWagi();
   }
 
   function dodajPomiarWagiHandler() {
