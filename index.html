@@ -837,6 +837,7 @@
     .desktop-sidebar { display: none; }
     .app-shell { min-height: 100vh; }
     .sidebar-people { display: none; }
+    #view-trening .training-month-nav button { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; padding:0; border:1px solid var(--border); border-radius:11px; background:var(--card); color:var(--text-2); cursor:pointer; font:700 21px/21px "Plus Jakarta Sans", sans-serif; }
     @media (min-width: 900px) {
       html { min-height: 100%; background: var(--bg); }
       body { min-height: 100vh; max-width: none; margin: 0; padding: 0 26px 34px 272px; background: radial-gradient(ellipse 70% 42% at 78% 0%, rgba(190,235,229,.5), transparent 100%), radial-gradient(ellipse 60% 42% at 38% 100%, rgba(218,241,239,.58), transparent 100%), var(--bg); }
@@ -896,24 +897,64 @@
       #view-trening { max-width: 1400px; }
       #view-ustawienia { max-width: 1400px; }
       #view-ustawienia .settings-page { max-width: 1400px; }
-      .training-toolbar { position: relative; display:flex; align-items:center; justify-content:space-between; gap:12px; margin: -10px -10px 16px; padding: 10px 10px 18px; flex-wrap:wrap; background: radial-gradient(ellipse 75% 130% at 38% 0%, rgba(255,255,255,.42), rgba(235,248,246,.2) 58%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); }
+      .training-toolbar { position: relative; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin: -10px -10px 8px; padding: 10px 10px 14px; flex-wrap:wrap; background: radial-gradient(ellipse 75% 130% at 38% 0%, rgba(255,255,255,.42), rgba(235,248,246,.2) 58%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); }
+      .training-toolbar > div:first-child { flex: 1 1 auto; }
+      .training-toolbar > div:first-child > .label-sm { color:var(--text-3); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
       .training-month-nav { display:flex; align-items:center; gap:8px; }
-      .training-month-nav button { width:36px; height:36px; border:1px solid var(--border); border-radius:11px; background:var(--card); color:var(--text-2); cursor:pointer; }
-      .training-month-title { min-width:170px; text-align:center; font-size:20px; font-weight:800; }
-      .training-layout { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(280px,.8fr); gap:16px; }
+      .training-month-nav button { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; padding:0; border:1px solid var(--border); border-radius:11px; background:var(--card); color:var(--text-2); cursor:pointer; font:700 21px/1 "Plus Jakarta Sans", sans-serif; transition:transform .15s var(--ease), background .15s var(--ease), color .15s var(--ease); }
+      .training-month-nav button:hover { color:var(--accent); background:var(--accent-bg); }
+      .training-month-nav button:active { transform:scale(.92); }
+      .training-month-title { flex:1; min-width:170px; text-align:center; font-size:20px; font-weight:800; }
+      .training-layout { display:grid; grid-template-columns:1fr; gap:16px; }
+      .training-overview { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:18px; }
+      .training-overview-card { min-width:0; padding:14px; border:1px solid rgba(217,235,233,.9); border-radius:18px; background:var(--card); box-shadow:var(--shadow-sm); }
+      .training-overview-label { color:var(--text-3); font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+      .training-overview-value { display:block; margin-top:5px; font-size:25px; font-weight:800; line-height:1; }
+      .training-overview-unit { display:block; margin-top:5px; color:var(--text-3); font-size:11px; }
+      .training-selected-card { padding:18px; border:1px solid rgba(217,235,233,.9); border-radius:22px; background:var(--card); box-shadow:var(--shadow-sm); }
+      .training-selected-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+      .training-selected-date { margin:0; font-size:18px; font-weight:800; }
+      .training-selected-meta { display:flex; align-items:center; gap:8px; margin-top:12px; color:var(--text-2); font-size:13px; font-weight:700; }
+      .training-selected-meta .training-dot { flex:0 0 auto; margin:0; }
+      .training-kind-badge { padding:5px 10px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-size:11px; font-weight:800; white-space:nowrap; }
+      .training-selected-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:16px; }
+      .training-selected-stat { padding:11px; border-radius:13px; background:#f4f6fb; }
+      .training-selected-stat span { display:block; color:var(--text-3); font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+      .training-selected-stat strong { display:block; margin-top:5px; font-size:12px; }
+      .training-selected-actions { display:flex; gap:8px; margin-top:14px; }
+      .training-selected-actions button { flex:1; min-height:36px; padding:8px 10px; border:1px solid var(--border); border-radius:10px; background:var(--card); color:var(--text-2); font:700 11px inherit; cursor:pointer; }
+      .training-selected-actions button.active { background:#e1f3e7; border-color:#9bd2ad; color:#2f8057; }
+      .training-calendar-button { width:100%; margin-top:8px; }
+      .training-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:210px; text-align:center; color:var(--text-3); }
+      .training-empty .material-symbols-outlined { margin-bottom:8px; color:#f0b129; font-size:32px; }
+      .training-empty strong { color:var(--text-2); font-size:14px; }
+      .training-empty span { margin-top:6px; font-size:12px; }
+      .training-empty .btn { width:auto; margin-top:14px; padding:10px 18px; }
+      .training-upcoming { margin-top:18px; }
+      .training-upcoming-title { margin:0 0 8px; color:var(--text-3); font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      .training-upcoming-list { display:grid; gap:8px; }
+      .training-upcoming-item { display:flex; align-items:center; gap:10px; padding:13px 14px; border:1px solid rgba(217,235,233,.9); border-left:4px solid var(--training-type-color,var(--accent)); border-radius:15px; background:var(--card); box-shadow:var(--shadow-sm); cursor:pointer; text-align:left; }
+      .training-upcoming-item:hover { transform:translateY(-1px); }
+      .training-upcoming-item-main { min-width:0; flex:1; }
+      .training-upcoming-item-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:800; }
+      .training-upcoming-item-meta { margin-top:4px; color:var(--text-3); font-size:11px; }
+      .training-upcoming-item-time { padding:5px 8px; border-radius:8px; background:var(--accent-bg); color:var(--accent); font-size:11px; font-weight:800; white-space:nowrap; }
       .training-calendar-card, .training-editor-card { background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.3), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.92), rgba(235,247,245,.68)); border:1px solid rgba(217,235,233,.78); border-radius:24px; padding:18px; box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 12px 28px rgba(52,122,123,.07); }
       .training-weekdays, .training-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
       .training-weekdays { margin-bottom:6px; color:var(--text-3); font-size:10px; font-weight:800; text-align:center; text-transform:uppercase; }
-      .training-day { min-height:78px; padding:8px; border:1px solid transparent; border-radius:14px; background:var(--surface); cursor:pointer; text-align:left; color:var(--text); }
+      .training-day { min-width:0; min-height:78px; padding:8px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.74); cursor:pointer; text-align:left; color:var(--text); transition:transform .15s var(--ease), border-color .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease); }
+      .training-day:hover { transform:translateY(-1px); border-color:var(--accent-border); }
       .training-day.muted { opacity:.42; }
-      .training-day.selected { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-bg); }
-      .training-day.today { background:#eef8f1; }
+      .training-day.selected { border-color:#e59d00; box-shadow:0 0 0 2px #f3c34e; }
+      .training-day.today { background:#e4f3ea; }
       .training-day-number { font-size:13px; font-weight:800; }
       .training-day-name { display:block; margin-top:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--accent); font-size:10px; font-weight:700; }
       .training-day .training-day-name { color:var(--training-type-color, var(--accent)); }
       .training-day .training-day-name.completed { color:var(--text-3); text-decoration:line-through; }
       .training-day .training-dot { display:inline-block; width:7px; height:7px; margin-right:5px; border-radius:50%; background:var(--training-type-color, var(--accent)); vertical-align:middle; }
       .training-day .training-dot.completed { background:var(--text-3); }
+      .training-day-markers { display:flex; align-items:center; gap:4px; margin-top:10px; min-height:8px; }
+      .training-day-markers .training-dot { margin:0; }
       .training-dot { display:inline-block; width:7px; height:7px; margin-right:4px; border-radius:50%; background:#efb92b; }
       .training-dot.done { background:#23b882; } .training-dot.missed { background:#ed6b6b; }
       .training-editor-card h2 { margin:0 0 4px; font-size:18px; }
@@ -955,8 +996,7 @@
       .training-color-custom { display:flex; align-items:center; gap:8px; box-sizing:border-box; width:100%; min-width:0; padding:8px; border:1px solid var(--border); border-radius:12px; color:var(--text-2); font-size:12px; }
       .training-color-custom-plus { width:24px; height:24px; border:1px solid var(--border); border-radius:50%; background:var(--card); color:var(--text-2); cursor:pointer; }
       @media (max-width:600px) { .training-type-row { grid-template-columns:1fr 38px; gap:10px; } .training-type-row .training-color-palette { grid-column:1 / -1; justify-content:flex-start; } }
-      @media(max-width:850px){ .training-layout{grid-template-columns:1fr;} }
-      @media(max-width:600px){ .training-calendar-card,.training-editor-card{padding:13px;border-radius:18px;} .training-day{min-height:64px;padding:6px;border-radius:10px;} .training-day-name{margin-top:6px;} .training-weekdays{font-size:8px;} .training-fields{grid-template-columns:1fr 1fr;} }
+      @media(max-width:600px){ .training-toolbar { align-items:flex-end; margin-left:-4px; margin-right:-4px; padding-left:4px; padding-right:4px; } .training-toolbar > select { flex:1 1 100%; max-width:none !important; } .training-calendar-card,.training-editor-card{padding:13px;border-radius:18px;} .training-day{min-height:64px;padding:6px 4px;border-radius:10px;} .training-day-name{margin-top:6px;} .training-weekdays{font-size:8px;} .training-fields{grid-template-columns:1fr 1fr;} .training-month-title{font-size:17px;min-width:0;} .training-overview{gap:6px;} .training-overview-card{padding:11px 9px;} .training-overview-value{font-size:21px;} .training-selected-card{padding:14px;} .training-selected-date{font-size:16px;} .training-selected-stats{gap:5px;} .training-selected-stat{padding:9px 7px;} }
       .tabbar { display: none; }
       .fab { right: 42px; bottom: 36px; }
     }
@@ -1209,25 +1249,71 @@
     .shopping-hero { margin: 0 -2px 18px; padding: 26px 24px 24px; border-radius: 28px; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.58), transparent 48%), linear-gradient(145deg, #d9f5f1 0%, #ccefeb 46%, #c2e7e5 100%); color: #176c6d; text-align: center; box-shadow: 0 14px 28px rgba(42, 137, 137, .12); }
     .shopping-hero h2 { margin: 0; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.06em; }
     .shopping-hero p { margin: 7px 0 0; color: #397d7d; font-size: 12px; font-weight: 700; }
-    .shopping-summary { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 20px 0 16px; padding: 17px 18px; border-radius: 20px; background: radial-gradient(circle at 100% 0%, rgba(216,246,241,.62), transparent 42%), linear-gradient(145deg, rgba(255,255,255,.96), rgba(239,250,248,.88)); border: 1px solid rgba(218, 236, 234, .9); box-shadow: var(--shadow-sm); }
+    .shopping-summary { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 20px 0 16px; padding: 17px 18px; border-radius: 20px; background: rgba(255,255,255,.45); border: 1px solid rgba(218, 236, 234, .9); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
     #shopping-summary[hidden] { display: none; }
     .shopping-summary-label { color: var(--text-2); font-size: 12px; font-weight: 700; }
     .shopping-summary-count { color: var(--accent); font-size: 13px; font-weight: 800; }
     .shopping-summary-track { grid-column: 1 / -1; height: 8px; overflow: hidden; border-radius: 999px; background: #e2efed; }
-    .shopping-summary-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #79d0c4, #1199a8); transition: width .25s var(--ease); }
-    .shopping-cat { position: relative; margin-bottom: 15px; overflow: hidden; border-radius: 22px; background: radial-gradient(circle at 100% 0%, rgba(190,235,229,.48), transparent 38%), linear-gradient(145deg, rgba(255,255,255,.96) 0%, rgba(241,250,248,.9) 52%, rgba(225,243,240,.76) 100%); border: 1px solid rgba(218, 236, 234, .9); box-shadow: inset 0 1px 0 rgba(255,255,255,.94), 0 10px 24px rgba(52, 122, 123, .08); }
-    .shopping-cat::after { content: ''; position: absolute; right: -38px; bottom: -54px; width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.28); box-shadow: 0 0 0 18px rgba(160,224,218,.08), 0 0 0 36px rgba(160,224,218,.05); pointer-events: none; }
-    .shopping-cat h3 { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; margin: 0; padding: 13px 17px; background: linear-gradient(115deg, rgba(239,247,241,.72) 0%, rgba(235,247,246,.5) 48%, rgba(222,243,240,.18) 100%); color: var(--text); font-size: 13px; text-transform: capitalize; letter-spacing: 0; }
-    .shopping-cat h3::after { content: '⌃'; color: var(--text-3); font-size: 17px; }
-    .shopping-cat .shopping-item { position: relative; z-index: 1; margin: 0; padding: 13px 17px; border-bottom: 1px solid rgba(220, 235, 232, .58); background: linear-gradient(100deg, rgba(255,255,255,.34), rgba(248,253,252,.08)); font-size: 14px; cursor: pointer; transition: background .18s var(--ease); }
+    .shopping-summary-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #8ac8c2, #1199a8); transition: width .25s var(--ease); }
+    .shopping-cat { position: relative; margin-bottom: 14px; overflow: hidden; border-radius: 18px; background: rgba(255,255,255,.52); border: 1px solid rgba(217,233,233,.9); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
+    .shopping-cat h3 { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; margin: 0; padding: 13px 16px 11px; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .shopping-cat h3::after { content: '⌃'; color: var(--text-3); font-size: 15px; }
+    .shopping-cat .shopping-item { position: relative; z-index: 1; margin: 0; padding: 12px 16px; border-top: 1px solid rgba(220, 235, 232, .72); background: rgba(255,255,255,.16); font-size: 14px; cursor: pointer; transition: background .18s var(--ease), opacity .18s var(--ease); }
     .shopping-cat .shopping-item:last-child { border-bottom: 0; }
-    .shopping-cat .shopping-item:hover { background: linear-gradient(100deg, rgba(207,244,237,.48), rgba(238,251,249,.2)); }
-    .shopping-item input[type=checkbox] { appearance: none; width: 22px; height: 22px; flex: 0 0 22px; margin: 0; border: 2px solid #7d8583; border-radius: 50%; background: transparent; cursor: pointer; }
-    .shopping-item input[type=checkbox]:checked { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 4px var(--card); }
-    .shopping-item.checked { background: linear-gradient(100deg, rgba(214,235,220,.7), rgba(239,248,241,.3)); }
+    .shopping-cat .shopping-item:hover { background: rgba(203, 237, 234, .18); }
+    .shopping-item input[type=checkbox] { appearance: none; width: 18px; height: 18px; flex: 0 0 18px; margin: 0; border: 2px solid #8aa0a4; border-radius: 5px; background: transparent; cursor: pointer; }
+    .shopping-item input[type=checkbox]:checked { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px rgba(255,255,255,.9); }
+    .shopping-item.checked { background: rgba(224, 245, 240, .6); }
     .shopping-item.checked span { color: #7e8581; }
+    .shopping-item .shopping-item-label { min-width: 0; flex: 1 1 auto; }
+    .shopping-item .shopping-item-qty-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-left: auto; }
+    .shopping-item .shopping-item-qty-input { width: 72px; min-width: 72px; max-width: 72px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.8); color: var(--text); font-size: 12px; font-weight: 700; text-align: right; }
+    .shopping-item .shopping-item-qty-input:focus { border-color: var(--accent-border); box-shadow: 0 0 0 3px var(--accent-bg); }
+    .shopping-item .shopping-item-qty-unit { color: var(--text-2); font-size: 12px; font-weight: 600; }
     .shopping-list-toolbar .btn { border-radius: 999px; }
     @media (max-width: 600px) { .shopping-range { grid-template-columns: 1fr 1fr; } .shopping-range .btn { grid-column: 1 / -1; } }
+    #view-zakupy .shopping-hero { position:relative; margin:0 0 10px; padding:0; border-radius:0; background:transparent; color:var(--text); text-align:left; box-shadow:none; }
+    #view-zakupy .shopping-hero h2 { font-size:16px; letter-spacing:-.03em; }
+    #view-zakupy .shopping-hero p { margin:3px 0 0; color:var(--text-3); font-size:11px; font-weight:500; }
+    #view-zakupy .shopping-progress-badge { position:absolute; top:-1px; right:0; padding:5px 10px; border-radius:10px; background:var(--accent-bg); color:var(--accent); font-size:12px; font-weight:800; }
+    #view-zakupy .shopping-range { display:grid; gap:8px; margin:0 0 12px; padding:10px 12px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.55); box-shadow:none; }
+    #view-zakupy .shopping-range-heading { color:var(--text-3); font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+    #view-zakupy .shopping-range-fields { display:grid; grid-template-columns:1fr 1fr auto; gap:7px; align-items:end; }
+    #view-zakupy .shopping-range-field label { margin:0 0 3px; font-size:9px; }
+    #view-zakupy .shopping-range-field input { height:36px; padding:8px 9px; font-size:12px; }
+    #view-zakupy .shopping-range .btn { min-height:36px; padding:8px 12px; border-radius:10px; font-size:12px; }
+    #view-zakupy .shopping-summary { margin:0 0 12px; padding:0; border:0; background:transparent; box-shadow:none; }
+    #view-zakupy .shopping-summary-label, #view-zakupy .shopping-summary-count { display:none; }
+    #view-zakupy .shopping-summary-track { height:5px; background:#dcefe4; }
+    #view-zakupy .shopping-summary-fill { background:var(--accent); }
+    #view-zakupy .shopping-list-toolbar { display:none; }
+    #view-zakupy .shopping-cat { margin-bottom:14px; border-radius:16px; background:var(--card); border-color:var(--border); box-shadow:var(--shadow-sm); }
+    #view-zakupy .shopping-cat h3 { padding:10px 12px 8px; color:var(--text-3); font-size:10px; letter-spacing:.07em; }
+    #view-zakupy .shopping-cat h3::after { display:none; }
+    #view-zakupy .shopping-cat .shopping-item { min-height:43px; padding:10px 12px; background:var(--card); font-size:13px; }
+    #view-zakupy .shopping-item input[type=checkbox] { width:18px; height:18px; flex-basis:18px; border:2px solid #dfe6ed; border-radius:5px; }
+    #view-zakupy .shopping-item input[type=checkbox]:checked { border-color:#8fc2aa; background:#8fc2aa; }
+    #view-zakupy .shopping-item .shopping-item-qty-wrap { gap:7px; }
+    #view-zakupy .shopping-item .shopping-item-qty-input { width:58px; min-width:58px; max-width:58px; padding:0; border:0; background:transparent; box-shadow:none; color:var(--text-3); font-size:11px; font-weight:500; }
+    #view-zakupy .shopping-item .shopping-item-qty-unit { color:var(--text-3); font-size:11px; font-weight:500; }
+    #view-zakupy .shopping-item .del-btn { width:20px; height:20px; margin-left:3px; color:#b7c0c2; font-size:16px; }
+    #view-zakupy .shopping-item .del-btn:hover { color:var(--danger); background:transparent; }
+    #view-zakupy > .section-title { display:none; }
+    #view-zakupy > .dodaj-skladnik-row { display:grid; grid-template-columns:minmax(0,1fr) 64px 106px 40px; gap:8px; margin:0 0 16px; align-items:stretch; }
+    #view-zakupy > .dodaj-skladnik-row > input { width:100%; height:40px; min-width:0; margin:0; }
+    #view-zakupy > .dodaj-skladnik-row .shopping-extra-field { display:flex; flex:0 0 auto; width:64px; min-width:64px; height:40px; }
+    #view-zakupy > .dodaj-skladnik-row .shopping-extra-field .label-sm { display:none; }
+    #view-zakupy > .dodaj-skladnik-row .shopping-extra-field #dodatkowy-ilosc { width:64px !important; min-width:64px !important; height:40px !important; min-height:40px !important; margin:0; align-self:stretch; }
+    #view-zakupy > .dodaj-skladnik-row #dodatkowy-kategoria { width:106px; height:40px; min-width:0; margin:0; padding:8px 7px; font-size:11px; }
+    #view-zakupy > .dodaj-skladnik-row button { width:40px; height:40px; min-height:40px; margin:0; border-radius:11px; }
+    @media (max-width:600px) {
+      #view-zakupy .shopping-range-fields { grid-template-columns:1fr 1fr; }
+      #view-zakupy .shopping-range .btn { grid-column:1 / -1; }
+      #view-zakupy > .dodaj-skladnik-row { grid-template-columns:minmax(0,1fr) 64px 40px; }
+      #view-zakupy > .dodaj-skladnik-row > input { grid-column:1 / -1; }
+      #view-zakupy > .dodaj-skladnik-row #dodatkowy-kategoria { width:auto; }
+    }
+    #view-zakupy #zakupy-dodatkowe-wynik { margin-top:0; }
     #modal-wybor, #modal-formularz { align-items: center !important; justify-content: center; padding: 18px; }
     #modal-wybor > .modal, #modal-formularz > .modal { margin: 0; border-radius: 26px; max-height: 88vh; box-shadow: 0 22px 64px rgba(20, 35, 24, .2); animation: modalPopIn .2s var(--ease); }
     #modal-formularz .modal { width: min(100%, 700px); max-width: 700px; padding: 24px 26px 30px; }
@@ -1863,8 +1949,46 @@
         height: 6px;
         margin-right: 2px;
       }
+      #view-trening .training-day-markers { margin-top:8px; gap:3px; }
+      #view-trening .training-day-markers .training-dot { width:7px; height:7px; margin:0; }
+      #view-trening .training-day.selected { border-color:#19a9e8 !important; background:transparent !important; box-shadow:none !important; color:var(--text) !important; }
+      #view-trening .training-day.selected .training-day-number { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:#19a9e8; color:#fff !important; }
+      #view-trening .training-day.selected .training-day-name { color:var(--text) !important; }
+      #view-trening .training-day-name { display:none; }
+      #view-trening .training-calendar-card { box-shadow:none; background:var(--card); }
+      #view-trening .training-overview, #view-trening .training-selected-card, #view-trening .training-upcoming, #view-trening .training-editor-card, #view-trening .training-summary { display:none !important; }
     }
     @media (max-width: 899px) {
+      #view-trening .training-overview { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:18px; }
+      #view-trening .training-overview-card { min-width:0; padding:11px 9px; border:1px solid rgba(217,235,233,.9); border-radius:16px; background:var(--card); box-shadow:var(--shadow-sm); }
+      #view-trening .training-overview-label { color:var(--text-3); font-size:9px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+      #view-trening .training-overview-value { display:block; margin-top:5px; font-size:21px; font-weight:800; line-height:1; }
+      #view-trening .training-overview-unit { display:block; margin-top:5px; color:var(--text-3); font-size:10px; }
+      #view-trening .training-selected-card { padding:14px; border:1px solid rgba(217,235,233,.9); border-radius:18px; background:var(--card); box-shadow:var(--shadow-sm); }
+      #view-trening .training-selected-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+      #view-trening .training-selected-date { margin:0; font-size:16px; font-weight:800; }
+      #view-trening .training-selected-meta { display:flex; align-items:center; gap:8px; margin-top:10px; color:var(--text-2); font-size:12px; font-weight:700; }
+      #view-trening .training-kind-badge { padding:5px 8px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-size:10px; font-weight:800; white-space:nowrap; }
+      #view-trening .training-selected-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; margin-top:14px; }
+      #view-trening .training-selected-stat { min-width:0; padding:9px 7px; border-radius:11px; background:#f4f6fb; }
+      #view-trening .training-selected-stat span { display:block; color:var(--text-3); font-size:8px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+      #view-trening .training-selected-stat strong { display:block; overflow:hidden; margin-top:5px; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+      #view-trening .training-selected-actions { display:flex; gap:6px; margin-top:12px; }
+      #view-trening .training-selected-actions button { flex:1; min-height:34px; padding:7px 8px; border:1px solid var(--border); border-radius:9px; background:var(--card); color:var(--text-2); font:700 10px inherit; cursor:pointer; }
+      #view-trening .training-selected-actions button.active { background:#e1f3e7; border-color:#9bd2ad; color:#2f8057; }
+      #view-trening .training-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:190px; text-align:center; color:var(--text-3); }
+      #view-trening .training-empty .material-symbols-outlined { margin-bottom:8px; color:#f0b129; font-size:30px; }
+      #view-trening .training-empty strong { color:var(--text-2); font-size:13px; }
+      #view-trening .training-empty span { margin-top:5px; font-size:11px; }
+      #view-trening .training-empty .btn { width:auto; margin-top:12px; padding:9px 16px; }
+      #view-trening .training-upcoming { margin-top:18px; }
+      #view-trening .training-upcoming-title { margin:0 0 8px; color:var(--text-3); font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      #view-trening .training-upcoming-list { display:grid; gap:7px; }
+      #view-trening .training-upcoming-item { display:flex; align-items:center; gap:8px; padding:11px 12px; border:1px solid rgba(217,235,233,.9); border-left:4px solid var(--training-type-color,var(--accent)); border-radius:13px; background:var(--card); box-shadow:var(--shadow-sm); cursor:pointer; text-align:left; }
+      #view-trening .training-upcoming-item-main { min-width:0; flex:1; }
+      #view-trening .training-upcoming-item-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; font-weight:800; }
+      #view-trening .training-upcoming-item-meta { display:block; margin-top:3px; color:var(--text-3); font-size:10px; }
+      #view-trening .training-upcoming-item-time { padding:4px 6px; border-radius:7px; background:var(--accent-bg); color:var(--accent); font-size:10px; font-weight:800; white-space:nowrap; }
       #view-plan .weekly-board {
         grid-template-columns: repeat(7, minmax(165px, 1fr)) !important;
         gap: 12px !important;
@@ -2162,6 +2286,34 @@
         font-size: 10px !important;
         white-space: nowrap !important;
       }
+      #view-trening .training-day.selected {
+        border-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: var(--text) !important;
+      }
+      #view-trening .training-day.selected .training-day-number {
+        display: grid !important;
+        place-items: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 50% !important;
+        background: #19a9e8 !important;
+        color: #fff !important;
+      }
+      #view-trening .training-day-name { display: none !important; }
+      #view-trening .training-day-markers { display:flex !important; visibility:visible !important; opacity:1 !important; }
+      #view-trening .training-day-markers .training-dot { display:block !important; width:7px !important; height:7px !important; margin:0 !important; border-radius:50% !important; background:var(--training-type-color,#6b7280) !important; }
+      #view-trening .training-editor-card {
+        display: block !important;
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 18px;
+      }
+      #view-trening .training-overview { display:grid !important; }
+      #view-trening .training-selected-card { display:block !important; }
+      #view-trening .training-upcoming { display:block !important; }
+      #view-trening .training-summary { display:grid !important; }
     }
   </style>
 </head>
@@ -2319,25 +2471,38 @@
 <div class="view" id="view-zakupy">
   <div class="shopping-hero">
     <h2>Lista zakupów</h2>
-    <p>Twoje produkty uporządkowane według kategorii</p>
+    <p id="shopping-items-count">0 z 0 pozycji</p>
+    <span class="shopping-progress-badge" id="shopping-progress-badge">0%</span>
   </div>
   <div class="shopping-range">
-    <div class="shopping-range-field"><label for="zakupy-od">Od</label><input type="date" id="zakupy-od"></div>
-    <div class="shopping-range-field"><label for="zakupy-do">Do</label><input type="date" id="zakupy-do"></div>
-    <button class="btn primary" onclick="wczytajListeZakupow()">Pokaż listę</button>
+    <div class="shopping-range-heading">Zakres listy zakupów</div>
+    <div class="shopping-range-fields">
+      <div class="shopping-range-field"><label for="zakupy-od">Od</label><input type="date" id="zakupy-od"></div>
+      <div class="shopping-range-field"><label for="zakupy-do">Do</label><input type="date" id="zakupy-do"></div>
+      <button class="btn primary" onclick="wczytajListeZakupow()">Pokaż listę</button>
+    </div>
   </div>
   <div class="shopping-summary" id="shopping-summary" hidden></div>
-  <div id="zakupy-wynik" style="margin-top:18px"></div>
-
-  <div class="section-title">Dodatkowe (ręcznie)</div>
   <div class="dodaj-skladnik-row">
-    <input id="dodatkowy-nazwa" placeholder="np. papier toaletowy" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
+    <input id="dodatkowy-nazwa" placeholder="Dodaj produkt…" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
     <div class="shopping-extra-field">
       <span class="label-sm">Ilość</span>
       <input id="dodatkowy-ilosc" class="ilosc-input" placeholder="" onkeydown="if(event.key==='Enter') dodajZakupDodatkowy();">
     </div>
-    <button onclick="dodajZakupDodatkowy()"><span class="material-symbols-outlined">add</span></button>
+    <select id="dodatkowy-kategoria" aria-label="Kategoria produktu">
+      <option value="inne">Inne</option>
+      <option value="warzywa">Warzywa</option>
+      <option value="owoce">Owoce</option>
+      <option value="nabiał">Nabiał</option>
+      <option value="mięso i ryby">Mięso i ryby</option>
+      <option value="pieczywo">Pieczywo</option>
+      <option value="konserwy">Konserwy</option>
+    </select>
+    <button onclick="dodajZakupDodatkowy()" aria-label="Dodaj produkt"><span class="material-symbols-outlined">add</span></button>
   </div>
+  <div id="zakupy-wynik" style="margin-top:18px"></div>
+
+  <div class="section-title">Dodatkowe (ręcznie)</div>
   <div id="zakupy-dodatkowe-wynik"></div>
 </div>
 
@@ -2354,12 +2519,15 @@
     </div>
     <select id="trening-osoba" onchange="zmienOsobeTreningu(this.value)" style="max-width:220px;"></select>
   </div>
+  <div class="training-overview" id="trening-overview"></div>
   <div class="training-layout">
     <section class="training-calendar-card">
       <div class="training-weekdays"><span>Pon</span><span>Wt</span><span>Śr</span><span>Czw</span><span>Pt</span><span>Sob</span><span>Nd</span></div>
       <div class="training-calendar" id="trening-kalendarz"></div>
       <div class="training-summary" id="trening-podsumowanie"></div>
     </section>
+    <section class="training-selected-card" id="trening-wybrany"></section>
+    <section class="training-upcoming" id="trening-nadchodzace"></section>
     <section class="training-editor-card">
       <h2 id="trening-edytor-tytul">Wybierz dzień</h2>
       <div class="training-editor-date" id="trening-edytor-data"></div>
@@ -2384,7 +2552,11 @@
         <button data-status="done" onclick="ustawStatusTreningu('done')">Wykonany</button>
         <button data-status="missed" onclick="ustawStatusTreningu('missed')">Pominięty</button>
       </div>
-      <button class="btn primary" style="width:100%;" onclick="zapiszTreningDnia()">Zapisz trening</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" type="button" onclick="dodajDrugiTrening()">Dodaj drugi trening</button>
+        <button class="btn primary" style="width:100%;" onclick="zapiszTreningDnia()">Zapisz trening</button>
+      </div>
+      <button class="btn training-calendar-button" type="button" onclick="dodajTreningDoKalendarza()"><span class="material-symbols-outlined">event</span>Dodaj do kalendarza</button>
     </section>
   </div>
 </div>
@@ -2598,6 +2770,13 @@
       <section class="settings-panel" id="ustawienia-panel-skladniki">
         <div class="section-title" style="margin-top:0;">Składniki i kategorie</div>
         <p class="label-sm" style="margin:0 0 12px;">Zmieniaj nazwy i kategorie oraz łącz zdublowane pozycje.</p>
+        <div class="section-title">Kategorie</div>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <input id="ustawienia-nowa-kategoria" placeholder="np. Napoje" onkeydown="if(event.key==='Enter') dodajKategorieSkladnikow();">
+          <button class="btn small" style="width:auto;" onclick="dodajKategorieSkladnikow()"><span class="material-symbols-outlined">add</span>Dodaj</button>
+        </div>
+        <div id="ustawienia-kategorie-lista"></div>
+        <div class="section-title">Składniki</div>
         <div class="settings-ingredient-toolbar">
           <input id="ustawienia-skladniki-szukaj" placeholder="Szukaj składnika…" oninput="renderujZarzadzanieSkladnikami()">
           <button class="btn small" onclick="renderujZarzadzanieSkladnikami()"><span class="material-symbols-outlined">refresh</span></button>
@@ -2708,6 +2887,22 @@
       const { data, error } = await sb.from('skladniki').select('*').order('nazwa');
       if (error) throw error;
       return data.map(s => ({ id: s.id, nazwa: s.nazwa, kategoria: s.kategoria_zakupowa, jednostka: s.jednostka }));
+    },
+
+    async getKategorieSkladnikow() {
+      const { data, error } = await sb.from('kategorie_skladnikow').select('*').order('nazwa');
+      if (error) throw error;
+      return data.map(k => ({ id: k.id, nazwa: k.nazwa }));
+    },
+
+    async saveKategorieSkladnikow(kategoria) {
+      const { data: { user }, error: userError } = await sb.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error('Sesja wygasła. Zaloguj się ponownie.');
+      const { error } = await sb.from('kategorie_skladnikow').upsert({
+        id: kategoria.id || undefined, user_id: user.id, nazwa: kategoria.nazwa
+      }, { onConflict: 'user_id,nazwa' });
+      if (error) throw error;
     },
 
     async getPrzepisy() {
@@ -2855,7 +3050,8 @@
         tempo: wpis.tempo || null, tetno: wpis.tetno || null, ftp: wpis.ftp || null,
         czas: wpis.czas || null, status: wpis.status || 'planned'
       };
-      const { error } = await sb.from('treningi').upsert(row, { onConflict: 'user_id,osoba,data' });
+      if (wpis.id) row.id = wpis.id;
+      const { error } = wpis.id ? await sb.from('treningi').upsert(row) : await sb.from('treningi').insert(row);
       if (error) throw error;
     },
 
@@ -2951,11 +3147,11 @@
     async getZakupyDodatkowe() {
       const { data, error } = await sb.from('zakupy_dodatkowe').select('*').order('id');
       if (error) throw error;
-      return data.map(z => ({ id: z.id, nazwa: z.nazwa, ilosc: z.ilosc, kupione: z.kupione }));
+      return data.map(z => ({ id: z.id, nazwa: z.nazwa, ilosc: z.ilosc, kategoria: z.kategoria || 'inne', kupione: z.kupione }));
     },
 
-    async dodajZakupDodatkowy(nazwa, ilosc) {
-      const { error } = await sb.from('zakupy_dodatkowe').insert({ nazwa, ilosc: ilosc || null });
+    async dodajZakupDodatkowy(nazwa, ilosc, kategoria) {
+      const { error } = await sb.from('zakupy_dodatkowe').insert({ nazwa, ilosc: ilosc || null, kategoria: kategoria || 'inne' });
       if (error) throw error;
     },
 
@@ -3217,6 +3413,7 @@
     treningMiesiac: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     treningOsoba: null,
     treningData: formatDate(new Date()),
+    treningId: null,
     treningStatus: 'planned',
     treningRodzaje: [
       { nazwa: 'Rower', slug: 'rower', kolor: '#2b8ac6' },
@@ -3229,6 +3426,7 @@
     tydzienPlan: [],
     tydzienStart: formatDate(getPoniedzialek(new Date())),
     zakupyDodatkowe: [],
+    zakupyIlosci: pobierzZakupyIlosciZLocalStorage(),
     domyslnaLiczbaPosilkow: 3,
     wagaOsoba: null,
     wagaPomiary: [],
@@ -3438,7 +3636,7 @@
     document.getElementById('fab-add').style.display = (nazwa === 'przepisy') ? 'block' : 'none';
     if (nazwa === 'dzisiaj') wczytajDzisiaj();
     if (nazwa === 'tydzien') wczytajTydzien();
-    if (nazwa === 'zakupy') wczytajZakupyDodatkowe();
+    if (nazwa === 'zakupy') { wczytajListeZakupow(); wczytajZakupyDodatkowe(); }
     if (nazwa === 'trening') inicjalizujTrening();
     if (nazwa === 'waga') inicjalizujWagaTab();
   }
@@ -4586,10 +4784,18 @@
     var doD = document.getElementById('zakupy-do').value;
     if (!od || !doD) { pokazKomunikat('Wybierz zakres dat.'); return; }
     document.getElementById('zakupy-wynik').innerHTML = '<div class="loading">Wczytywanie…</div>';
-    Promise.all([db.getPlanZakresuRaw(od, doD), db.getZakupyZaznaczenia()]).then(function (wyniki) {
+    Promise.all([db.getPlanZakresuRaw(od, doD), db.getZakupyZaznaczenia(), db.getZakupyDodatkowe()]).then(function (wyniki) {
       var plan = mapPlanRows(wyniki[0]);
       var zaznaczenia = wyniki[1];
       var pogrupowane = obliczListeZakupow(plan);
+      state.zakupyDodatkowe = wyniki[2] || [];
+      state.zakupyDodatkowe.forEach(function (it) {
+        var kategoria = it.kategoria || 'inne';
+        if (!pogrupowane[kategoria]) pogrupowane[kategoria] = [];
+        var id = 'dodatkowy-' + it.id;
+        pogrupowane[kategoria].push({ id: id, bazoweId: it.id, nazwa: it.nazwa, ilosc: Number(it.ilosc) || 0, jednostka: '', dodatkowy: true, kupione: !!it.kupione });
+        zaznaczenia[id] = !!it.kupione;
+      });
       renderujListeZakupow(pogrupowane, zaznaczenia);
     }).catch(pokazBlad);
   }
@@ -4617,13 +4823,48 @@
     return pogrupowane;
   }
 
+  function pobierzZakupyIlosciZLocalStorage() {
+    try {
+      var zapis = localStorage.getItem('mealPlannerZakupyIlosci');
+      if (!zapis) return {};
+      var parsed = JSON.parse(zapis);
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function zapiszZakupyIlosciDoLocalStorage() {
+    try {
+      localStorage.setItem('mealPlannerZakupyIlosci', JSON.stringify(state.zakupyIlosci || {}));
+    } catch (e) {}
+  }
+
+  function pobierzWartoscIlosciZakupu(id, iloscDomyslna) {
+    var stan = state.zakupyIlosci && state.zakupyIlosci[String(id)];
+    if (stan === undefined || stan === null || stan === '') return Number(iloscDomyslna) || 0;
+    return Number(stan);
+  }
+
+  function formatujIloscZakupu(wartosc, jednostka) {
+    if (typeof wartosc !== 'number' || isNaN(wartosc)) return '';
+    var surowa = Number(wartosc);
+    var text = surowa % 1 === 0 ? String(surowa) : surowa.toFixed(1).replace(/\.0$/, '');
+    return text + (jednostka ? ' ' + jednostka : '');
+  }
+
   function renderujListeZakupow(pogrupowane, zaznaczenia) {
     zaznaczenia = zaznaczenia || {};
+    state.zakupyIlosci = state.zakupyIlosci || {};
     var container = document.getElementById('zakupy-wynik');
     var kategorie = Object.keys(pogrupowane);
     var summary = document.getElementById('shopping-summary');
     if (!kategorie.length) {
       if (summary) summary.hidden = true;
+      var emptyCount = document.getElementById('shopping-items-count');
+      var emptyBadge = document.getElementById('shopping-progress-badge');
+      if (emptyCount) emptyCount.textContent = '0 z 0 pozycji';
+      if (emptyBadge) emptyBadge.textContent = '0%';
       container.innerHTML = '<p class="label-sm">Brak zaplanowanych posiłków z przypisanymi składnikami w tym zakresie.</p>';
       return;
     }
@@ -4635,6 +4876,11 @@
       summary.hidden = false;
       summary.innerHTML = '<div class="shopping-summary-label">Postęp zakupów</div><div class="shopping-summary-count" id="shopping-summary-count">' + wykonane + ' z ' + wszystkie + '</div><div class="shopping-summary-track"><div class="shopping-summary-fill" style="width:' + (wszystkie ? Math.round((wykonane / wszystkie) * 100) : 0) + '%"></div></div>';
     }
+    var itemsCount = document.getElementById('shopping-items-count');
+    var progressBadge = document.getElementById('shopping-progress-badge');
+    var progress = wszystkie ? Math.round((wykonane / wszystkie) * 100) : 0;
+    if (itemsCount) itemsCount.textContent = wykonane + ' z ' + wszystkie + ' pozycji';
+    if (progressBadge) progressBadge.textContent = progress + '%';
     window.aktualnaListaZakupow = pogrupowane;
     container.innerHTML = '<div class="shopping-list-toolbar"><button class="btn" onclick="kopiujListeZakupow()"><span class="material-symbols-outlined">content_copy</span>Kopiuj listę</button></div>';
     kategorie.forEach(function (kat) {
@@ -4654,23 +4900,85 @@
         checkbox.checked = zaznaczone;
 
         var label = document.createElement('span');
-        label.innerText = it.nazwa + ' — ' + (Math.round(it.ilosc * 100) / 100) + ' ' + it.jednostka;
+        label.className = 'shopping-item-label';
+        label.innerText = it.nazwa;
+
+        var qtyWrap = document.createElement('div');
+        qtyWrap.className = 'shopping-item-qty-wrap';
+
+        var qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.step = '0.1';
+        qtyInput.min = '0';
+        qtyInput.className = 'shopping-item-qty-input';
+        qtyInput.value = String(Number(pobierzWartoscIlosciZakupu(it.id, it.ilosc)) || 0);
+
+        var qtyUnit = document.createElement('span');
+        qtyUnit.className = 'shopping-item-qty-unit';
+        qtyUnit.innerText = it.jednostka || '';
+
+        qtyInput.onchange = function () {
+          var val = Number(qtyInput.value);
+          if (!isNaN(val) && val >= 0) {
+            state.zakupyIlosci[String(it.id)] = val;
+          } else {
+            delete state.zakupyIlosci[String(it.id)];
+          }
+          zapiszZakupyIlosciDoLocalStorage();
+          var currentText = formatujIloscZakupu(pobierzWartoscIlosciZakupu(it.id, it.ilosc), it.jednostka);
+          qtyInput.value = String(Number(pobierzWartoscIlosciZakupu(it.id, it.ilosc)) || 0);
+          label.title = currentText ? currentText : it.nazwa;
+        };
+
+        qtyInput.oninput = function () {
+          if (qtyInput.value === '') return;
+          var val = Number(qtyInput.value);
+          if (!isNaN(val) && val >= 0) {
+            state.zakupyIlosci[String(it.id)] = val;
+            zapiszZakupyIlosciDoLocalStorage();
+          }
+        };
 
         function ustawStan(nowyStan) {
           checkbox.checked = nowyStan;
           row.classList.toggle('checked', nowyStan);
-          db.ustawZaznaczenieZakupu(it.id, nowyStan).catch(pokazBlad);
+          var zapis = it.dodatkowy ? db.ustawKupioneDodatkowy(it.bazoweId, nowyStan) : db.ustawZaznaczenieZakupu(it.id, nowyStan);
+          zapis.catch(pokazBlad);
           aktualizujPodsumowanieZakupow();
         }
 
-        row.onclick = function () { ustawStan(!checkbox.checked); };
+        row.onclick = function (event) {
+          if (event.target === qtyInput) return;
+          ustawStan(!checkbox.checked);
+        };
         checkbox.onclick = function (e) {
           e.stopPropagation();
           ustawStan(checkbox.checked);
         };
 
+        qtyWrap.appendChild(qtyInput);
+        qtyWrap.appendChild(qtyUnit);
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'del-btn';
+        deleteButton.setAttribute('aria-label', 'Usuń produkt z widoku');
+        deleteButton.innerHTML = '<span class="material-symbols-outlined">close</span>';
+        deleteButton.onclick = function (event) {
+          event.stopPropagation();
+          if (it.dodatkowy) {
+            db.usunZakupDodatkowy(it.bazoweId).then(wczytajListeZakupow).catch(pokazBlad);
+          } else {
+            row.remove();
+            aktualizujPodsumowanieZakupow();
+          }
+        };
+        if (it.dodatkowy) {
+          deleteButton.setAttribute('aria-label', 'Usuń dodatkowy produkt');
+        };
+        qtyWrap.appendChild(deleteButton);
         row.appendChild(checkbox);
         row.appendChild(label);
+        row.appendChild(qtyWrap);
         block.appendChild(row);
       });
 
@@ -4693,7 +5001,11 @@
     var lista = window.aktualnaListaZakupow || {};
     var tekst = Object.keys(lista).map(function (kategoria) {
       var pozycje = lista[kategoria].map(function (item) {
-        return '- ' + item.nazwa + ' — ' + (Math.round(item.ilosc * 100) / 100) + ' ' + (item.jednostka || '');
+        var ilosc = Number(state.zakupyIlosci && state.zakupyIlosci[String(item.id)])
+          if (isNaN(ilosc) || ilosc === null || ilosc === undefined || ilosc < 0) {
+            ilosc = Number(item.ilosc) || 0;
+          }
+        return '- ' + item.nazwa + ' — ' + (Math.round(ilosc * 100) / 100) + ' ' + (item.jednostka || '');
       }).join('\n');
       return kategoria.toUpperCase() + '\n' + pozycje;
     }).join('\n\n');
@@ -4728,6 +5040,7 @@
     renderujUstawieniaOsoby();
     renderujNazwyPosilkowZUstawien();
     renderujZarzadzanieSkladnikami();
+    wczytajKategorieSkladnikow();
     renderujNieuzywaneSkladniki();
     ustawieniaZakladka('osoby');
     pokazWidok('ustawienia');
@@ -4892,6 +5205,66 @@
 
   var KATEGORIE_SKLADNIKOW = ['nabiał', 'warzywa', 'owoce', 'mięso', 'pieczywo', 'przyprawy', 'inne'];
 
+  async function wczytajKategorieSkladnikow() {
+    try {
+      var zapisane = await db.getKategorieSkladnikow();
+      if (zapisane.length) KATEGORIE_SKLADNIKOW = zapisane.map(function (k) { return k.nazwa; });
+    } catch (e) {
+      console.warn('Nie udało się wczytać własnych kategorii składników.', e);
+    }
+    renderujKategorieSkladnikow();
+    renderujZarzadzanieSkladnikami();
+  }
+
+  function renderujKategorieSkladnikow() {
+    var lista = document.getElementById('ustawienia-kategorie-lista');
+    if (!lista) return;
+    lista.innerHTML = KATEGORIE_SKLADNIKOW.map(function (kategoria) {
+      return '<div class="settings-ingredient-row"><input class="settings-category-name" value="' + escapeHtml(kategoria) + '" data-original="' + escapeHtml(kategoria) + '"><button class="btn small" title="Zapisz kategorię" onclick="zapiszKategorieSkladnikow(this)"><span class="material-symbols-outlined">save</span></button></div>';
+    }).join('');
+    var select = document.getElementById('nowy-skladnik-kategoria');
+    if (select) select.innerHTML = KATEGORIE_SKLADNIKOW.map(function (kategoria) { return '<option value="' + escapeHtml(kategoria) + '">' + escapeHtml(kategoria) + '</option>'; }).join('');
+  }
+
+  async function dodajKategorieSkladnikow() {
+    var input = document.getElementById('ustawienia-nowa-kategoria');
+    var nazwa = input ? input.value.trim() : '';
+    if (!nazwa) return;
+    if (KATEGORIE_SKLADNIKOW.some(function (k) { return normalizujNazweSkladnika(k) === normalizujNazweSkladnika(nazwa); })) {
+      pokazKomunikat('Taka kategoria już istnieje.');
+      return;
+    }
+    try {
+      await db.saveKategorieSkladnikow({ nazwa:nazwa });
+      if (input) input.value = '';
+      await wczytajKategorieSkladnikow();
+    } catch (e) { pokazBlad(e); }
+  }
+
+  async function zapiszKategorieSkladnikow(button) {
+    var input = button.closest('.settings-ingredient-row').querySelector('.settings-category-name');
+    var stara = input.getAttribute('data-original');
+    var nowa = input.value.trim();
+    if (!nowa || nowa === stara) return;
+    if (KATEGORIE_SKLADNIKOW.some(function (k) { return k !== stara && normalizujNazweSkladnika(k) === normalizujNazweSkladnika(nowa); })) {
+      pokazKomunikat('Taka kategoria już istnieje.');
+      return;
+    }
+    try {
+      var wpisy = state.skladniki.filter(function (s) { return s.kategoria === stara; });
+      for (var i = 0; i < wpisy.length; i++) {
+        await db.saveSkladnik({ id:wpisy[i].id, nazwa:wpisy[i].nazwa, kategoria:nowa, jednostka:wpisy[i].jednostka });
+      }
+      var zapisane = await db.getKategorieSkladnikow();
+      var kategoria = zapisane.find(function (k) { return k.nazwa === stara; });
+      if (kategoria) await db.saveKategorieSkladnikow({ id:kategoria.id, nazwa:nowa });
+      state.skladniki = await db.getSkladniki();
+      await wczytajKategorieSkladnikow();
+      renderujNieuzywaneSkladniki();
+      pokazKomunikat('Zmieniono nazwę kategorii.');
+    } catch (e) { pokazBlad(e); }
+  }
+
   function normalizujNazweSkladnika(nazwa) {
     return String(nazwa || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
@@ -5039,29 +5412,22 @@
   function renderujZakupyDodatkowe() {
     var container = document.getElementById('zakupy-dodatkowe-wynik');
     if (!container) return;
-    if (!state.zakupyDodatkowe.length) {
-      container.innerHTML = '<p class="label-sm">Brak dodatkowych pozycji.</p>';
-      return;
-    }
-    container.innerHTML = state.zakupyDodatkowe.map(function (it) {
-      return '<div class="shopping-item' + (it.kupione ? ' checked' : '') + '" data-id="' + escapeHtml(it.id) + '">' +
-        '<input type="checkbox" ' + (it.kupione ? 'checked' : '') + ' onchange="przelaczKupioneDodatkowy(' + escapeHtml(it.id) + ', this.checked)">' +
-        '<span>' + escapeHtml(it.nazwa) + (it.ilosc ? ' — ' + escapeHtml(it.ilosc) : '') + '</span>' +
-        '<button class="del-btn" onclick="usunZakupDodatkowyPotwierdz(' + escapeHtml(it.id) + ')"><span class="material-symbols-outlined">close</span></button>' +
-        '</div>';
-    }).join('');
+    container.innerHTML = '';
   }
 
   function dodajZakupDodatkowy() {
     var nazwaEl = document.getElementById('dodatkowy-nazwa');
     var iloscEl = document.getElementById('dodatkowy-ilosc');
+    var kategoriaEl = document.getElementById('dodatkowy-kategoria');
     var nazwa = nazwaEl.value.trim();
     var ilosc = iloscEl.value.trim();
+    var kategoria = kategoriaEl ? kategoriaEl.value : 'inne';
     if (!nazwa) return;
-    db.dodajZakupDodatkowy(nazwa, ilosc).then(function () {
+    db.dodajZakupDodatkowy(nazwa, ilosc, kategoria).then(function () {
       nazwaEl.value = '';
       iloscEl.value = '';
       nazwaEl.focus();
+      wczytajListeZakupow();
       wczytajZakupyDodatkowe();
     }).catch(pokazBlad);
   }
@@ -5084,7 +5450,8 @@
   // ===================== WIDOK: TRENING =====================
   var treningMiesiace = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
   function kluczTrening(osoba, data) { return String(osoba || '') + '|' + data; }
-  function znajdzTrening(data) { return state.treningi.find(function (t) { return t.data === data; }) || {}; }
+  function znajdzTreningi(data) { return state.treningi.filter(function (t) { return t.data === data; }); }
+  function znajdzTrening(data) { return znajdzTreningi(data)[0] || {}; }
   async function inicjalizujTrening() {
     if (!state.treningOsoba && state.osoby.length) state.treningOsoba = state.osoby[0].imie;
     var select = document.getElementById('trening-osoba');
@@ -5123,13 +5490,16 @@
   function ustawStatusTreningu(status) {
     state.treningStatus = status;
     document.querySelectorAll('.training-status button').forEach(function (b) { b.classList.toggle('active', b.dataset.status === status); });
+    renderujTreningPodsumowanie();
   }
   function formatujDateTreningu(date) {
     return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
   }
-  function wybierzDzienTreningu(data) {
+  function wybierzDzienTreningu(data, treningId) {
     state.treningData = data;
-    var wpis = znajdzTrening(data);
+    var wpisy = znajdzTreningi(data);
+    var wpis = treningId ? (wpisy.find(function (t) { return String(t.id) === String(treningId); }) || wpisy[0] || {}) : (wpisy[0] || {});
+    state.treningId = wpis.id || null;
     document.getElementById('trening-nazwa').value = wpis.nazwa || '';
     document.getElementById('trening-typ').innerHTML = state.treningRodzaje.map(function (r) {
       return '<option value="' + escapeHtml(r.slug) + '">' + escapeHtml(r.nazwa) + '</option>';
@@ -5145,11 +5515,71 @@
     renderujTreningKalendarz();
     document.getElementById('trening-edytor-tytul').textContent = wpis.nazwa || 'Plan dnia';
     document.getElementById('trening-edytor-data').textContent = new Date(data + 'T12:00:00').toLocaleDateString('pl-PL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    renderujTreningPodsumowanie();
+  }
+  function dodajDrugiTrening() {
+    var data = state.treningData;
+    wybierzDzienTreningu(data, null);
+    state.treningId = null;
+    document.getElementById('trening-nazwa').value = '';
+    document.getElementById('trening-opis').value = '';
+    document.getElementById('trening-tempo').value = '';
+    document.getElementById('trening-tetno').value = '';
+    document.getElementById('trening-ftp').value = '';
+    document.getElementById('trening-czas').value = '';
+    state.treningStatus = 'planned';
+    ustawStatusTreningu('planned');
+    document.getElementById('trening-edytor-tytul').textContent = 'Drugi trening';
   }
   function renderujTrening() {
     document.getElementById('trening-miesiac').textContent = treningMiesiace[state.treningMiesiac.getMonth()] + ' ' + state.treningMiesiac.getFullYear();
     renderujTreningKalendarz();
     wybierzDzienTreningu(state.treningData);
+  }
+  function pobierzNazweTypuTreningu(typ) {
+    var rodzaj = state.treningRodzaje.find(function (r) { return r.slug === typ; });
+    return rodzaj ? rodzaj.nazwa : (typ || 'Trening');
+  }
+  function pobierzKolorTypuTreningu(typ) {
+    var rodzaj = state.treningRodzaje.find(function (r) { return r.slug === typ; });
+    return rodzaj ? rodzaj.kolor : '#2f8057';
+  }
+  function pobierzMinutyTreningu(czas) {
+    var match = String(czas || '').match(/\d+/);
+    return match ? Number(match[0]) : 0;
+  }
+  function otworzEdytorTreningu() {
+    var editor = document.querySelector('.training-editor-card');
+    if (editor) editor.scrollIntoView({ behavior:'smooth', block:'start' });
+    var first = document.getElementById('trening-nazwa');
+    if (first) first.focus();
+  }
+  function renderujTreningPodsumowanie() {
+    var overview = document.getElementById('trening-overview');
+    var selected = document.getElementById('trening-wybrany');
+    var upcoming = document.getElementById('trening-nadchodzace');
+    if (!overview || !selected || !upcoming) return;
+    var entries = state.treningi || [];
+    var totalMinutes = entries.reduce(function (sum, t) { return sum + pobierzMinutyTreningu(t.czas); }, 0);
+    overview.innerHTML = '<div class="training-overview-card"><span class="training-overview-label">Treningi</span><strong class="training-overview-value">' + entries.length + '</strong><span class="training-overview-unit">w tym miesiącu</span></div>' +
+      '<div class="training-overview-card"><span class="training-overview-label">Czas</span><strong class="training-overview-value">' + totalMinutes + '</strong><span class="training-overview-unit">minut</span></div>' +
+      '<div class="training-overview-card"><span class="training-overview-label">Wykonane</span><strong class="training-overview-value">' + entries.filter(function (t) { return t.status === 'done'; }).length + '</strong><span class="training-overview-unit">zrealizowane</span></div>';
+    var wpis = znajdzTrening(state.treningData);
+    var dataTekst = new Date(state.treningData + 'T12:00:00').toLocaleDateString('pl-PL', { weekday:'long', day:'numeric', month:'long' });
+    if (!wpis.nazwa && !wpis.opis) {
+      selected.innerHTML = '<div class="training-empty"><span class="material-symbols-outlined">directions_run</span><strong>Brak treningu</strong><span>Nie zaplanowano na ten dzień</span><button class="btn primary" onclick="otworzEdytorTreningu()">Dodaj trening</button></div>';
+    } else {
+      var kolor = pobierzKolorTypuTreningu(wpis.typ);
+      selected.innerHTML = '<div class="training-selected-head"><div><h2 class="training-selected-date">' + escapeHtml(dataTekst) + '</h2><div class="training-selected-meta"><i class="training-dot" style="background:' + escapeHtml(kolor) + '"></i>' + escapeHtml(wpis.nazwa || 'Trening') + '</div></div><span class="training-kind-badge">' + escapeHtml(pobierzNazweTypuTreningu(wpis.typ)) + '</span></div>' +
+        '<div class="training-selected-stats"><div class="training-selected-stat"><span>Czas</span><strong>' + escapeHtml(wpis.czas || 'Nie podano') + '</strong></div><div class="training-selected-stat"><span>Tempo</span><strong>' + escapeHtml(wpis.tempo || 'Nie podano') + '</strong></div><div class="training-selected-stat"><span>Status</span><strong>' + (wpis.status === 'done' ? 'Wykonany' : wpis.status === 'missed' ? 'Pominięty' : 'Zaplanowany') + '</strong></div></div>' +
+        '<div class="training-selected-actions"><button class="' + (state.treningStatus === 'planned' ? 'active' : '') + '" onclick="ustawStatusTreningu(\'planned\')">Zaplanowany</button><button class="' + (state.treningStatus === 'done' ? 'active' : '') + '" onclick="ustawStatusTreningu(\'done\')">Ukończony</button></div>';
+    }
+    var nextEntries = entries.filter(function (t) { return t.data > state.treningData; }).sort(function (a, b) { return a.data.localeCompare(b.data); }).slice(0, 4);
+    upcoming.innerHTML = '<h3 class="training-upcoming-title">Nadchodzące</h3>' + (nextEntries.length ? '<div class="training-upcoming-list">' + nextEntries.map(function (t) {
+      var kolor = pobierzKolorTypuTreningu(t.typ);
+      var date = new Date(t.data + 'T12:00:00').toLocaleDateString('pl-PL', { year:'numeric', month:'2-digit', day:'2-digit' });
+      return '<button class="training-upcoming-item" style="--training-type-color:' + escapeHtml(kolor) + '" onclick="wybierzDzienTreningu(\'' + t.data + '\')"><span class="training-upcoming-item-main"><span class="training-upcoming-item-name">' + escapeHtml(t.nazwa || 'Trening') + '</span><span class="training-upcoming-item-meta">' + date + ' · ' + escapeHtml(pobierzNazweTypuTreningu(t.typ)) + '</span></span><span class="training-upcoming-item-time">' + escapeHtml(t.czas || 'Plan') + '</span></button>';
+    }).join('') + '</div>' : '<div class="label-sm">Brak kolejnych treningów</div>');
   }
   function renderujTreningKalendarz() {
     var el = document.getElementById('trening-kalendarz');
@@ -5164,12 +5594,17 @@
       var number = i - start + 1, date = new Date(year, month, number);
       var inMonth = number >= 1 && number <= days;
       if (!inMonth) date = new Date(year, month, number < 1 ? number : number);
-      var data = formatujDateTreningu(date), wpis = znajdzTrening(data);
+      var data = formatujDateTreningu(date), wpisy = znajdzTreningi(data), wpis = wpisy[0];
       var today = data === formatDate(new Date());
-      var rodzaj = state.treningRodzaje.find(function (r) { return r.slug === wpis.typ; });
+      var rodzaj = wpis && state.treningRodzaje.find(function (r) { return r.slug === wpis.typ; });
+      var znaczniki = wpisy.map(function (trening) {
+        var typ = state.treningRodzaje.find(function (r) { return r.slug === trening.typ; });
+        return '<i class="training-dot' + (trening.status === 'done' ? ' completed' : '') + '" style="--training-type-color:' + escapeHtml(typ ? typ.kolor : '#2f8057') + ';background:' + escapeHtml(typ ? typ.kolor : '#2f8057') + '" title="' + escapeHtml(trening.nazwa || 'Trening') + '"></i>';
+      }).join('');
       html += '<button class="training-day' + (inMonth ? '' : ' muted') + (data === state.treningData ? ' selected' : '') + (today ? ' today' : '') + '" style="' + (rodzaj ? '--training-type-color:' + escapeHtml(rodzaj.kolor) : '') + '" onclick="wybierzDzienTreningu(\'' + data + '\')">' +
         '<span class="training-day-number">' + date.getDate() + '</span>' +
-        (wpis && (wpis.nazwa || wpis.opis) ? '<span class="training-day-name' + (wpis.status === 'done' ? ' completed' : '') + '"><i class="training-dot' + (wpis.status === 'done' ? ' completed' : '') + '"></i>' + escapeHtml(wpis.nazwa || 'Trening') + '</span>' : '') + '</button>';
+        (znaczniki ? '<span class="training-day-markers">' + znaczniki + '</span>' : '') +
+        (wpis && (wpis.nazwa || wpis.opis) ? '<span class="training-day-name' + (wpis.status === 'done' ? ' completed' : '') + '">' + escapeHtml(wpis.nazwa || 'Trening') + '</span>' : '') + '</button>';
     }
     el.innerHTML = html;
     var monthEntries = state.treningi;
@@ -5257,6 +5692,7 @@
       tetno: document.getElementById('trening-tetno').value.trim(),
       ftp: document.getElementById('trening-ftp').value.trim(),
       czas: document.getElementById('trening-czas').value.trim(),
+      id: state.treningId,
       status: state.treningStatus
     };
     db.zapiszTrening(wpis).then(async function () {
@@ -5264,6 +5700,66 @@
       renderujTrening();
       pokazKomunikat('Zapisano plan treningu.');
     }).catch(pokazBlad);
+  }
+
+  function escapujWartoscIcs(value) {
+    return String(value || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+  }
+  function dataIcs(data) {
+    return String(data || '').replace(/-/g, '');
+  }
+  function nastepnaDataIcs(data) {
+    var date = new Date(data + 'T12:00:00');
+    date.setDate(date.getDate() + 1);
+    return dataIcs(formatujDateTreningu(date));
+  }
+  async function dodajTreningDoKalendarza() {
+    var wpis = state.treningi.find(function (t) { return state.treningId && String(t.id) === String(state.treningId); }) || {};
+    var nazwa = document.getElementById('trening-nazwa').value.trim() || wpis.nazwa || 'Trening';
+    var typ = document.getElementById('trening-typ').value || wpis.typ || '';
+    var opis = document.getElementById('trening-opis').value.trim() || wpis.opis || '';
+    var czas = document.getElementById('trening-czas').value.trim() || wpis.czas || '';
+    var data = state.treningData;
+    var title = nazwa + (typ ? ' · ' + pobierzNazweTypuTreningu(typ) : '');
+    var description = [opis, czas ? 'Czas: ' + czas : ''].filter(Boolean).join('\n');
+    var uid = (state.treningId || state.treningOsoba + '-' + data + '-' + Date.now()) + '@planer-posilkow';
+    var stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    var ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Planer posilkow//Trening//PL',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:' + escapujWartoscIcs(uid),
+      'DTSTAMP:' + stamp,
+      'DTSTART;VALUE=DATE:' + dataIcs(data),
+      'DTEND;VALUE=DATE:' + nastepnaDataIcs(data),
+      'SUMMARY:' + escapujWartoscIcs(title),
+      (description ? 'DESCRIPTION:' + escapujWartoscIcs(description) : ''),
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].filter(Boolean).join('\r\n') + '\r\n';
+    var file = new File([ics], 'trening-' + data + '.ics', { type:'text/calendar;charset=utf-8' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+      try {
+        await navigator.share({ title:title, files:[file] });
+        return;
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+      }
+    }
+    var url = URL.createObjectURL(file);
+    var opened = window.open(url, '_blank');
+    if (!opened) {
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
   }
 
   // ===================== WIDOK: WAGA =====================
