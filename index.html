@@ -1715,6 +1715,10 @@
     [data-theme="dark"] .training-day.today { background: #1c4145; }
     .modal-overlay { backdrop-filter: blur(8px); }
     .modal { border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow-lg); }
+    #modal-kalendarz .modal { width: min(100%, 520px); max-height: 90vh; }
+    #modal-kalendarz .modal-header { margin: -22px -18px 18px; padding: 18px; }
+    #modal-kalendarz .calendar-form-actions { display: flex; gap: 8px; margin-top: 20px; }
+    #modal-kalendarz .calendar-form-actions .btn { margin: 0; }
 
     /* Login screen inspired by the rounded split-panel reference. */
     #login-screen {
@@ -2828,6 +2832,29 @@
     <div class="btn-row" id="confirm-buttons">
       <button class="btn ghost" id="confirm-cancel-btn">Anuluj</button>
       <button class="btn primary" id="confirm-ok-btn">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-kalendarz" style="align-items:center;">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Dodaj wydarzenie</h2>
+      <button class="close-x" type="button" onclick="zamknijModal('modal-kalendarz')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <label for="kalendarz-tytul">Tytuł</label>
+    <input id="kalendarz-tytul" type="text">
+    <label for="kalendarz-data">Data</label>
+    <input id="kalendarz-data" type="date">
+    <div class="training-fields">
+      <div><label for="kalendarz-od">Od</label><input id="kalendarz-od" type="time"></div>
+      <div><label for="kalendarz-do">Do</label><input id="kalendarz-do" type="time"></div>
+    </div>
+    <label for="kalendarz-opis">Opis</label>
+    <textarea id="kalendarz-opis"></textarea>
+    <div class="calendar-form-actions">
+      <button class="btn ghost" type="button" onclick="zamknijModal('modal-kalendarz')">Anuluj</button>
+      <button class="btn primary" type="button" onclick="otworzWydarzenieWKalendarzu()">Otwórz Kalendarz</button>
     </div>
   </div>
 </div>
@@ -5713,7 +5740,7 @@
     date.setDate(date.getDate() + 1);
     return dataIcs(formatujDateTreningu(date));
   }
-  async function dodajTreningDoKalendarza() {
+  function dodajTreningDoKalendarza() {
     var wpis = state.treningi.find(function (t) { return state.treningId && String(t.id) === String(state.treningId); }) || {};
     var nazwa = document.getElementById('trening-nazwa').value.trim() || wpis.nazwa || 'Trening';
     var typ = document.getElementById('trening-typ').value || wpis.typ || '';
@@ -5722,8 +5749,37 @@
     var data = state.treningData;
     var title = nazwa + (typ ? ' · ' + pobierzNazweTypuTreningu(typ) : '');
     var description = [opis, czas ? 'Czas: ' + czas : ''].filter(Boolean).join('\n');
+    document.getElementById('kalendarz-tytul').value = title;
+    document.getElementById('kalendarz-data').value = data;
+    document.getElementById('kalendarz-od').value = '';
+    document.getElementById('kalendarz-do').value = '';
+    document.getElementById('kalendarz-opis').value = description;
+    otworzModal('modal-kalendarz');
+  }
+
+  async function otworzWydarzenieWKalendarzu() {
+    var title = document.getElementById('kalendarz-tytul').value.trim() || 'Trening';
+    var data = document.getElementById('kalendarz-data').value;
+    var startTime = document.getElementById('kalendarz-od').value;
+    var endTime = document.getElementById('kalendarz-do').value;
+    var description = document.getElementById('kalendarz-opis').value.trim();
+    if (!data) {
+      await pokazKomunikat('Wybierz datę wydarzenia.');
+      return;
+    }
+    if ((startTime && !endTime) || (!startTime && endTime)) {
+      await pokazKomunikat('Podaj obie godziny albo pozostaw je puste.');
+      return;
+    }
+    if (startTime && endTime && endTime <= startTime) {
+      await pokazKomunikat('Godzina zakończenia musi być późniejsza niż rozpoczęcia.');
+      return;
+    }
     var uid = (state.treningId || state.treningOsoba + '-' + data + '-' + Date.now()) + '@planer-posilkow';
     var stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    var timedEvent = startTime && endTime;
+    var dataPoczatkowa = timedEvent ? dataIcs(data) + 'T' + startTime.replace(':', '') + '00' : dataIcs(data);
+    var dataKoncowa = timedEvent ? dataIcs(data) + 'T' + endTime.replace(':', '') + '00' : nastepnaDataIcs(data);
     var ics = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -5733,8 +5789,8 @@
       'BEGIN:VEVENT',
       'UID:' + escapujWartoscIcs(uid),
       'DTSTAMP:' + stamp,
-      'DTSTART;VALUE=DATE:' + dataIcs(data),
-      'DTEND;VALUE=DATE:' + nastepnaDataIcs(data),
+      timedEvent ? 'DTSTART:' + dataPoczatkowa : 'DTSTART;VALUE=DATE:' + dataPoczatkowa,
+      timedEvent ? 'DTEND:' + dataKoncowa : 'DTEND;VALUE=DATE:' + dataKoncowa,
       'SUMMARY:' + escapujWartoscIcs(title),
       (description ? 'DESCRIPTION:' + escapujWartoscIcs(description) : ''),
       'END:VEVENT',
@@ -5749,6 +5805,7 @@
     document.body.appendChild(link);
     link.click();
     link.remove();
+    zamknijModal('modal-kalendarz');
     setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
   }
 
